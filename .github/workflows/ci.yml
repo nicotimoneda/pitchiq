@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias
+        run: uv sync
+
+      - name: Lint
+        run: uv run ruff check .
+
+      # los tests de red (marker "network") quedan excluidos por defecto
+      # via addopts en pyproject.toml: en CI solo corren los sintéticos
+      - name: Tests
+        run: uv run pytest

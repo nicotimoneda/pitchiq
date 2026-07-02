@@ -1,0 +1,15 @@
+# entorno
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+dist/
+
+# datos y salidas (regenerables)
+data/cache/
+figures/
+
+# editor / SO
+.DS_Store
+.ipynb_checkpoints/

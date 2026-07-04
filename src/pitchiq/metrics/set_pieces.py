@@ -173,3 +173,45 @@ def corner_xg_for(events: pd.DataFrame, team: str) -> float:
         & (events["play_pattern"] == CORNER_PLAY_PATTERN)
     ]
     return float(shots["shot_statsbomb_xg"].sum())
+
+
+# ---------------------------------------------------------------------------
+# Córner defensivo
+# ---------------------------------------------------------------------------
+
+
+def man_orientation_index(frame: pd.DataFrame, team: str) -> float:
+    """PROXY HEURÍSTICO de orientación al hombre en un córner defensivo.
+
+    Para cada atacante rival visible (sin el sacador), distancia a su defensor
+    visible más cercano (portero excluido); devuelve la media. Menor = marcaje
+    más orientado al hombre; mayor = más zonal. Es un índice continuo sobre
+    jugadores VISIBLES, NO un clasificador exacto de sistema de marcaje.
+    NaN si no hay atacantes o defensores visibles suficientes.
+    """
+    if frame.empty:
+        return float("nan")
+    if frame["event_team"].iloc[0] == team:
+        raise ValueError("el índice se define en córners DEFENSIVOS (saca el rival)")
+    players = frame[frame["location"].notna()]
+    # el evento (saque) es del rival: atacantes = teammate del evento, sin el sacador
+    attackers = players[players["teammate"] & ~players["actor"].astype(bool)]
+    defenders = players[~players["teammate"] & ~players["keeper"].astype(bool)]
+    if attackers.empty or defenders.empty:
+        return float("nan")
+    att_xy = np.array(attackers["location"].tolist(), dtype=float)[:, :2]
+    def_xy = np.array(defenders["location"].tolist(), dtype=float)[:, :2]
+    dists = np.linalg.norm(att_xy[:, None, :] - def_xy[None, :, :], axis=2)
+    return float(dists.min(axis=1).mean())
+
+
+def corner_xg_against(events: pd.DataFrame, team: str) -> float:
+    """xG concedido en córners: remates rivales con play_pattern "From Corner"."""
+    if events.empty or "shot_statsbomb_xg" not in events.columns:
+        return 0.0
+    shots = events[
+        (events["type"] == "Shot")
+        & (events["team"] != team)
+        & (events["play_pattern"] == CORNER_PLAY_PATTERN)
+    ]
+    return float(shots["shot_statsbomb_xg"].sum())

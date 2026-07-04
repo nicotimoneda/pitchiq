@@ -9,7 +9,6 @@ import argparse
 from collections import Counter
 
 import numpy as np
-import pandas as pd
 
 from pitchiq import config
 from pitchiq.data.loader import load_events, load_frames, load_matches

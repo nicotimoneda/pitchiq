@@ -8,7 +8,7 @@
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
 ![StatsBomb](https://img.shields.io/badge/datos-StatsBomb%20Open%20Data-D50032)
 ![Ruff](https://img.shields.io/badge/lint-ruff-D7FF64?logo=ruff&logoColor=black)
-![Estado](https://img.shields.io/badge/estado-M2%20·%20en%20construcción-E8A317)
+![Estado](https://img.shields.io/badge/estado-M3%20·%20en%20construcción-E8A317)
 
 </div>
 
@@ -18,14 +18,15 @@
 
 Los informes tácticos generados con LLMs tienden a afirmar cosas que los datos no sostienen. PitchIQ ataca ese problema desde la base: un pipeline que computa métricas espaciales sobre datos de eventos reales y que, en milestones posteriores, generará informes donde **cada afirmación es trazable a un número computado**. Nada de "presiona alto" sin un PPDA y un mapa de zonas detrás.
 
-## Estado actual: M2
+## Estado actual: M3
 
 Proyecto en construcción. Lo que hay hoy:
 
 - **Ingesta** de StatsBomb Open Data (partidos, eventos, freeze-frames 360) con cache local en disco.
 - **Métricas de eventos (M1)**: zonas de recuperación en rejilla 6×5 + PPDA como escalar de intensidad de presión.
 - **Métricas espaciales 360 (M2)**: compacidad del bloque, altura de línea defensiva y soporte de presión.
-- **Visualización**: heatmap de zonas, bloque defensivo medio y altura de línea por partido, vía dos CLIs.
+- **Balón parado — córners (M3)**: zonas de saque, ocupación del área, primer contacto, xG a favor/en contra e índice de orientación al hombre (proxy).
+- **Visualización**: heatmaps de zonas y de saques, bloque defensivo, altura de línea, primer contacto — vía tres CLIs.
 - Tests sintéticos en CI (los de red excluidos con el marker `network`) y lint en verde.
 
 ### Las tres métricas espaciales (M2)
@@ -37,6 +38,30 @@ Proyecto en construcción. Lo que hay hoy:
 | `pressing_support` | Compañeros visibles a ≤ radio (default 10) de la posición del evento Pressure (proxy del balón), sin contar al presionador. | Conteo mínimo: solo visibles |
 
 > ⚠️ **Caveat crítico de los datos 360**: los freeze-frames solo capturan a los jugadores dentro del **área visible de la retransmisión**, no siempre los 22. Todas las métricas espaciales se computan sobre los jugadores **visibles** y son una **aproximación**: nunca se asumen 11 por frame, y cuando no hay suficientes visibles para definir una métrica, el valor es NaN — no se inventa. Además, 360 es freeze-frame (foto en el instante de cada evento), no tracking continuo.
+
+### Córners (M3)
+
+| Métrica | Qué mide | Lado |
+|---|---|---|
+| `delivery_zone` | Clasifica el saque por su destino: corto / primer palo / centro / segundo palo, relativo a la portería atacada (derivada del saque, sin orientación fija) | ataque |
+| `box_load` | Atacantes y defensores **visibles** dentro del área grande al sacar + diferencial | ataque |
+| `first_contact` | Equipo y localización del primer contacto tras el saque (ganado / perdido / concedido) | ambos |
+| `corner_xg_for` / `corner_xg_against` | xG a favor / en contra en remates atribuidos a córner | ambos |
+| `man_orientation_index` | **Proxy heurístico** de marcaje: distancia media de cada atacante rival visible a su defensor visible más cercano (portero excluido). Menor = más al hombre, mayor = más zonal | defensa |
+
+Temporada 2023/24 del Leverkusen: 236 córners a favor (68 % de primer contacto ganado, 10,8 xG) y 112 en contra (50 % de primer contacto concedido, 5,0 xG en contra).
+
+**Caveats de M3 — léelos antes de citar un número:**
+
+1. **El índice de orientación al hombre es un proxy heurístico continuo**, no un clasificador de sistema de marcaje: mide proximidad media al marcador más cercano sobre jugadores visibles. Sirve para comparar tendencias entre partidos/equipos, no para afirmar "juega al hombre".
+2. **Tamaño de muestra**: 236 córners a favor y 112 en contra en la temporada. Suficiente para patrones agregados (zonas de saque, % primer contacto); justa para subdivisiones finas (p. ej. "segundo palo con salida en corto en la segunda parte").
+3. **Regla de atribución de xG a córner**: un remate cuenta como "de córner" si su `play_pattern == "From Corner"` (definición de StatsBomb, codificada en `CORNER_PLAY_PATTERN`). Remates en segundas jugadas largas pueden quedar fuera.
+4. **Área visible de los 360** (caveat de arriba): `box_load` y el índice de orientación son cotas/aproximaciones sobre visibles; los córners sin freeze-frame quedan fuera de esas métricas (148/236 y 97/112 con 360 en la temporada).
+
+<div align="center">
+<img src="assets/corners_delivery_bayer_leverkusen_temporada.png" width="55%" alt="Zonas de saque de córner del Bayer Leverkusen 2023/24"/>
+<img src="assets/corners_first_contact_against_bayer_leverkusen_temporada.png" width="42%" alt="Primer contacto en córners en contra"/>
+</div>
 
 <div align="center">
 <img src="assets/defensive_block_bayer_leverkusen_season.png" width="70%" alt="Bloque defensivo medio del Bayer Leverkusen 2023/24"/>
@@ -65,7 +90,10 @@ python scripts/build_recovery_map.py --match-id 3895052 --team "Bayer Leverkusen
 # M2: resumen espacial 360 — un partido o la temporada entera
 python scripts/build_shape_report.py --match-id 3895052 --team "Bayer Leverkusen"
 python scripts/build_shape_report.py --team "Bayer Leverkusen"
-# → figures/defensive_block_*.png + figures/line_height_by_match_*.png
+
+# M3: resumen de córners (ataque + defensa)
+python scripts/build_setpiece_report.py --team "Bayer Leverkusen"
+# → figures/corners_*.png
 ```
 
 La primera ejecución descarga de StatsBomb; las siguientes leen del cache en `data/cache/`. La temporada completa son ~34 descargas de eventos + 360 la primera vez.
@@ -78,7 +106,7 @@ Python 3.11 · uv · statsbombpy · pandas / numpy / scipy · mplsoccer · pydan
 
 - [x] **M1** — Ingesta con cache + zonas de recuperación + PPDA + CLI de visualización
 - [x] **M2** — Métricas espaciales 360: compacidad, altura de línea, soporte de presión
-- [ ] **M3** — Balón parado: métricas de córners y faltas con freeze-frames
+- [x] **M3** — Balón parado: córners (zonas de saque, ocupación, primer contacto, xG, índice de orientación al hombre)
 - [ ] **M4** — Capa de agentes + RAG: informe táctico con afirmaciones ancladas a métricas
 - [ ] **M5** — API FastAPI + Docker + deploy
 - [ ] **M6** — Evaluación del sistema + blog post

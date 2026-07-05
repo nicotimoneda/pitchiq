@@ -8,7 +8,7 @@
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
 ![StatsBomb](https://img.shields.io/badge/datos-StatsBomb%20Open%20Data-D50032)
 ![Ruff](https://img.shields.io/badge/lint-ruff-D7FF64?logo=ruff&logoColor=black)
-![Estado](https://img.shields.io/badge/estado-M3%20·%20en%20construcción-E8A317)
+![Estado](https://img.shields.io/badge/estado-M4%20·%20en%20construcción-E8A317)
 
 </div>
 
@@ -18,7 +18,32 @@
 
 Los informes tácticos generados con LLMs tienden a afirmar cosas que los datos no sostienen. PitchIQ ataca ese problema desde la base: un pipeline que computa métricas espaciales sobre datos de eventos reales y que, en milestones posteriores, generará informes donde **cada afirmación es trazable a un número computado**. Nada de "presiona alto" sin un PPDA y un mapa de zonas detrás.
 
-## Estado actual: M3
+## La feature central: informes 100 % grounded (M4)
+
+El LLM **no calcula ni inventa números**. Su único papel es redactar sobre las salidas de herramientas deterministas (las métricas de M1–M3, envueltas con esquemas pydantic), y un **validador automático post-generación** extrae cada cifra del texto y la coteja contra las salidas reales:
+
+```
+equipo ──▶ [nodo de herramientas]──▶ [nodo de redacción (LLM)] ──▶ validador de grounding
+              deterministas              solo redacta                cifra a cifra
+                                                                        │
+                                              ¿cifra sin respaldo? ──▶ 1 reintento con feedback
+                                                                        │ si persiste
+                                                                   se marca en el informe
+```
+
+- El check es **automático y con test**: un informe con una cifra inventada baja el ratio de grounding, dispara una regeneración y, si persiste, la cifra queda marcada como no verificada en el propio informe. Nunca se publica como cierta.
+- El proveedor de LLM es **intercambiable**: una interfaz fina `LLMClient` con implementación por defecto para Anthropic (`claude-opus-4-8`). Cambiar de proveedor = implementar un método.
+- La evidencia completa (salidas de herramientas + reporte de grounding cifra a cifra) se guarda como `.json` junto al informe `.md`.
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-...   # solo para generar informes; nunca va al código ni al repo
+python scripts/generate_report.py --team "Bayer Leverkusen"
+# → reports/informe_*.md + reports/informe_*.json + ratio de grounding por consola
+```
+
+Los tests mockean el `LLMClient`: ni CI ni la suite tocan la red o el LLM real.
+
+## Estado actual: M4
 
 Proyecto en construcción. Lo que hay hoy:
 
@@ -26,8 +51,9 @@ Proyecto en construcción. Lo que hay hoy:
 - **Métricas de eventos (M1)**: zonas de recuperación en rejilla 6×5 + PPDA como escalar de intensidad de presión.
 - **Métricas espaciales 360 (M2)**: compacidad del bloque, altura de línea defensiva y soporte de presión.
 - **Balón parado — córners (M3)**: zonas de saque, ocupación del área, primer contacto, xG a favor/en contra e índice de orientación al hombre (proxy).
+- **Agentes + informe grounded (M4)**: grafo LangGraph (herramientas → redacción), wrapper de LLM agnóstico y validador de grounding con reintento.
 - **Visualización**: heatmaps de zonas y de saques, bloque defensivo, altura de línea, primer contacto — vía tres CLIs.
-- Tests sintéticos en CI (los de red excluidos con el marker `network`) y lint en verde.
+- Tests sintéticos en CI (los de red excluidos con el marker `network`; el LLM siempre mockeado) y lint en verde.
 
 ### Las tres métricas espaciales (M2)
 
@@ -100,16 +126,17 @@ La primera ejecución descarga de StatsBomb; las siguientes leen del cache en `d
 
 ## Stack
 
-Python 3.11 · uv · statsbombpy · pandas / numpy / scipy · mplsoccer · pydantic v2 · pytest · ruff · GitHub Actions
+Python 3.11 · uv · statsbombpy · pandas / numpy / scipy · mplsoccer · pydantic v2 · LangGraph · anthropic (proveedor intercambiable) · pytest · ruff · GitHub Actions
 
 ## Roadmap
 
 - [x] **M1** — Ingesta con cache + zonas de recuperación + PPDA + CLI de visualización
 - [x] **M2** — Métricas espaciales 360: compacidad, altura de línea, soporte de presión
 - [x] **M3** — Balón parado: córners (zonas de saque, ocupación, primer contacto, xG, índice de orientación al hombre)
-- [ ] **M4** — Capa de agentes + RAG: informe táctico con afirmaciones ancladas a métricas
-- [ ] **M5** — API FastAPI + Docker + deploy
-- [ ] **M6** — Evaluación del sistema + blog post
+- [x] **M4** — Agentes (LangGraph): informe táctico con cada cifra anclada a una herramienta + validador de grounding
+- [ ] **M5** — RAG sobre el corpus de métricas + evaluación con RAGAS
+- [ ] **M6** — API FastAPI + Docker + deploy
+- [ ] **M7** — Evaluación del sistema + blog post
 
 ## Créditos
 

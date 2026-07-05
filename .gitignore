@@ -9,6 +9,7 @@ dist/
 # datos y salidas (regenerables)
 data/cache/
 figures/
+reports/
 
 # editor / SO
 .DS_Store

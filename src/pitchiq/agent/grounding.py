@@ -16,6 +16,7 @@ _NUMBER_RE = re.compile(r"\d+(?:[.,]\d+)?")
 # Números que no son afirmaciones métricas y se excluyen del check:
 # años (2023, 2024) y temporadas (2023/24)
 _YEAR_RE = re.compile(r"^(19|20)\d{2}$")
+_SEASON_RE = re.compile(r"\b(19|20)\d{2}[/-]\d{2}\b")
 
 
 class Figure(BaseModel):
@@ -46,6 +47,7 @@ class GroundingReport(BaseModel):
 
 def extract_figures(text: str) -> "list[tuple[str, float]]":
     """Extrae los números del texto (coma o punto decimal), excluyendo años."""
+    text = _SEASON_RE.sub(" ", text)  # "2023/24" no es una cifra métrica
     figures = []
     for match in _NUMBER_RE.finditer(text):
         raw = match.group()

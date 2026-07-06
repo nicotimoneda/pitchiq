@@ -1,0 +1,162 @@
+# Glosario táctico de PitchIQ — BORRADOR PENDIENTE DE REVISIÓN HUMANA
+#
+# Redactado por Claude Code como borrador de trabajo. NINGUNA entrada se
+# considera autoritativa hasta que un humano la revise y marque revisado: true.
+# Las definiciones evitan deliberadamente cifras concretas: este glosario
+# aporta interpretación, nunca números (los números salen de las herramientas).
+# El campo fuente queda como "pendiente de revisión humana": no se fabrican citas.
+
+- concepto: PPDA (passes allowed per defensive action)
+  definicion: >-
+    Pases que el rival consigue dar por cada acción defensiva del equipo
+    analizado, computado en la zona de presión (se excluye la franja de pista
+    más cercana a la propia portería). En la implementación de PitchIQ las
+    acciones defensivas incluyen presiones, además de entradas, intercepciones
+    y recuperaciones, por lo que los valores salen más bajos que en la
+    variante clásica basada solo en duelos.
+  interpretacion: >-
+    Un PPDA bajo indica presión intensa tras pérdida: el rival apenas encadena
+    pases antes de sufrir una acción defensiva. Un PPDA alto sugiere un bloque
+    que espera replegado y concede la circulación. Es una métrica de intensidad,
+    no de calidad: presionar mucho no implica presionar bien. Comparar entre
+    partidos del mismo equipo es más fiable que comparar entre implementaciones
+    distintas de la métrica.
+  fuente: pendiente de revisión humana
+  revisado: false
+
+- concepto: zonas de recuperación
+  definicion: >-
+    Reparto espacial de las acciones defensivas del equipo (recuperaciones,
+    presiones, entradas e intercepciones) sobre una rejilla que divide la
+    pista a lo largo y a lo ancho. Cada celda acumula el conteo de acciones
+    que ocurrieron dentro de ella.
+  interpretacion: >-
+    Concentraciones altas en campo rival señalan presión adelantada y recuperación
+    tras pérdida lejos de la propia portería; concentraciones en campo propio
+    describen un equipo que defiende replegado. La banda donde se acumulan las
+    recuperaciones suele reflejar hacia dónde orienta la presión el equipo o por
+    dónde ataca el rival.
+  fuente: pendiente de revisión humana
+  revisado: false
+
+- concepto: compacidad defensiva (convex hull)
+  definicion: >-
+    Dispersión del bloque defensivo medida como el área del polígono convexo
+    que envuelve a los compañeros visibles en el freeze-frame durante acciones
+    defensivas, junto con la anchura (rango a lo ancho) y la profundidad (rango
+    a lo largo) de ese bloque. Se computa solo sobre jugadores visibles en la
+    retransmisión, así que es una aproximación.
+  interpretacion: >-
+    Menos área implica un bloque más compacto: líneas juntas, menos espacio
+    interior para el rival entre líneas. Un área grande puede indicar un equipo
+    estirado, en transición o mal replegado. La anchura y la profundidad matizan
+    la lectura: un bloque estrecho y corto protege el centro; uno ancho y largo
+    cubre amplitud a costa de espacios interiores.
+  fuente: pendiente de revisión humana
+  revisado: false
+
+- concepto: altura de línea defensiva
+  definicion: >-
+    Posición media, a lo largo de la pista, de los compañeros visibles más
+    retrasados (excluido el portero) durante las acciones defensivas del
+    equipo. Se estima sobre el freeze-frame de cada evento y se agrega por
+    partido; es una aproximación limitada al área visible de la cámara.
+  interpretacion: >-
+    Una línea alta acorta el campo y acompaña a la presión adelantada, a cambio
+    de conceder espacio a la espalda para desmarques de ruptura. Una línea baja
+    protege la profundidad pero aleja al equipo de la portería rival y alarga
+    las transiciones ofensivas. Leerla junto al PPDA distingue un equipo que
+    presiona alto de uno que solo defiende alto.
+  fuente: pendiente de revisión humana
+  revisado: false
+
+- concepto: soporte de presión
+  definicion: >-
+    Número de compañeros visibles a corta distancia del balón en el momento en
+    que un jugador del equipo ejecuta una presión, sin contar al propio
+    presionador. Al computarse sobre jugadores visibles es una cota inferior
+    del apoyo real.
+  interpretacion: >-
+    Valores altos describen presiones colectivas y coordinadas, con jugadores
+    que cierran las líneas de pase alrededor del balón; valores bajos sugieren
+    presiones individuales y aisladas, más fáciles de superar con un pase. El
+    soporte de presión complementa al PPDA: la intensidad dice cuánto se
+    presiona, el soporte dice con cuánta compañía.
+  fuente: pendiente de revisión humana
+  revisado: false
+
+- concepto: zonas de saque de córner
+  definicion: >-
+    Clasificación del destino de cada saque de córner en cuatro categorías
+    relativas a la portería atacada; corto cuando el balón no llega al área,
+    primer palo, centro y segundo palo según la franja del área donde acaba,
+    tomando como referencia el lado desde el que se saca.
+  interpretacion: >-
+    Un reparto cargado al primer palo suele buscar remates de cabeza en el
+    espacio corto o prolongaciones; el centro ataca directamente la zona del
+    portero; el segundo palo busca rematadores llegando desde atrás. Muchos
+    córners cortos indican preferencia por sacar al portero de su zona de
+    confort o generar superioridad en banda antes del centro.
+  fuente: pendiente de revisión humana
+  revisado: false
+
+- concepto: box load (ocupación del área en el saque)
+  definicion: >-
+    Número de atacantes y defensores visibles dentro del área grande en el
+    instante del saque de córner, y su diferencia. Los conteos se limitan a
+    los jugadores capturados por el área visible del freeze-frame, por lo que
+    funcionan como cotas inferiores.
+  interpretacion: >-
+    Más atacantes en el área cargan el remate pero exponen a la contra; pocos
+    atacantes sugieren córners conservadores o buscados en corto. Del lado
+    defensivo, una ocupación propia muy alta indica prioridad por proteger el
+    área aun renunciando a la salida rápida. El diferencial resume quién puebla
+    mejor la zona de remate.
+  fuente: pendiente de revisión humana
+  revisado: false
+
+- concepto: primer contacto (córner)
+  definicion: >-
+    Equipo que toca primero el balón tras el saque de córner, identificado por
+    el siguiente evento con contacto en los datos. En córners a favor se habla
+    de primer contacto ganado; en córners en contra, de primer contacto
+    concedido cuando lo gana el rival que saca.
+  interpretacion: >-
+    Ganar el primer contacto en ataque es condición casi necesaria para generar
+    remate directo de córner; perderlo sistemáticamente apunta a saques
+    defendibles o a falta de dominio aéreo. En defensa, conceder pocos primeros
+    contactos señala buen dominio del área propia, aunque no garantiza despejes
+    limpios: el segundo balón queda fuera de esta métrica.
+  fuente: pendiente de revisión humana
+  revisado: false
+
+- concepto: xG de córner
+  definicion: >-
+    Suma de la probabilidad de gol (expected goals) de los remates atribuidos
+    a jugadas de córner, usando la etiqueta de patrón de juego del proveedor de
+    datos. Incluye el remate directo tras el saque y las continuaciones que el
+    proveedor sigue considerando parte de la jugada de córner.
+  interpretacion: >-
+    Un xG de córner alto a favor indica balón parado ofensivo productivo en
+    calidad de ocasiones, no necesariamente en goles: la conversión puede ir
+    por encima o por debajo de lo esperado en muestras cortas. En contra, un
+    xG alto delata problemas estructurales defendiendo el área en estático.
+    Las segundas jugadas largas pueden quedar fuera de la atribución.
+  fuente: pendiente de revisión humana
+  revisado: false
+
+- concepto: índice de orientación al hombre (MOI)
+  definicion: >-
+    Proxy heurístico y continuo del tipo de marcaje en córners defensivos;
+    para cada atacante rival visible se mide la distancia a su defensor visible
+    más cercano (portero excluido) y se promedia. NO es un clasificador de
+    sistema de marcaje ni distingue esquemas mixtos; es una aproximación
+    computada solo sobre los jugadores visibles del freeze-frame.
+  interpretacion: >-
+    Distancias medias cortas sugieren marcaje más orientado al hombre, con
+    cada defensor pegado a un rival; distancias largas sugieren estructuras más
+    zonales, con defensores protegiendo espacios en lugar de rivales. Su valor
+    está en comparar tendencias entre partidos o equipos, nunca en afirmar de
+    forma categórica que un equipo marca al hombre o en zona.
+  fuente: pendiente de revisión humana
+  revisado: false

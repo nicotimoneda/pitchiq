@@ -20,8 +20,18 @@ class ReportState(TypedDict, total=False):
     team: str
     tool_outputs: dict[str, dict]  # nombre de herramienta -> salida serializada
     evidence: dict[str, float]  # métrica -> valor (para el grounding)
+    context: dict[str, list[str]]  # sección -> conceptos interpretativos (RAG)
     feedback: str  # cifras no respaldadas de una pasada anterior (reintento)
     draft: str  # borrador del informe en Markdown
+
+
+# Consultas de recuperación por sección del informe (M5): el RAG aporta QUÉ
+# SIGNIFICAN las métricas de cada sección, nunca sus valores.
+SECTION_QUERIES = {
+    "presión": "presión tras pérdida, PPDA, zonas de recuperación del balón",
+    "forma defensiva": "compacidad del bloque, altura de la línea defensiva, soporte de presión",
+    "córners": "saques de córner, ocupación del área, primer contacto, marcaje al hombre o zonal",
+}
 
 
 WRITER_SYSTEM = """\
@@ -55,6 +65,18 @@ def _writer_prompt(state: ReportState) -> str:
         "Salidas de las herramientas (única fuente de cifras permitida):\n"
         f"{json.dumps(state['tool_outputs'], ensure_ascii=False, indent=2)}"
     )
+    if state.get("context"):
+        bloques = "\n".join(
+            f"[{seccion}]\n" + "\n".join(f"- {c}" for c in conceptos)
+            for seccion, conceptos in state["context"].items()
+        )
+        prompt += (
+            "\n\nCONTEXTO INTERPRETATIVO (glosario táctico EN REVISIÓN, no "
+            "autoritativo): úsalo SOLO para explicar qué significan los valores "
+            "en términos futbolísticos. NO es fuente de cifras: todo número del "
+            "informe debe seguir saliendo de las salidas de herramientas de "
+            f"arriba.\n{bloques}"
+        )
     if state.get("feedback"):
         prompt += (
             "\n\nATENCIÓN: tu borrador anterior contenía cifras que no están en "
@@ -64,8 +86,8 @@ def _writer_prompt(state: ReportState) -> str:
     return prompt
 
 
-def build_graph(llm: LLMClient):
-    """Compila el grafo: run_tools -> write_report."""
+def build_graph(llm: LLMClient, retriever=None):
+    """Compila el grafo: run_tools -> retrieve_context (si hay RAG) -> write_report."""
 
     def run_tools(state: ReportState) -> ReportState:
         """Nodo determinista: ejecuta las herramientas y recoge salidas y evidencia."""
@@ -79,6 +101,14 @@ def build_graph(llm: LLMClient):
             "evidence": evidence,
         }
 
+    def retrieve_context(state: ReportState) -> ReportState:
+        """Nodo RAG: conceptos interpretativos por sección (nunca cifras)."""
+        context = {
+            seccion: [e.as_context() for e in retriever.retrieve_concepts(query, k=3)]
+            for seccion, query in SECTION_QUERIES.items()
+        }
+        return {"context": context}
+
     def write_report(state: ReportState) -> ReportState:
         """Nodo de redacción: el LLM escribe SOLO con las salidas provistas."""
         return {"draft": llm.complete(WRITER_SYSTEM, _writer_prompt(state))}
@@ -87,6 +117,11 @@ def build_graph(llm: LLMClient):
     graph.add_node("run_tools", run_tools)
     graph.add_node("write_report", write_report)
     graph.add_edge(START, "run_tools")
-    graph.add_edge("run_tools", "write_report")
+    if retriever is not None:
+        graph.add_node("retrieve_context", retrieve_context)
+        graph.add_edge("run_tools", "retrieve_context")
+        graph.add_edge("retrieve_context", "write_report")
+    else:
+        graph.add_edge("run_tools", "write_report")
     graph.add_edge("write_report", END)
     return graph.compile()

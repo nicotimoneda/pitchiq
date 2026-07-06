@@ -21,16 +21,21 @@ class GroundedReport(BaseModel):
 
 
 def generate_report(
-    team: str, llm: "LLMClient | None" = None, max_retries: int = 1
+    team: str,
+    llm: "LLMClient | None" = None,
+    max_retries: int = 1,
+    retriever=None,
 ) -> GroundedReport:
     """Ejecuta el grafo, valida el grounding y reintenta una vez si hay cifras sueltas.
 
-    Si tras el reintento quedan cifras sin respaldo, el informe sale marcado con
-    una advertencia explícita al pie — nunca se publica una cifra inventada como
-    si estuviera verificada.
+    Si se pasa un ``retriever`` (M5), el redactor recibe contexto interpretativo
+    del glosario — nunca cifras — y el informe queda marcado con la advertencia
+    de glosario en revisión. Si tras el reintento quedan cifras sin respaldo, el
+    informe sale marcado con una advertencia explícita al pie — nunca se publica
+    una cifra inventada como si estuviera verificada.
     """
     llm = llm if llm is not None else AnthropicClient()
-    app = build_graph(llm)
+    app = build_graph(llm, retriever=retriever)
     state = app.invoke({"team": team})
     grounding = validate_grounding(state["draft"], state["evidence"])
 
@@ -48,6 +53,14 @@ def generate_report(
         grounding = validate_grounding(state["draft"], state["evidence"])
 
     markdown = state["draft"]
+    if state.get("context"):
+        markdown += (
+            "\n\n> ℹ️ Las interpretaciones tácticas de este informe se apoyan en "
+            "un glosario EN REVISIÓN (borrador redactado por IA, pendiente de "
+            "revisión humana) y no son autoritativas. Las cifras provienen "
+            "exclusivamente de métricas computadas y están validadas por el "
+            "check de grounding."
+        )
     if not grounding.is_grounded:
         sueltas = ", ".join(f.text for f in grounding.ungrounded)
         markdown += (

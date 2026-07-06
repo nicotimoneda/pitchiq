@@ -10,6 +10,7 @@ from datetime import date
 
 from pitchiq import config
 from pitchiq.agent.report import generate_report
+from pitchiq.rag.retriever import open_default_retriever
 
 
 def main() -> None:
@@ -18,7 +19,15 @@ def main() -> None:
     parser.add_argument("--team", type=str, default=config.DEFAULT_TEAM)
     args = parser.parse_args()
 
-    report = generate_report(args.team)
+    retriever = open_default_retriever()
+    if retriever is None:
+        print(
+            "aviso: sin índice vectorial (python scripts/build_index.py); "
+            "el informe saldrá sin contexto interpretativo"
+        )
+    report = generate_report(args.team, retriever=retriever)
+    if retriever is not None:
+        retriever.close()
 
     reports_dir = config.ROOT_DIR / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)

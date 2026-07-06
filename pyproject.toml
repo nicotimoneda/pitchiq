@@ -24,10 +24,7 @@ dev = [
     "pytest>=8.0",
     "ruff>=0.8",
 ]
-eval = [
-    "langchain-anthropic>=1.4.8",
-    "ragas>=0.4.3",
-]
+eval = []
 
 [build-system]
 requires = ["hatchling"]

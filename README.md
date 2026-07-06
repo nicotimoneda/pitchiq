@@ -8,7 +8,7 @@
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
 ![StatsBomb](https://img.shields.io/badge/datos-StatsBomb%20Open%20Data-D50032)
 ![Ruff](https://img.shields.io/badge/lint-ruff-D7FF64?logo=ruff&logoColor=black)
-![Estado](https://img.shields.io/badge/estado-M4%20·%20en%20construcción-E8A317)
+![Estado](https://img.shields.io/badge/estado-M5%20·%20en%20construcción-E8A317)
 
 </div>
 
@@ -43,7 +43,20 @@ python scripts/generate_report.py --team "Bayer Leverkusen"
 
 Los tests mockean el `LLMClient`: ni CI ni la suite tocan la red o el LLM real.
 
-## Estado actual: M4
+### RAG interpretativo (M5): contexto, nunca cifras
+
+Sobre el pipeline anterior, una capa RAG (Qdrant local + embeddings `sentence-transformers`, todo sin API key) recupera conceptos de un **glosario táctico** y se los pasa al redactor como contexto interpretativo: qué significa en fútbol un PPDA bajo, un bloque compacto o un MOI corto. Tres garantías:
+
+1. **El RAG no aporta números.** El glosario tiene un validador que **rechaza cualquier entrada con dígitos**; las cifras siguen saliendo solo de las herramientas y el validador de grounding de M4 se aplica sin cambios sobre el informe final. Hay un test explícito de que el contexto RAG no rompe el grounding.
+2. **⚠️ El glosario está EN REVISIÓN.** Lo redactó una IA como borrador: todas las entradas llevan `revisado: false` y sus interpretaciones **no son autoritativas hasta revisión humana**. Ninguna entrada cita fuentes que no se puedan garantizar (campo `fuente: pendiente de revisión humana`). El propio informe arrastra esta advertencia.
+3. **Evaluación medible.** `scripts/eval_rag.py` evalúa fidelidad y relevancia de contexto con RAGAS sobre un set de preguntas de interpretación. Usa un LLM juez de Anthropic → **cuesta llamadas de API y queda fuera de CI**. Corre en un entorno aislado (ragas es incompatible con langchain 1.x):
+
+```bash
+uv run python scripts/build_index.py                            # índice vectorial local
+ANTHROPIC_API_KEY=sk-ant-... uv run --script scripts/eval_rag.py  # evaluación RAGAS
+```
+
+## Estado actual: M5
 
 Proyecto en construcción. Lo que hay hoy:
 
@@ -52,6 +65,7 @@ Proyecto en construcción. Lo que hay hoy:
 - **Métricas espaciales 360 (M2)**: compacidad del bloque, altura de línea defensiva y soporte de presión.
 - **Balón parado — córners (M3)**: zonas de saque, ocupación del área, primer contacto, xG a favor/en contra e índice de orientación al hombre (proxy).
 - **Agentes + informe grounded (M4)**: grafo LangGraph (herramientas → redacción), wrapper de LLM agnóstico y validador de grounding con reintento.
+- **RAG interpretativo + evaluación (M5)**: glosario táctico en revisión, índice Qdrant local con embeddings locales, contexto interpretativo en el informe y evaluación RAGAS fuera de CI.
 - **Visualización**: heatmaps de zonas y de saques, bloque defensivo, altura de línea, primer contacto — vía tres CLIs.
 - Tests sintéticos en CI (los de red excluidos con el marker `network`; el LLM siempre mockeado) y lint en verde.
 
@@ -126,7 +140,7 @@ La primera ejecución descarga de StatsBomb; las siguientes leen del cache en `d
 
 ## Stack
 
-Python 3.11 · uv · statsbombpy · pandas / numpy / scipy · mplsoccer · pydantic v2 · LangGraph · anthropic (proveedor intercambiable) · pytest · ruff · GitHub Actions
+Python 3.11 · uv · statsbombpy · pandas / numpy / scipy · mplsoccer · pydantic v2 · LangGraph · anthropic (proveedor intercambiable) · Qdrant local · sentence-transformers · RAGAS (eval, fuera de CI) · pytest · ruff · GitHub Actions
 
 ## Roadmap
 
@@ -134,9 +148,9 @@ Python 3.11 · uv · statsbombpy · pandas / numpy / scipy · mplsoccer · pydan
 - [x] **M2** — Métricas espaciales 360: compacidad, altura de línea, soporte de presión
 - [x] **M3** — Balón parado: córners (zonas de saque, ocupación, primer contacto, xG, índice de orientación al hombre)
 - [x] **M4** — Agentes (LangGraph): informe táctico con cada cifra anclada a una herramienta + validador de grounding
-- [ ] **M5** — RAG sobre el corpus de métricas + evaluación con RAGAS
+- [x] **M5** — RAG interpretativo (glosario en revisión + Qdrant local) + evaluación RAGAS
 - [ ] **M6** — API FastAPI + Docker + deploy
-- [ ] **M7** — Evaluación del sistema + blog post
+- [ ] **M7** — Evaluación honesta del sistema + blog post
 
 ## Créditos
 

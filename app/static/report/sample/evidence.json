@@ -1,0 +1,43 @@
+{
+  "team": "Equipo Muestra",
+  "generated_at": "2026-01-01",
+  "sample": true,
+  "model": null,
+  "grounding": {
+    "ratio": 1.0,
+    "figures": [
+      {
+        "text": "2.48",
+        "value": 2.48,
+        "grounded": true,
+        "matched_metric": "presion.ppda_medio"
+      },
+      {
+        "text": "52.9",
+        "value": 52.9,
+        "grounded": true,
+        "matched_metric": "forma_defensiva.altura_linea_media"
+      },
+      {
+        "text": "236",
+        "value": 236.0,
+        "grounded": true,
+        "matched_metric": "corners_ataque.n_corners"
+      }
+    ]
+  },
+  "tool_outputs": {
+    "presion": {
+      "team": "Equipo Muestra",
+      "ppda_medio": 2.48
+    },
+    "forma_defensiva": {
+      "team": "Equipo Muestra",
+      "altura_linea_media": 52.9
+    },
+    "corners_ataque": {
+      "team": "Equipo Muestra",
+      "n_corners": 236
+    }
+  }
+}

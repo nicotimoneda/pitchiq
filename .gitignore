@@ -6,10 +6,11 @@ __pycache__/
 .ruff_cache/
 dist/
 
-# datos y salidas (regenerables)
+# datos y salidas (regenerables) — anclados a la raíz: los artefactos
+# precomputados de app/static/report/ SÍ se versionan
 data/cache/
-figures/
-reports/
+/figures/
+/reports/
 
 # editor / SO
 .DS_Store

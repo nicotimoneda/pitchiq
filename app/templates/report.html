@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PitchIQ — {{ team }}</title>
+  <style>
+    :root { --rojo: #d62828; --tinta: #1a1a1a; --gris: #5a5a5a; }
+    body { font-family: Georgia, 'Times New Roman', serif; color: var(--tinta);
+           max-width: 820px; margin: 0 auto; padding: 2rem 1.2rem; line-height: 1.65; }
+    header { border-bottom: 3px solid var(--rojo); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+    h1 { margin: 0 0 .3rem; font-size: 1.9rem; }
+    .meta { color: var(--gris); font-size: .9rem; }
+    .badge { display: inline-block; background: #1a7f37; color: #fff; border-radius: 4px;
+             padding: .15rem .55rem; font-size: .85rem; font-family: system-ui, sans-serif; }
+    .badge.warn { background: #b58900; }
+    .aviso-muestra { background: #fff3cd; border: 1px solid #ffe08a; border-radius: 6px;
+                     padding: .7rem 1rem; margin: 1rem 0; font-size: .95rem; }
+    .informe blockquote { border-left: 4px solid #ccc; margin-left: 0; padding-left: 1rem;
+                          color: var(--gris); font-size: .92rem; }
+    figure { margin: 1.5rem 0; text-align: center; }
+    figure img { max-width: 100%; border: 1px solid #e2e2e2; border-radius: 6px; }
+    footer { margin-top: 2.5rem; border-top: 1px solid #e2e2e2; padding-top: 1rem;
+             color: var(--gris); font-size: .85rem; }
+    a { color: var(--rojo); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PitchIQ — {{ team }}</h1>
+    <p class="meta">
+      Informe precomputado el {{ generated_at }} ·
+      <span class="badge{% if grounding_ratio < 1 %} warn{% endif %}">
+        grounding: {{ '%.0f' % (grounding_ratio * 100) }}&nbsp;% ({{ n_figures_grounding }} cifras verificadas)
+      </span>
+    </p>
+  </header>
+
+  {% if is_sample %}
+  <div class="aviso-muestra">
+    ⚠️ <strong>Datos de muestra.</strong> Estás viendo fixtures sintéticas: los
+    artefactos reales aún no se han precomputado (<code>scripts/precompute.py</code>).
+  </div>
+  {% endif %}
+
+  <div class="informe">{{ report_html | safe }}</div>
+
+  {% for figure in figures %}
+  <figure>
+    <img src="/figures/{{ figure }}" alt="{{ figure }}" loading="lazy">
+  </figure>
+  {% endfor %}
+
+  <footer>
+    Cada cifra del informe está validada contra métricas computadas
+    (StatsBomb Open Data). Las interpretaciones provienen de un glosario en
+    revisión y no son autoritativas.
+    · <a href="/api/report">/api/report</a>
+    · <a href="/api/evidence">/api/evidence</a>
+    · <a href="https://github.com/nicotimoneda/pitchiq">código</a>
+  </footer>
+</body>
+</html>

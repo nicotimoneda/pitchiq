@@ -20,11 +20,19 @@ dependencies = [
 ]
 
 [dependency-groups]
+app = [
+    "fastapi>=0.115",
+    "jinja2>=3.1",
+    "markdown>=3.7",
+    "uvicorn>=0.32",
+]
 dev = [
     "pytest>=8.0",
     "ruff>=0.8",
 ]
-eval = []
+
+[tool.uv]
+default-groups = ["dev", "app"]
 
 [build-system]
 requires = ["hatchling"]

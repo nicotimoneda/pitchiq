@@ -1,0 +1,5 @@
+# la imagen solo necesita app/ + pyproject/uv.lock para resolver el grupo "app"
+*
+!app
+!pyproject.toml
+!uv.lock

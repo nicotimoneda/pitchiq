@@ -7,7 +7,6 @@ se hardcodean. Solo métricas: sin LLM, sin RAG, sin key.
 """
 
 import numpy as np
-import pandas as pd
 
 from pitchiq.data.loader import load_events, load_frames
 from pitchiq.metrics.pressing import ppda, recovery_zones

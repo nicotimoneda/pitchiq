@@ -8,7 +8,9 @@
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
 ![StatsBomb](https://img.shields.io/badge/datos-StatsBomb%20Open%20Data-D50032)
 ![Ruff](https://img.shields.io/badge/lint-ruff-D7FF64?logo=ruff&logoColor=black)
-![Estado](https://img.shields.io/badge/estado-M5%20·%20en%20construcción-E8A317)
+![Estado](https://img.shields.io/badge/estado-M6%20·%20en%20construcción-E8A317)
+
+**🌐 LIVE URL: \<pendiente de deploy\>**
 
 </div>
 
@@ -56,7 +58,36 @@ uv run python scripts/build_index.py                            # índice vector
 ANTHROPIC_API_KEY=sk-ant-... uv run --script scripts/eval_rag.py  # evaluación RAGAS
 ```
 
-## Estado actual: M5
+### Arquitectura precomputada (M6): generar una vez, servir estático
+
+La web pública **no genera nada**: separa la GENERACIÓN (cara, con LLM, en local) del SERVIDO (barato, estático, en producción).
+
+```
+LOCAL (humano, con key)                      PRODUCCIÓN (Render, sin key)
+─────────────────────────                    ────────────────────────────
+scripts/precompute.py                        app FastAPI mínima
+  ├─ métricas M1-M3 → figuras                  ├─ GET /            informe HTML
+  ├─ informe M4+M5 (única llamada LLM)         ├─ GET /api/report   JSON
+  └─ artefactos → app/static/report/           ├─ GET /api/evidence JSON
+        │                                      └─ GET /health
+        └── git commit ──────────────────▶  imagen Docker pequeña
+```
+
+**Por qué así:** la app de producción no lleva `ANTHROPIC_API_KEY` (imposible filtrarla: no existe allí), no importa torch/langgraph/anthropic (imagen mínima, el CI lo verifica), y cada visita cuesta cero llamadas de LLM. El pipeline de generación completo sigue en el repo para quien clone y ponga su key.
+
+```bash
+# paso humano, en local (una vez):
+ANTHROPIC_API_KEY=sk-ant-... uv run python scripts/precompute.py --team "Bayer Leverkusen"
+git add app/static/report && git commit    # los artefactos se versionan
+
+# servir en local con Docker:
+docker build -t pitchiq-app . && docker run --rm -p 8000:8000 pitchiq-app
+# → http://localhost:8000  (sin artefactos reales sirve fixtures de muestra, con aviso)
+```
+
+El deploy en Render usa `render.yaml` (web service Docker, health check en `/health`, **sin variables secretas**).
+
+## Estado actual: M6
 
 Proyecto en construcción. Lo que hay hoy:
 

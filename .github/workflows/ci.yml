@@ -26,3 +26,15 @@ jobs:
       # via addopts en pyproject.toml: en CI solo corren los sintéticos
       - name: Tests
         run: uv run pytest
+
+  docker:
+    # smoke test: la imagen de la app (deps mínimas, sin ML) construye
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Docker build
+        run: docker build -t pitchiq-app .
+      - name: La imagen no arrastra deps de ML
+        run: |
+          docker run --rm pitchiq-app pip list > deps.txt
+          ! grep -iE "^(torch|langgraph|anthropic|sentence-transformers)" deps.txt

@@ -1,0 +1,13 @@
+{
+  "n_preguntas": 10,
+  "modelos": {
+    "all-MiniLM-L6-v2 (M5, inglés)": {
+      "top1_accuracy": 0.8,
+      "top3_accuracy": 1.0
+    },
+    "paraphrase-multilingual-MiniLM-L12-v2 (M6)": {
+      "top1_accuracy": 0.6,
+      "top3_accuracy": 0.9
+    }
+  }
+}

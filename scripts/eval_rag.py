@@ -54,6 +54,21 @@ def main() -> None:
     for metric, value in scores.items():
         print(f"  {metric}: {value:.3f}")
 
+    # consolidación M7: los resultados alimentan EVALUATION.md
+    import json
+
+    results_dir = Path(__file__).resolve().parent.parent / "eval" / "results"
+    results_dir.mkdir(parents=True, exist_ok=True)
+    out = results_dir / "ragas.json"
+    out.write_text(
+        json.dumps(
+            {"n_preguntas": len(EVAL_QUESTIONS), "metricas": scores},
+            ensure_ascii=False, indent=2,
+        ),
+        encoding="utf-8",
+    )
+    print(f"-> {out}")
+
 
 if __name__ == "__main__":
     main()

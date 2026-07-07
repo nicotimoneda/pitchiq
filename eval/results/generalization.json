@@ -1,0 +1,17 @@
+{
+  "torneo": "UEFA Euro 2024",
+  "competition_id": 55,
+  "season_id": 282,
+  "equipo": "Spain",
+  "n_partidos": 7,
+  "partidos_con_360": 7,
+  "acciones_defensivas_por_partido": 227.0,
+  "ppda_medio": 2.15,
+  "hull_area_media_m2": 529.4,
+  "altura_linea_media": 53.77,
+  "corners_a_favor": 45,
+  "corners_en_contra": 20,
+  "xg_corner_a_favor": 1.69,
+  "xg_corner_en_contra": 0.67,
+  "nota": "métricas 360 computadas solo sobre partidos con cobertura de freeze-frames; la cobertura varía entre torneos y partidos"
+}

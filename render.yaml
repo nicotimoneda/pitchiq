@@ -1,0 +1,10 @@
+# Deploy en Render: web service Docker SIN secretos.
+# La app solo sirve artefactos precomputados; no necesita ANTHROPIC_API_KEY
+# ni ninguna otra variable — cero coste de LLM por visitante.
+services:
+  - type: web
+    name: pitchiq
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: true

@@ -2,15 +2,15 @@
 
 # ⚽ PitchIQ
 
-**Informes tácticos de equipo donde cada afirmación está anclada a una métrica computada — no inventada por el LLM.**
+**Informes tácticos con LLM donde inventarse una cifra es imposible por construcción — y una evaluación que no se maquilla ni a sí misma.**
 
 [![CI](https://github.com/nicotimoneda/pitchiq/actions/workflows/ci.yml/badge.svg)](https://github.com/nicotimoneda/pitchiq/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
 ![StatsBomb](https://img.shields.io/badge/datos-StatsBomb%20Open%20Data-D50032)
-![Ruff](https://img.shields.io/badge/lint-ruff-D7FF64?logo=ruff&logoColor=black)
-![Estado](https://img.shields.io/badge/estado-M6%20·%20en%20construcción-E8A317)
+![Grounding](https://img.shields.io/badge/grounding-100%25%20verificado-1A7F37)
+![Estado](https://img.shields.io/badge/estado-completo%20·%20M1--M7-1A7F37)
 
-**🌐 LIVE URL: \<pendiente de deploy\>**
+**🌐 LIVE URL: \<pendiente de deploy\>** · [📊 Evaluación honesta](EVALUATION.md) · 📝 Blog: \<pendiente\>
 
 </div>
 
@@ -18,7 +18,19 @@
 
 ## Qué es
 
-Los informes tácticos generados con LLMs tienden a afirmar cosas que los datos no sostienen. PitchIQ ataca ese problema desde la base: un pipeline que computa métricas espaciales sobre datos de eventos reales y que, en milestones posteriores, generará informes donde **cada afirmación es trazable a un número computado**. Nada de "presiona alto" sin un PPDA y un mapa de zonas detrás.
+Un pipeline que computa métricas tácticas deterministas sobre StatsBomb Open Data (Bayer Leverkusen 23/24) y genera un informe con LLM donde **el modelo no puede calcular ni inventar números**: solo redacta sobre las salidas de las herramientas, y un validador coteja después cada cifra del texto contra la evidencia. La [evaluación](EVALUATION.md) mide todo lo medible sin key — incluido el hallazgo incómodo de que un "fix" de embeddings del propio proyecto resultó ser una regresión de −20 puntos al medirlo. Ese es el estándar del repo: números antes que sensaciones, también contra uno mismo.
+
+## El recorrido (M1–M7)
+
+| Milestone | Qué añadió | Estado |
+|---|---|---|
+| **M1** | Ingesta con cache + zonas de recuperación + PPDA + CLI de heatmap | ✅ |
+| **M2** | Métricas 360: compacidad (convex hull), altura de línea, soporte de presión | ✅ |
+| **M3** | Córners: zonas de saque, box load, primer contacto, xG, MOI (proxy) | ✅ |
+| **M4** | LangGraph + validador de grounding: cifras del LLM verificadas una a una | ✅ |
+| **M5** | RAG interpretativo (glosario sin números, en revisión) + eval RAGAS | ✅ |
+| **M6** | Arquitectura precomputada: FastAPI mínima + Docker sin ML + Render | ✅ |
+| **M7** | [Evaluación honesta consolidada](EVALUATION.md) + kit factual del blog | ✅ |
 
 ## La feature central: informes 100 % grounded (M4)
 
@@ -87,18 +99,7 @@ docker build -t pitchiq-app . && docker run --rm -p 8000:8000 pitchiq-app
 
 El deploy en Render usa `render.yaml` (web service Docker, health check en `/health`, **sin variables secretas**).
 
-## Estado actual: M6
-
-Proyecto en construcción. Lo que hay hoy:
-
-- **Ingesta** de StatsBomb Open Data (partidos, eventos, freeze-frames 360) con cache local en disco.
-- **Métricas de eventos (M1)**: zonas de recuperación en rejilla 6×5 + PPDA como escalar de intensidad de presión.
-- **Métricas espaciales 360 (M2)**: compacidad del bloque, altura de línea defensiva y soporte de presión.
-- **Balón parado — córners (M3)**: zonas de saque, ocupación del área, primer contacto, xG a favor/en contra e índice de orientación al hombre (proxy).
-- **Agentes + informe grounded (M4)**: grafo LangGraph (herramientas → redacción), wrapper de LLM agnóstico y validador de grounding con reintento.
-- **RAG interpretativo + evaluación (M5)**: glosario táctico en revisión, índice Qdrant local con embeddings locales, contexto interpretativo en el informe y evaluación RAGAS fuera de CI.
-- **Visualización**: heatmaps de zonas y de saques, bloque defensivo, altura de línea, primer contacto — vía tres CLIs.
-- Tests sintéticos en CI (los de red excluidos con el marker `network`; el LLM siempre mockeado) y lint en verde.
+## Detalle de las métricas
 
 ### Las tres métricas espaciales (M2)
 
@@ -173,15 +174,11 @@ La primera ejecución descarga de StatsBomb; las siguientes leen del cache en `d
 
 Python 3.11 · uv · statsbombpy · pandas / numpy / scipy · mplsoccer · pydantic v2 · LangGraph · anthropic (proveedor intercambiable) · Qdrant local · sentence-transformers · RAGAS (eval, fuera de CI) · pytest · ruff · GitHub Actions
 
-## Roadmap
+## Evaluación y material del proyecto
 
-- [x] **M1** — Ingesta con cache + zonas de recuperación + PPDA + CLI de visualización
-- [x] **M2** — Métricas espaciales 360: compacidad, altura de línea, soporte de presión
-- [x] **M3** — Balón parado: córners (zonas de saque, ocupación, primer contacto, xG, índice de orientación al hombre)
-- [x] **M4** — Agentes (LangGraph): informe táctico con cada cifra anclada a una herramienta + validador de grounding
-- [x] **M5** — RAG interpretativo (glosario en revisión + Qdrant local) + evaluación RAGAS
-- [ ] **M6** — API FastAPI + Docker + deploy
-- [ ] **M7** — Evaluación honesta del sistema + blog post
+- [**EVALUATION.md**](EVALUATION.md) — qué afirma el sistema (y qué no), todas las limitaciones sin maquillar y los números: grounding 1.0, comparación de embeddings antes/después, generalización a la Euro 2024.
+- [`docs/blog_kit.md`](docs/blog_kit.md) — material factual en crudo para el post (los hallazgos con números y un esquema); la prosa final la escribe el autor.
+- `uv run python scripts/run_eval.py` regenera la evaluación sin key.
 
 ## Créditos
 

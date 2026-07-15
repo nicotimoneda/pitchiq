@@ -15,6 +15,8 @@
   El fix fue una regresión de −20 puntos.
 - Moral: validar con 2-3 ejemplos elegidos a mano es una trampa; sin un set de
   evaluación, hasta las mejoras "evidentes" pueden ser regresiones.
+- Final del arco: se revirtió a L6 en M7, esta vez con el número delante — el
+  ciclo completo (cambio a ojo → medición → reversión) es la historia.
 - Caveat que hay que contar: el set son 10 preguntas; cada una vale 10 puntos.
 
 ### 2. El invariante de grounding (la tesis del proyecto)

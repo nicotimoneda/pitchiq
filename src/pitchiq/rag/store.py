@@ -9,9 +9,11 @@ from pathlib import Path
 from pitchiq import config
 from pitchiq.rag.knowledge import ConceptEntry
 
-# Multilingüe: el glosario y las consultas están en español (fix de calidad
-# de retrieval detectado en M5; el modelo inglés fallaba en top-1)
-EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+# Historia de esta constante (ver EVALUATION.md): en M6 se cambió al modelo
+# multilingüe tras probar a ojo unas consultas en español; al medirlo en M7
+# con top-k accuracy resultó ser una regresión (60 % vs 80 % top-1), así que
+# se revirtió. Moraleja: medir sobre el set, no validar con ejemplos sueltos.
+EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 INDEX_DIR = config.ROOT_DIR / "data" / "index"
 COLLECTION = "glosario"
 

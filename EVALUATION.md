@@ -43,8 +43,8 @@ se re-ejecuta sobre ellos — hay un test que lo garantiza en CI).
 decidió tras probar a ojo 2-3 consultas donde el modelo inglés fallaba. Medido
 sobre el set completo, **el cambio empeoró el retrieval** (−20 puntos de top-1).
 La lección es el propio método: validar a ojo con ejemplos sueltos engaña;
-hay que medir sobre un set. Recomendación pendiente de decisión humana:
-revertir a `all-MiniLM-L6-v2`. *Caveat del caveat:* el set son 10 preguntas —
+hay que medir sobre un set. **Resolución: revertido a `all-MiniLM-L6-v2` en M7**,
+esta vez con el número delante. *Caveat del caveat:* el set son 10 preguntas —
 cada pregunta vale 10 puntos, así que la diferencia real son 2 preguntas.
 
 ### Evaluación RAGAS (fidelidad + relevancia de contexto)
@@ -91,10 +91,10 @@ en la Bundesliga 23/24, 31/34): toda métrica espacial hereda esa dependencia.
 5. **Muestras de córners.** 236 a favor / 112 en contra: bien para agregados,
    justo para subdivisiones finas (p. ej. "córners al segundo palo en la
    segunda parte" son ya submuestras minúsculas).
-6. **Embeddings en español.** Ver tabla: la mejor configuración medida es
-   80 % top-1 / 100 % top-3 sobre un set de 10 preguntas, y la decisión de M6
-   resultó ser una regresión medible (−20 top-1). Set pequeño: cada pregunta
-   mueve un 10 %.
+6. **Embeddings en español.** Ver tabla: la configuración final (revertida
+   tras medir) da 80 % top-1 / 100 % top-3 sobre un set de 10 preguntas; la
+   decisión "de mejora" de M6 fue una regresión medible (−20 top-1). Set
+   pequeño: cada pregunta mueve un 10 %.
 7. **PPDA no estándar.** Incluye eventos Pressure: los valores (~2-3) no son
    comparables con el PPDA clásico estilo Opta (~8-15). Consistente
    internamente, no entre implementaciones.

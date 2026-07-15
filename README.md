@@ -51,7 +51,7 @@ equipo ──▶ [nodo de herramientas]──▶ [nodo de redacción (LLM)] ─�
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...   # solo para generar informes; nunca va al código ni al repo
-python scripts/generate_report.py --team "Bayer Leverkusen"
+uv run python scripts/generate_report.py --team "Bayer Leverkusen"
 # → reports/informe_*.md + reports/informe_*.json + ratio de grounding por consola
 ```
 
@@ -157,14 +157,14 @@ Requiere [`uv`](https://github.com/astral-sh/uv).
 uv sync
 
 # M1: mapa de zonas de recuperación + PPDA de un partido
-python scripts/build_recovery_map.py --match-id 3895052 --team "Bayer Leverkusen"
+uv run python scripts/build_recovery_map.py --match-id 3895052 --team "Bayer Leverkusen"
 
 # M2: resumen espacial 360 — un partido o la temporada entera
-python scripts/build_shape_report.py --match-id 3895052 --team "Bayer Leverkusen"
-python scripts/build_shape_report.py --team "Bayer Leverkusen"
+uv run python scripts/build_shape_report.py --match-id 3895052 --team "Bayer Leverkusen"
+uv run python scripts/build_shape_report.py --team "Bayer Leverkusen"
 
 # M3: resumen de córners (ataque + defensa)
-python scripts/build_setpiece_report.py --team "Bayer Leverkusen"
+uv run python scripts/build_setpiece_report.py --team "Bayer Leverkusen"
 # → figures/corners_*.png
 ```
 

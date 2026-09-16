@@ -30,7 +30,7 @@ def test_shape_tool(synthetic_season):
     out = shape_tool(ToolInput(team="A"))
     assert isinstance(out, ShapeOutput)
     assert out.partidos_con_360 == 1
-    assert math.isclose(out.hull_area_media_m2, 1600.0)  # cuadrado 40x40
+    assert math.isclose(out.hull_area_media_yd2, 1600.0)  # cuadrado 40x40
     assert math.isclose(out.anchura_media, 40.0)
     assert math.isclose(out.profundidad_media, 40.0)
     # los 4 compañeros más retrasados: x = 30, 30, 70, 70 -> media 50

@@ -67,9 +67,9 @@ def report_match(match_id: int, team: str, radius: float) -> None:
     """Métricas espaciales de un partido + figura del bloque defensivo."""
     m = match_metrics(match_id, team, radius)
     print(f"partido {match_id} · {team} · {m['n_events_360']} eventos con 360")
-    print(f"  compacidad: hull {m['hull_area']:.0f} m² · {m['width']:.1f} ancho × {m['depth']:.1f} prof")
+    print(f"  compacidad: hull {m['hull_area']:.0f} yd² · {m['width']:.1f} ancho × {m['depth']:.1f} prof")
     print(f"  altura de línea: {m['line_height']:.1f} (x, 0-120)")
-    print(f"  soporte de presión (≤{radius:g} m): {m['support']:.2f} · dist {m['support_dist']}")
+    print(f"  soporte de presión (≤{radius:g} yd): {m['support']:.2f} · dist {m['support_dist']}")
 
     positions = _block_positions(m["_events"], m["_frames"], team)
     fig = plot_defensive_block(
@@ -97,15 +97,15 @@ def report_season(team: str, radius: float) -> None:
         pos = _block_positions(m["_events"], m["_frames"], team)
         if len(pos):
             all_positions.append(pos)
-        print(f"  {labels[-1]}: línea {m['line_height']:.1f} · hull {m['hull_area']:.0f} m²")
+        print(f"  {labels[-1]}: línea {m['line_height']:.1f} · hull {m['hull_area']:.0f} yd²")
 
     season = pd.DataFrame(rows)
     print(f"\n{team} — temporada ({len(season)} partidos, "
           f"{int(season['n_events_360'].sum())} eventos con 360)")
-    print(f"  hull medio: {season['hull_area'].mean():.0f} m² · "
+    print(f"  hull medio: {season['hull_area'].mean():.0f} yd² · "
           f"{season['width'].mean():.1f} ancho × {season['depth'].mean():.1f} prof")
     print(f"  altura de línea media: {season['line_height'].mean():.1f}")
-    print(f"  soporte de presión medio (≤{radius:g} m): {season['support'].mean():.2f}")
+    print(f"  soporte de presión medio (≤{radius:g} yd): {season['support'].mean():.2f}")
 
     config.FIGURES_DIR.mkdir(parents=True, exist_ok=True)
     fig = plot_line_height_by_match(

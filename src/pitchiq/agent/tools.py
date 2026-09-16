@@ -114,7 +114,7 @@ def pressing_tool(params: ToolInput) -> PressingOutput:
 class ShapeOutput(ToolOutput):
     """Compacidad, altura de línea y soporte de presión (solo jugadores visibles)."""
 
-    hull_area_media_m2: float
+    hull_area_media_yd2: float
     anchura_media: float
     profundidad_media: float
     altura_linea_media: float
@@ -138,7 +138,7 @@ def shape_tool(params: ToolInput) -> ShapeOutput:
         supports.append(pressing_support(frames, events, params.team).mean("support"))
     return ShapeOutput(
         team=params.team,
-        hull_area_media_m2=round(float(np.nanmean(hulls)), 0),
+        hull_area_media_yd2=round(float(np.nanmean(hulls)), 0),
         anchura_media=round(float(np.nanmean(widths)), 1),
         profundidad_media=round(float(np.nanmean(depths)), 1),
         altura_linea_media=round(float(np.nanmean(lines)), 1),
@@ -240,9 +240,10 @@ TOOLS: "dict[str, tuple[str, object]]" = {
         pressing_tool,
     ),
     "forma_defensiva": (
-        "Forma defensiva 360: área media del bloque (convex hull, m²), anchura y "
-        "profundidad, altura media de la línea defensiva (x, 0-120) y compañeros "
-        "de media a ≤10 m de cada presión. Solo jugadores visibles (aproximación).",
+        "Forma defensiva 360: área media del bloque (convex hull, en yardas²: "
+        "el campo StatsBomb mide 120×80 yardas), anchura y profundidad, altura "
+        "media de la línea defensiva (x, 0-120 yardas) y compañeros de media a "
+        "≤10 yardas de cada presión. Solo jugadores visibles (aproximación).",
         shape_tool,
     ),
     "corners_ataque": (
@@ -253,7 +254,7 @@ TOOLS: "dict[str, tuple[str, object]]" = {
     ),
     "corners_defensa": (
         "Córners en contra: total, índice de orientación al hombre (PROXY "
-        "heurístico continuo: distancia media en metros al marcador más cercano, "
+        "heurístico continuo: distancia media en yardas al marcador más cercano, "
         "menor = más al hombre), % de primer contacto concedido y xG encajado.",
         corners_defense_tool,
     ),

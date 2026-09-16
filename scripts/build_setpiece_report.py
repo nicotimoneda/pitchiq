@@ -104,7 +104,7 @@ def report(obs: "dict[str, list]", team: str, tag: str) -> None:
     print(f"  DEFENSA: {n_def} córners")
     if obs["moi"]:
         print(f"    índice de orientación al hombre (PROXY heurístico): "
-              f"{np.mean(obs['moi']):.2f} m de media al marcador más cercano "
+              f"{np.mean(obs['moi']):.2f} yardas de media al marcador más cercano "
               f"({len(obs['moi'])} córners con 360)")
     print(f"    1er contacto concedido: {fc_conceded}/{len(obs['fc_against'])} "
           f"({_pct(fc_conceded, len(obs['fc_against'])):.0f} %)")

@@ -64,7 +64,7 @@ ids de competición resueltos dinámicamente del catálogo (55/282):
 |---|---|---|
 | Acciones defensivas / partido | 227.0 | 213.8 |
 | PPDA medio | 2.15 | 2.48 |
-| Área de hull media (m²) | 529.4 | 514 |
+| Área de hull media (yardas²) | 529.4 | 514 |
 | Altura de línea media | 53.8 | 52.9 |
 | Córners a favor / en contra | 45 / 20 | 236 / 112 |
 | xG córner a favor / en contra | 1.69 / 0.67 | 10.84 / 4.95 |
@@ -101,6 +101,12 @@ en la Bundesliga 23/24, 31/34): toda métrica espacial hereda esa dependencia.
 8. **El LLM redacta, con red de seguridad.** El grounding garantiza las cifras,
    no la calidad táctica de la prosa: una frase puede ser sosa o genérica y
    pasar el validador igualmente.
+9. **Unidades en yardas, no en metros.** Las coordenadas de StatsBomb miden un
+   campo de 120×80 yardas: las distancias están en yardas y las áreas en
+   yardas². Versiones anteriores del proyecto las etiquetaban por error como
+   metros (incluida la descripción que leía el LLM, que habría llevado la unidad
+   equivocada al informe); corregido en septiembre de 2026. El validador de
+   grounding comprueba números, no unidades, así que no lo habría detectado.
 
 ## Reproducir
 

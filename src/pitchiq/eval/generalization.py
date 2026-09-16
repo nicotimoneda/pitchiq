@@ -85,7 +85,7 @@ def evaluate_team(team: "str | None" = None) -> dict:
         "partidos_con_360": con_360,
         "acciones_defensivas_por_partido": _mean(actions),
         "ppda_medio": _mean(ppdas),
-        "hull_area_media_m2": _mean(hulls),
+        "hull_area_media_yd2": _mean(hulls),
         "altura_linea_media": _mean(lines),
         "corners_a_favor": corners_for,
         "corners_en_contra": corners_against,

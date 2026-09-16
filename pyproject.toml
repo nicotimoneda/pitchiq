@@ -16,6 +16,7 @@ dependencies = [
     "anthropic>=0.116.0",
     "qdrant-client>=1.18.0",
     "sentence-transformers>=5.6.0",
+    "torch>=2.0",  # directa para poder fijar la build CPU en Linux (tool.uv.sources)
     "pyyaml>=6.0.3",
 ]
 
@@ -33,6 +34,16 @@ dev = [
 
 [tool.uv]
 default-groups = ["dev", "app"]
+
+# En Linux (CI, servidores) torch se instala en su build solo-CPU: los embeddings
+# del RAG corren en CPU y la build CUDA añade varios GB de librerías nvidia.
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
 
 [build-system]
 requires = ["hatchling"]

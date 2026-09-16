@@ -170,7 +170,14 @@
   .grid-cards { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
   .panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; padding: 16px; min-width: 0; }
   .panel + .panel { margin-top: 16px; }
-  .grid-2 .panel + .panel, .grid-cards .panel + .panel { margin-top: 0; }
+  .grid-2 .panel + .panel, .grid-cards .panel + .panel, .stack .panel + .panel { margin-top: 0; }
+  .stack { display: grid; gap: 16px; min-width: 0; }
+  .form { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; margin: -14px 0 28px; }
+  .form i { width: 11px; height: 11px; border-radius: 2px; cursor: default; }
+  .form i.V { background: var(--ok); }
+  .form i.E { background: var(--draw); }
+  .form i.D { background: var(--warn); }
+  .form i:hover, .form i:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
   .panel-title { font-size: 15px; font-weight: 700; margin: 0 0 10px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
   .panel-title span { font-weight: 400; color: var(--muted); font-size: 14px; }
   .panel-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; font-size: 13px; color: var(--muted); margin-top: 10px; }
@@ -362,6 +369,7 @@
     <p class="comp" id="t-comp"></p>
     <h1 id="t-nombre"></h1>
     <div class="record" id="t-record"></div>
+    <div class="form" id="t-form" aria-label="Resultados partido a partido"></div>
     <div class="kpis" id="t-kpis"></div>
   </section>
 
@@ -448,16 +456,21 @@
       <h2 id="h-bp">Balón parado</h2>
       <p class="sec-note">Córners</p>
     </div>
-    <div class="grid-cards">
+    <div class="grid-2">
       <div class="panel">
-        <p class="panel-title">A favor <span>destino de cada saque</span></p>
-        <svg class="pitch" id="campo-corners" viewBox="57 -3 66 86" role="img" aria-label="Destino de los córners a favor"></svg>
+        <p class="panel-title">Córners a favor <span>destino de cada saque · portería rival arriba</span></p>
+        <svg class="pitch" id="campo-corners" viewBox="-3 -3 86 66" role="img" aria-label="Destino de los córners a favor"></svg>
         <div class="bars" id="zonas" style="margin-top:14px"></div>
-        <dl class="stats" id="stats-corners-favor" style="margin-top:14px"></dl>
       </div>
-      <div class="panel">
-        <p class="panel-title">En contra</p>
-        <dl class="stats" id="stats-corners-contra"></dl>
+      <div class="stack">
+        <div class="panel">
+          <p class="panel-title">A favor</p>
+          <dl class="stats" id="stats-corners-favor"></dl>
+        </div>
+        <div class="panel">
+          <p class="panel-title">En contra</p>
+          <dl class="stats" id="stats-corners-contra"></dl>
+        </div>
       </div>
     </div>
   </section>
@@ -584,6 +597,7 @@ function resultados(team) {
 
 /* ---------- verificación de cifras (misma regla que el validador) ---------- */
 const NOMBRES = {
+  "campo.largo": "largo del campo (120 yardas)",
   "resultados.partidos": "partidos jugados",
   "resultados.victorias": "victorias",
   "resultados.empates": "empates",
@@ -625,6 +639,7 @@ function evidencia(team) {
   }
   const R = resultados(team);
   for (const k in R) ev.push(["resultados." + k, R[k]]);
+  ev.push(["campo.largo", 120]);  // medida fija del campo StatsBomb (120 × 80 yardas)
   return ev;
 }
 function nombreMetrica(key) {
@@ -681,8 +696,9 @@ function marcarCifras(root, ev) {
 }
 
 /* ---------- campo ---------- */
-function dibujarCampo(svg) {
+function dibujarCampo(svg, transform) {
   svg.innerHTML = "";
+  if (transform) svg = svgEl("g", { transform }, svg);
   const bg = svgEl("g", {}, svg);
   svgEl("rect", { x: 0, y: 0, width: 120, height: 80, class: "pbg" }, bg);
   const datos = svgEl("g", {}, svg);
@@ -783,7 +799,8 @@ const letra = (p) => p.goles_favor > p.goles_contra ? "V" : p.goles_favor === p.
 function tipPartido(team, i, extra) {
   const p = team.partidos[i];
   return "<b>J" + (i + 1) + " · " + (p.local ? "vs " : "en ") + esc(p.rival) + "</b><br>" +
-    fechaCorta(p.fecha) + " · " + p.goles_favor + "-" + p.goles_contra + " (" + ({ V: "victoria", E: "empate", D: "derrota" })[letra(p)] + ")<br>" + extra;
+    fechaCorta(p.fecha) + " · " + p.goles_favor + "-" + p.goles_contra + " (" + ({ V: "victoria", E: "empate", D: "derrota" })[letra(p)] + ")" +
+    (extra ? "<br>" + extra : "");
 }
 const has = (v) => v !== null && v !== undefined;
 const statsHtml = (rows) => rows.filter(Boolean).map(([dt, sub, dd, unit]) =>
@@ -802,6 +819,16 @@ function renderCabecera(team) {
     '<span class="pill"><b>' + R.empates + "</b> E</span>" +
     '<span class="pill' + (R.derrotas === 0 ? " loss-zero" : "") + '"><b>' + R.derrotas + "</b> D</span>" +
     '<span class="pill"><b>' + R.goles_favor + "–" + R.goles_contra + "</b> goles</span>";
+  const forma = $("#t-form");
+  forma.innerHTML = "";
+  team.partidos.forEach((p, i) => {
+    const c = document.createElement("i");
+    c.className = letra(p);
+    c.tabIndex = 0;
+    c.setAttribute("aria-label", "J" + (i + 1) + ": " + p.goles_favor + "-" + p.goles_contra + " contra " + p.rival);
+    bindTip(c, () => tipPartido(team, i, ""));
+    forma.appendChild(c);
+  });
   const altura = T.forma_defensiva.altura_linea_media;
   $("#t-kpis").innerHTML = [
     ["PPDA medio", fmt(T.presion.ppda_medio, 2), "", "pases rivales por acción defensiva"],
@@ -944,7 +971,8 @@ function renderDefensa(team) {
 function renderBalonParado(team) {
   const T = team.herramientas;
   const svg = $("#campo-corners");
-  const { datos } = dibujarCampo(svg);
+  // medio campo en horizontal: (x, y) -> (y, 120 - x), la portería rival queda arriba
+  const { datos } = dibujarCampo(svg, "translate(0 120) rotate(-90)");
   for (const c of team.corners) svgEl("circle", { cx: c.x, cy: c.y, r: 0.7, class: "dot" }, datos);
 
   const zonas = Object.entries(T.corners_ataque.zonas_saque).sort((a, b) => b[1] - a[1]);

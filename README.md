@@ -75,21 +75,26 @@ ANTHROPIC_API_KEY=sk-ant-... uv run --script scripts/eval_rag.py  # evaluación 
 La web pública **no genera nada**: separa la GENERACIÓN (cara, con LLM, en local) del SERVIDO (barato, estático, en producción).
 
 ```
-LOCAL (humano, con key)                      PRODUCCIÓN (Render, sin key)
+LOCAL (humano)                               PRODUCCIÓN (Render, sin key)
 ─────────────────────────                    ────────────────────────────
 scripts/precompute.py                        app FastAPI mínima
-  ├─ métricas M1-M3 → figuras                  ├─ GET /            informe HTML
-  ├─ informe M4+M5 (única llamada LLM)         ├─ GET /api/report   JSON
-  └─ artefactos → app/static/report/           ├─ GET /api/evidence JSON
+  ├─ --demo-data: gráficas (SIN key)           ├─ GET /              demo interactiva
+  │    → demo_data.json                        │                     + informe del LLM
+  ├─ informe M4+M5 (CON key, 1 llamada)        ├─ GET /api/demo-data  JSON
+  │    → report.md + evidence.json             ├─ GET /api/report     JSON
+  └─ artefactos → app/static/report/           ├─ GET /api/evidence   JSON
         │                                      └─ GET /health
         └── git commit ──────────────────▶  imagen Docker pequeña
 ```
 
-**Por qué así:** la app de producción no lleva `ANTHROPIC_API_KEY` (imposible filtrarla: no existe allí), no importa torch/langgraph/anthropic (imagen mínima, el CI lo verifica), y cada visita cuesta cero llamadas de LLM. El pipeline de generación completo sigue en el repo para quien clone y ponga su key.
+La página principal es una demo interactiva con datos reales: mapa de recuperaciones y bloque defensivo sobre el campo, la altura de la defensa partido a partido, los córners, la comparación con España (Euro 2024) y un comprobador de cifras donde el visitante puede inventarse un número y ver cómo el validador lo marca. El informe escrito por el LLM aparece como sección propia, con su recuento de cifras comprobadas, en cuanto se precomputa.
+
+**Por qué así:** la app de producción no lleva `ANTHROPIC_API_KEY` (imposible filtrarla: no existe allí), no importa torch/langgraph/anthropic (imagen mínima, el CI lo verifica), y cada visita cuesta cero llamadas de LLM. Las gráficas y el informe son artefactos independientes: la web enseña datos reales aunque el informe todavía no exista. El pipeline de generación completo sigue en el repo para quien clone y ponga su key.
 
 ```bash
-# paso humano, en local (una vez):
-ANTHROPIC_API_KEY=sk-ant-... uv run python scripts/precompute.py --team "Bayer Leverkusen"
+# paso humano, en local:
+uv run python scripts/precompute.py --demo-data                    # gráficas reales, sin key
+ANTHROPIC_API_KEY=sk-ant-... uv run python scripts/precompute.py   # + informe del LLM
 git add app/static/report && git commit    # los artefactos se versionan
 
 # servir en local con Docker:

@@ -51,6 +51,18 @@ def _temporada_corta(season_name: str) -> str:
 
 def clasificacion(matches) -> "list[str]":
     """Equipos ordenados por la clasificación que dan los resultados."""
+    tabla = _tabla(matches)
+    return sorted(tabla, key=lambda t: (-tabla[t][0], -tabla[t][1], -tabla[t][2], t))
+
+
+def temporada_completa(matches) -> bool:
+    """True si la competición trae (casi) todos los partidos de una liga a doble vuelta."""
+    n = len(set(matches["home_team"]) | set(matches["away_team"]))
+    return n > 2 and len(matches) >= 0.95 * n * (n - 1)
+
+
+def _tabla(matches) -> "dict[str, list[int]]":
+    """Puntos, diferencia de goles y goles a favor de cada equipo."""
     tabla: dict[str, list[int]] = {}
     for _, m in matches.iterrows():
         for team, gf, gc in ((m["home_team"], m["home_score"], m["away_score"]),
@@ -59,7 +71,7 @@ def clasificacion(matches) -> "list[str]":
             fila[0] += 3 if gf > gc else 1 if gf == gc else 0
             fila[1] += int(gf) - int(gc)
             fila[2] += int(gf)
-    return sorted(tabla, key=lambda t: (-tabla[t][0], -tabla[t][1], -tabla[t][2], t))
+    return tabla
 
 
 def equipos_a_publicar() -> "list[dict]":
@@ -78,15 +90,21 @@ def equipos_a_publicar() -> "list[dict]":
             raise SystemExit(f"competición {cid}/{sid} no está en StatsBomb Open Data")
         competicion = str(fila.iloc[0]["competition_name"]).replace("1. Bundesliga", "Bundesliga")
         temporada = _temporada_corta(fila.iloc[0]["season_name"])
+        matches = load_matches(competition_id=cid, season_id=sid)
+        orden = clasificacion(matches)
+        completa = temporada_completa(matches)
         if "equipos" in bloque:
             equipos = list(bloque["equipos"])
         else:
-            equipos = clasificacion(load_matches(competition_id=cid, season_id=sid))[: int(bloque["top"])]
+            equipos = orden[: int(bloque["top"])]
         for equipo in equipos:
             entradas.append({
                 "equipo": equipo, "competition_id": cid, "season_id": sid,
                 "competicion": competicion, "temporada": temporada,
                 "slug": _slugify(f"{equipo} {temporada}"),
+                # el puesto solo tiene sentido si la temporada está completa
+                "posicion": orden.index(equipo) + 1 if completa else None,
+                "n_equipos": len(orden) if completa else None,
             })
     return entradas
 
@@ -304,6 +322,8 @@ def build_team_data(entry: dict, orden: int) -> None:
         "equipo": team,
         "nombre": team,
         "con_360": bool(tools["forma_defensiva"].partidos_con_360),
+        "posicion": entry.get("posicion"),
+        "n_equipos": entry.get("n_equipos"),
         "competicion": entry["competicion"],
         "temporada": entry["temporada"],
         "orden": orden,

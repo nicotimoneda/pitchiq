@@ -35,3 +35,15 @@ def test_slug_y_temporada():
 def test_sin_nan_convierte_a_null_sin_tocar_el_resto():
     datos = {"a": math.nan, "b": [1.5, math.nan], "c": {"d": 0.0, "e": "x"}}
     assert precompute._sin_nan(datos) == {"a": None, "b": [1.5, None], "c": {"d": 0.0, "e": "x"}}
+
+
+def test_temporada_completa_detecta_doble_vuelta():
+    equipos = ["A", "B", "C"]
+    completa = pd.DataFrame(
+        [{"home_team": h, "away_team": a, "home_score": 1, "away_score": 0}
+         for h in equipos for a in equipos if h != a]
+    )
+    assert precompute.temporada_completa(completa)
+    # solo los partidos de un equipo (como la Bundesliga 2023/24 del Leverkusen)
+    parcial = completa[(completa["home_team"] == "A") | (completa["away_team"] == "A")]
+    assert not precompute.temporada_completa(parcial.iloc[:3])

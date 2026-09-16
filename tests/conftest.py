@@ -75,5 +75,5 @@ def synthetic_season(monkeypatch):
     from pitchiq.agent import tools
 
     match = _synthetic_match()
-    monkeypatch.setattr(tools, "_season_data", lambda team: (match,))
+    monkeypatch.setattr(tools, "_season_data", lambda *args, **kwargs: (match,))
     return match

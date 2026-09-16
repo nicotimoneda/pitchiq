@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PitchIQ Leverkusen</title>
+<title>PitchIQ · {{ initial_team.nombre }}</title>
+<meta name="description" content="Análisis táctico de {{ initial_team.nombre }} ({{ initial_team.competicion }} {{ initial_team.temporada }}): presión, defensa, balón parado y partidos, con cifras verificadas.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
@@ -11,439 +12,535 @@
   :root {
     --bg: #f3f5f2;
     --surface: #fbfcfa;
+    --surface-2: #eef1ed;
     --ink: #121a15;
     --ink-2: #47524b;
     --muted: #6f7a73;
     --rule: #d8ddd8;
     --accent: #c8102e;
-    --espana: #2a78d6;
+    --other: #2a78d6;
     --pitch: #e4ece3;
     --pitch-line: #aebfae;
     --ok: #146c2e;
     --ok-bg: #d9efdf;
-    --bad: #9a3b04;
-    --bad-bg: #fde5cf;
+    --warn: #9a3b04;
+    --warn-bg: #fde5cf;
+    --draw: #6f5c00;
+    --draw-bg: #f3ebc6;
     --seq-lo: #fbe8e9;
     --seq-hi: #8e0b1f;
     --on-hi: #ffffff;
     --tip-bg: #121a15;
     --tip-ink: #f3f5f2;
+    --bar-bg: rgba(243, 245, 242, .88);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #0e1310;
       --surface: #151b17;
+      --surface-2: #1b231e;
       --ink: #edf2ee;
       --ink-2: #b6c0b9;
       --muted: #8b958f;
       --rule: #29322c;
       --accent: #ef4355;
-      --espana: #4b93ea;
+      --other: #4b93ea;
       --pitch: #17211a;
       --pitch-line: #36493c;
       --ok: #5fd07f;
       --ok-bg: #12301c;
-      --bad: #f7a55c;
-      --bad-bg: #3b250f;
+      --warn: #f7a55c;
+      --warn-bg: #3b250f;
+      --draw: #e3c75a;
+      --draw-bg: #2f2a10;
       --seq-lo: #221819;
       --seq-hi: #ff6b75;
       --on-hi: #1b0a0d;
       --tip-bg: #edf2ee;
       --tip-ink: #0e1310;
+      --bar-bg: rgba(14, 19, 16, .88);
     }
   }
   :root[data-theme="dark"] {
     --bg: #0e1310;
     --surface: #151b17;
+    --surface-2: #1b231e;
     --ink: #edf2ee;
     --ink-2: #b6c0b9;
     --muted: #8b958f;
     --rule: #29322c;
     --accent: #ef4355;
-    --espana: #4b93ea;
+    --other: #4b93ea;
     --pitch: #17211a;
     --pitch-line: #36493c;
     --ok: #5fd07f;
     --ok-bg: #12301c;
-    --bad: #f7a55c;
-    --bad-bg: #3b250f;
+    --warn: #f7a55c;
+    --warn-bg: #3b250f;
+    --draw: #e3c75a;
+    --draw-bg: #2f2a10;
     --seq-lo: #221819;
     --seq-hi: #ff6b75;
     --on-hi: #1b0a0d;
     --tip-bg: #edf2ee;
     --tip-ink: #0e1310;
+    --bar-bg: rgba(14, 19, 16, .88);
   }
 
+  html, body { margin: 0; }
+  [hidden] { display: none !important; }
   body {
     background: var(--bg);
     color: var(--ink);
-    font: 17px/1.6 "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
-    padding-inline: 16px;
-    padding-block: 0 56px;
+    font: 16px/1.55 "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 720px; margin: 0 auto; }
-  h1, h2, .num, .sb-num {
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .display, h1, h2, .num {
     font-family: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
     font-variant-numeric: tabular-nums;
   }
-  a { color: var(--accent); }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; }
 
-  /* ---------- cabecera ---------- */
-  header { padding-block: 40px 28px; }
-  .eyebrow {
-    font-size: 13px; font-weight: 700; letter-spacing: .09em;
-    text-transform: uppercase; color: var(--accent); margin: 0;
+  /* ---------- barra superior ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 30;
+    padding-top: env(safe-area-inset-top, 0px);
+    background: var(--bar-bg);
+    backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px);
+    border-bottom: 1px solid var(--rule);
   }
-  h1 {
-    font-size: clamp(42px, 10vw, 76px); font-weight: 700; line-height: .95;
-    margin: .25em 0 .35em; text-wrap: balance; letter-spacing: -.01em;
+  .topbar-in { display: flex; align-items: center; gap: 18px; min-height: 58px; }
+  .brand {
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+    font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-size: 26px; font-weight: 700;
+    letter-spacing: -.01em; flex: none;
   }
-  .lede { color: var(--ink-2); max-width: 60ch; margin: 0 0 22px; font-size: 18px; }
-  .scoreboard {
-    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
-    background: var(--ink); color: var(--bg); border-radius: 12px; overflow: hidden;
+  .brand svg { width: 26px; height: 18px; }
+  .brand .iq { color: var(--accent); }
+  .team-pick { position: relative; flex: none; }
+  .team-pick select {
+    appearance: none; -webkit-appearance: none; font: inherit; font-weight: 700; font-size: 15px;
+    color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 999px;
+    padding: 7px 34px 7px 14px; cursor: pointer; max-width: 58vw;
   }
-  .scoreboard > div { padding: 12px 2px 10px; text-align: center; min-width: 0; }
-  .scoreboard > div + div { border-left: 1px solid color-mix(in oklab, var(--bg) 18%, var(--ink)); }
-  .sb-num { display: block; font-size: clamp(22px, 6.6vw, 44px); font-weight: 700; line-height: 1; }
-  .sb-num.zero { color: var(--accent); }
-  .sb-lab {
-    display: block; font-size: clamp(10px, 2.8vw, 12px); letter-spacing: .04em;
-    text-transform: uppercase; opacity: .78; overflow-wrap: anywhere;
+  .team-pick::after {
+    content: ""; position: absolute; right: 14px; top: 50%; width: 7px; height: 7px;
+    border-right: 2px solid var(--ink-2); border-bottom: 2px solid var(--ink-2);
+    transform: translateY(-70%) rotate(45deg); pointer-events: none;
   }
-  .sb-note { font-size: 14px; color: var(--muted); margin: 8px 0 0; }
+  .secnav { display: flex; gap: 2px; margin-left: auto; overflow-x: auto; scrollbar-width: none; }
+  .secnav::-webkit-scrollbar { display: none; }
+  .secnav a {
+    text-decoration: none; font-size: 15px; font-weight: 600; color: var(--ink-2);
+    padding: 8px 12px; border-radius: 999px; white-space: nowrap;
+  }
+  .secnav a:hover { color: var(--ink); background: var(--surface-2); }
+  .secnav a.on { color: var(--ink); background: var(--surface-2); }
+
+  .banner {
+    background: var(--warn-bg); color: var(--ink); font-size: 14px; text-align: center; padding: 8px 16px;
+  }
+
+  /* ---------- cabecera del equipo ---------- */
+  .team-head { padding-block: 44px 8px; }
+  .comp { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(46px, 9vw, 88px); line-height: .92; margin: 6px 0 16px; font-weight: 700; letter-spacing: -.015em; text-wrap: balance; }
+  .record { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 28px; }
+  .pill {
+    display: inline-flex; align-items: baseline; gap: 5px; padding: 5px 12px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--rule); font-size: 14px; color: var(--ink-2);
+  }
+  .pill b { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-size: 19px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .pill.loss-zero b { color: var(--accent); }
+  .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; }
+  .kpi { background: var(--surface); padding: 16px 18px 14px; min-width: 0; }
+  .kpi .lab { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+  .kpi .num { display: block; font-size: clamp(34px, 5vw, 46px); font-weight: 700; line-height: 1.05; margin: 2px 0; }
+  .kpi .num small { font-size: .55em; color: var(--muted); font-weight: 600; margin-left: 2px; }
+  .kpi .sub { font-size: 13px; color: var(--muted); }
 
   /* ---------- secciones ---------- */
-  section { padding-block: 40px 8px; border-top: 1px solid var(--rule); }
-  section > p { max-width: 62ch; }
-  h2 {
-    font-size: clamp(30px, 6.5vw, 42px); font-weight: 700; line-height: 1.02;
-    margin: 0 0 .45em; text-wrap: balance;
-  }
-  .kicker { font-size: 13px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
-  .panel {
-    background: var(--surface); border: 1px solid var(--rule); border-radius: 14px;
-    padding: 16px; margin: 20px 0;
-  }
-  .panel-foot {
-    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px;
-    font-size: 14px; color: var(--muted); margin-top: 10px;
-  }
-  .hint { font-size: 14px; color: var(--muted); }
-  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 18px 0; }
-  .kpi .num { display: block; font-size: 40px; font-weight: 700; line-height: 1; color: var(--ink); }
-  .kpi .num em { font-style: normal; color: var(--accent); }
-  .kpi span:last-child { font-size: 15px; color: var(--ink-2); line-height: 1.35; display: block; margin-top: 4px; }
+  section.block { padding-block: 56px 8px; scroll-margin-top: 72px; }
+  .sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 20px; margin-bottom: 18px; border-top: 2px solid var(--ink); padding-top: 12px; }
+  h2 { font-size: clamp(32px, 4.6vw, 44px); line-height: 1; margin: 0; font-weight: 700; }
+  .sec-note { font-size: 14px; color: var(--muted); margin: 0; }
+  .grid-2 { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .grid-cards { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .panel { background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; padding: 16px; min-width: 0; }
+  .panel + .panel { margin-top: 16px; }
+  .grid-2 .panel + .panel, .grid-cards .panel + .panel { margin-top: 0; }
+  .panel-title { font-size: 15px; font-weight: 700; margin: 0 0 10px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .panel-title span { font-weight: 400; color: var(--muted); font-size: 14px; }
+  .panel-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; font-size: 13px; color: var(--muted); margin-top: 10px; }
 
-  /* ---------- comprobador ---------- */
-  .checker label { font-weight: 700; display: block; margin-bottom: 6px; }
-  #texto {
-    width: 100%; min-height: 128px; resize: vertical; box-sizing: border-box;
-    font: inherit; font-size: 16px; line-height: 1.5; color: var(--ink);
-    background: var(--bg); border: 1px solid var(--rule); border-radius: 10px; padding: 12px;
-  }
-  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 4px; }
-  .btn {
-    font: inherit; font-size: 15px; font-weight: 700; cursor: pointer;
-    border-radius: 999px; padding: 10px 18px; border: 1.5px solid var(--ink);
-    background: transparent; color: var(--ink);
-  }
-  .btn.primary { background: var(--ink); color: var(--bg); }
-  .btn:hover { border-color: var(--accent); }
-  .verdict {
-    display: inline-flex; align-items: center; gap: 8px; margin: 16px 0 10px;
-    padding: 8px 14px; border-radius: 999px; font-weight: 700; font-size: 16px;
-  }
-  .verdict.ok { background: var(--ok-bg); color: var(--ok); }
-  .verdict.bad { background: var(--bad-bg); color: var(--bad); }
-  .rendered { font-size: 19px; line-height: 1.95; margin: 0; }
-  .rendered mark { border-radius: 6px; padding: .05em .3em; font-weight: 700; white-space: nowrap; }
-  .rendered mark.ok { background: var(--ok-bg); color: var(--ok); }
-  .rendered mark.bad {
-    background: var(--bad-bg); color: var(--bad);
-    text-decoration: underline wavy; text-underline-offset: 4px;
-  }
-  .rendered mark .ico { font-size: .8em; margin-left: .15em; }
-  .sources { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 6px; font-size: 15px; }
-  .sources li { display: grid; grid-template-columns: 22px 64px 1fr; gap: 6px; align-items: baseline; }
-  .sources .n { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .sources .ok-t { color: var(--ok); font-weight: 700; }
-  .sources .bad-t { color: var(--bad); font-weight: 700; }
-  .fineprint { font-size: 14px; color: var(--muted); margin: 14px 0 0; }
+  .stats { margin: 0; display: grid; }
+  .stats div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--rule); }
+  .stats div:first-child { padding-top: 2px; }
+  .stats div:last-child { border-bottom: 0; padding-bottom: 2px; }
+  .stats dt { font-size: 15px; color: var(--ink-2); }
+  .stats dt small { display: block; font-size: 13px; color: var(--muted); }
+  .stats dd { margin: 0; font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .stats dd small { font-size: .6em; color: var(--muted); margin-left: 3px; }
 
-  /* ---------- campos ---------- */
+  /* ---------- informe ---------- */
+  .report { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 16px; align-items: start; }
+  .report-body { font-size: 18px; line-height: 1.7; }
+  .report-body p { margin: 0 0 .9em; max-width: 68ch; }
+  .report-body p:last-child { margin-bottom: 0; }
+  .report-body h1 { font-size: 26px; line-height: 1.1; margin: 0 0 .5em; }
+  .report-body h2 { font-size: 22px; margin: 1.1em 0 .35em; }
+  .report-body h3 { font-size: 18px; margin: 1em 0 .3em; }
+  .report-body blockquote { border-left: 3px solid var(--rule); margin: 1em 0 0; padding-left: 14px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+  .report-kicker { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+  .report-ai { margin-top: 16px; }
+  .cifra {
+    font-weight: 700; border-radius: 5px; padding: 0 .22em; white-space: nowrap; cursor: help;
+    background: var(--ok-bg); color: var(--ok);
+  }
+  .cifra.sin { background: var(--warn-bg); color: var(--warn); text-decoration: underline wavy; text-underline-offset: 3px; }
+  .verif { display: grid; gap: 10px; }
+  .verif .big { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-size: 44px; font-weight: 700; line-height: 1; }
+  .verif .big small { font-size: .5em; color: var(--muted); }
+  .verif-badge { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; color: var(--ok); }
+  .verif-badge.sin { color: var(--warn); }
+  .verif p { margin: 0; font-size: 14px; color: var(--ink-2); line-height: 1.45; }
+  .dl-links { display: flex; flex-wrap: wrap; gap: 8px; }
+  .btn-sm {
+    font: inherit; font-size: 14px; font-weight: 600; text-decoration: none; color: var(--ink);
+    border: 1px solid var(--rule); border-radius: 999px; padding: 6px 12px; background: var(--surface-2);
+  }
+  .btn-sm:hover { border-color: var(--ink-2); }
+
+  /* ---------- campo ---------- */
   .pitch { display: block; width: 100%; height: auto; max-width: 100%; touch-action: manipulation; }
   .pitch .pl { fill: none; stroke: var(--pitch-line); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
   .pitch .pbg { fill: var(--pitch); }
   .pitch .spot { fill: var(--pitch-line); }
   .pitch .cell { stroke: var(--surface); stroke-width: 2; vector-effect: non-scaling-stroke; cursor: pointer; }
   .pitch .cell:hover, .pitch .cell.active { stroke: var(--ink); }
-  .pitch .clab { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-weight: 700; pointer-events: none; fill: var(--ink); }
+  .pitch .clab { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-weight: 700; fill: var(--ink); }
   .pitch .clab.hi { fill: var(--on-hi); }
-  .pitch .ann { font-family: "Source Sans 3", system-ui, sans-serif; font-weight: 700; fill: var(--ink); }
+  .pitch .ann { font-family: "Source Sans 3", system-ui, sans-serif; font-weight: 700; fill: var(--ink); paint-order: stroke; stroke: var(--pitch); stroke-width: .9px; }
   .pitch .annline { stroke: var(--ink); stroke-width: 2; stroke-dasharray: 6 4; vector-effect: non-scaling-stroke; }
   .pitch .dot { fill: var(--accent); fill-opacity: .55; }
-  .ramp { display: flex; align-items: center; gap: 8px; }
-  .ramp i {
-    display: inline-block; width: 90px; height: 10px; border-radius: 3px;
-    background: linear-gradient(90deg, color-mix(in oklab, var(--seq-hi) 22%, var(--seq-lo)), var(--seq-hi));
-  }
+  .ramp { display: inline-flex; align-items: center; gap: 8px; }
+  .ramp i { display: inline-block; width: 84px; height: 9px; border-radius: 3px; background: linear-gradient(90deg, color-mix(in oklab, var(--seq-hi) 22%, var(--seq-lo)), var(--seq-hi)); }
 
-  /* ---------- gráfica partido a partido ---------- */
-  #linea { width: 100%; }
-  #linea svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
+  /* ---------- gráficas de línea ---------- */
+  .chart { width: 100%; }
+  .chart svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
   .ax text { fill: var(--muted); font: 12px "Source Sans 3", system-ui, sans-serif; }
   .ax line { stroke: var(--rule); }
   .refline { stroke: var(--pitch-line); stroke-width: 1.5; }
   .meanline { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 5 4; }
-  .reflab { fill: var(--muted); font: 12px "Source Sans 3", system-ui, sans-serif; }
   .series { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
   .mk { fill: var(--accent); stroke: var(--surface); stroke-width: 2; }
   .mk-null { fill: none; stroke: var(--muted); stroke-width: 1.5; }
   .xhair { stroke: var(--ink-2); stroke-width: 1; }
   .hl { fill: var(--surface); stroke: var(--accent); stroke-width: 3; }
   .extlab { fill: var(--ink); font: 700 12px "Source Sans 3", system-ui, sans-serif; paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
-  .chart-key { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 13px; color: var(--muted); margin: 0 0 8px; }
-  .chart-key i { display: inline-block; width: 18px; margin-right: 6px; vertical-align: middle; }
-  .chart-key .k-ref { border-top: 1.5px solid var(--pitch-line); }
-  .chart-key .k-mean { border-top: 1.5px dashed var(--muted); }
-  .chart-key .k-null { width: 8px; height: 8px; border: 1.5px solid var(--muted); border-radius: 50%; }
+  .key { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--muted); }
+  .key i { display: inline-block; width: 16px; margin-right: 6px; vertical-align: middle; }
+  .key .k-series { border-top: 2.5px solid var(--accent); }
+  .key .k-ref { border-top: 1.5px solid var(--pitch-line); }
+  .key .k-mean { border-top: 1.5px dashed var(--muted); }
+  .key .k-null { width: 8px; height: 8px; border: 1.5px solid var(--muted); border-radius: 50%; }
 
   /* ---------- barras ---------- */
-  .bars { display: grid; gap: 14px; }
-  .bar-group h3 { font-size: 16px; margin: 0 0 2px; }
-  .bar-group p { font-size: 14px; color: var(--muted); margin: 0 0 6px; }
-  .bar-row { display: grid; grid-template-columns: 92px 1fr; gap: 8px; align-items: center; min-height: 26px; }
-  .bar-row .who { font-size: 14px; color: var(--ink-2); }
+  .bars { display: grid; gap: 12px; }
+  .bar-group h3 { font-size: 15px; margin: 0 0 1px; }
+  .bar-group p { font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+  .bar-row { display: grid; grid-template-columns: 108px minmax(0, 1fr); gap: 10px; align-items: center; min-height: 26px; }
+  .bar-row .who { font-size: 14px; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .track { display: flex; align-items: center; gap: 8px; min-width: 0; }
-  .bar-row .sub { grid-column: 2; font-size: 13px; color: var(--muted); margin: -6px 0 2px; line-height: 1.35; }
-  .fill { height: 20px; border-radius: 0 4px 4px 0; flex: none; }
-  .fill.lev { background: var(--accent); }
-  .fill.esp { background: var(--espana); }
-  .val { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--ink-2); margin-bottom: 14px; }
-  .legend span::before {
-    content: ""; display: inline-block; width: 11px; height: 11px; border-radius: 3px;
-    margin-right: 6px; vertical-align: -1px; background: var(--c);
-  }
+  .fill { height: 18px; border-radius: 0 4px 4px 0; flex: none; }
+  .fill.a { background: var(--accent); }
+  .fill.b { background: var(--other); }
+  .val { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .compare-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-bottom: 16px; font-size: 14px; color: var(--ink-2); }
+  .compare-head .sw::before { content: ""; display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; background: var(--c); }
+  .compare-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 32px; }
 
-  /* ---------- límites ---------- */
-  .limits { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 14px; }
-  .limits li { padding-left: 16px; border-left: 3px solid var(--rule); max-width: 62ch; }
-  .limits b { display: block; }
+  /* ---------- tabla ---------- */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 14px; background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 10px 14px; text-align: left; white-space: nowrap; }
+  th { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--rule); position: sticky; top: 0; background: var(--surface); }
+  th button { all: unset; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; }
+  th button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+  th .arrow { opacity: .35; font-size: 10px; }
+  th[aria-sort="ascending"] .arrow, th[aria-sort="descending"] .arrow { opacity: 1; color: var(--ink); }
+  td.n, th.n { text-align: right; }
+  tbody tr { border-bottom: 1px solid var(--rule); }
+  tbody tr:last-child { border-bottom: 0; }
+  tbody tr:hover { background: var(--surface-2); }
+  .res { display: inline-flex; align-items: center; gap: 8px; }
+  .res i { font-style: normal; font-size: 12px; font-weight: 700; width: 22px; height: 22px; display: inline-grid; place-items: center; border-radius: 6px; }
+  .res i.V { background: var(--ok-bg); color: var(--ok); }
+  .res i.E { background: var(--draw-bg); color: var(--draw); }
+  .res i.D { background: var(--warn-bg); color: var(--warn); }
+  .na { color: var(--muted); }
+  #tabla.sin-360 th:nth-child(7), #tabla.sin-360 td:nth-child(7) { display: none; }
+  .empty { border-style: dashed; background: transparent; }
+  .empty-title { font-weight: 700; font-size: 16px; margin: 0 0 4px; }
+  .empty p:last-child { margin: 0; color: var(--ink-2); max-width: 70ch; }
 
-  footer { border-top: 1px solid var(--rule); margin-top: 40px; padding-top: 18px; font-size: 14px; color: var(--muted); }
-  footer p { margin: 0 0 6px; max-width: 62ch; }
+  /* ---------- pie ---------- */
+  footer { margin-top: 72px; border-top: 1px solid var(--rule); padding-block: 28px 48px; font-size: 14px; color: var(--muted); }
+  .foot-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px 32px; }
+  .foot-links { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+  .foot-links a { color: var(--ink-2); }
+  details.method { margin-top: 20px; max-width: 760px; }
+  details.method summary { cursor: pointer; font-weight: 700; color: var(--ink-2); }
+  details.method ul { padding-left: 18px; margin: 12px 0 0; display: grid; gap: 8px; }
+  details.method li { line-height: 1.5; }
 
   #tip {
-    position: fixed; z-index: 20; pointer-events: none; max-width: 260px;
+    position: fixed; z-index: 50; pointer-events: none; max-width: 270px;
     background: var(--tip-bg); color: var(--tip-ink); border-radius: 8px;
-    padding: 8px 11px; font-size: 14px; line-height: 1.4;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, .18);
+    padding: 8px 11px; font-size: 14px; line-height: 1.4; box-shadow: 0 8px 22px rgba(0, 0, 0, .2);
   }
 
-  @media (max-width: 480px) {
-    body { font-size: 16px; }
-    .rendered { font-size: 17px; }
-    .bar-row { grid-template-columns: 78px 1fr; }
-    .sources li { grid-template-columns: 20px 56px 1fr; }
+  @media (max-width: 900px) {
+    .grid-2, .grid-cards, .report { grid-template-columns: minmax(0, 1fr); }
+    .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .compare-grid { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .wrap { padding-inline: 16px; }
+    .topbar-in { flex-wrap: wrap; gap: 8px 12px; padding-block: 8px; }
+    .secnav { margin-left: 0; width: 100%; order: 3; margin-inline: -4px; }
+    .secnav a { padding: 6px 10px; font-size: 14px; }
+    .team-head { padding-block: 28px 4px; }
+    section.block { padding-block: 44px 4px; scroll-margin-top: 110px; }
+    .kpi { padding: 12px 14px; }
+    .report-body { font-size: 17px; }
+    .bar-row { grid-template-columns: 84px minmax(0, 1fr); }
+    th, td { padding: 9px 10px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    * { transition: none !important; animation: none !important; }
+    * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
   }
-
-  html, body { margin: 0; }
-  [hidden] { display: none !important; }
-  img { max-width: 100%; }
-  .aviso {
-    background: var(--bad-bg); color: var(--ink); border-radius: 10px;
-    padding: 10px 14px; margin: 16px 0 0; font-size: 15px;
-  }
-  .informe { font-size: 17px; }
-  .informe h1 { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; font-size: 28px; line-height: 1.1; margin: 0 0 .5em; }
-  .informe h2 { font-size: 24px; margin: 1.2em 0 .4em; }
-  .informe h3 { font-size: 19px; margin: 1em 0 .3em; }
-  .informe p { margin: 0 0 1em; max-width: 64ch; }
-  .informe blockquote { border-left: 3px solid var(--rule); margin: 1em 0; padding-left: 14px; color: var(--ink-2); font-size: 15px; }
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  {% if is_sample_data %}
-  <p class="aviso">⚠️ <b>Datos de muestra.</b> Estás viendo datos sintéticos: los reales se exportan con <code>scripts/precompute.py --demo-data</code>.</p>
-  {% endif %}
-  <header>
-    <p class="eyebrow">PitchIQ · Bundesliga 2023/24</p>
-    <h1>El año que el Leverkusen no perdió</h1>
-    <p class="lede">PitchIQ repasa cada acción de sus 34 partidos, mide cómo defiende y escribe informes con inteligencia artificial en los que no se puede colar ni un número inventado.</p>
-    <div class="scoreboard" role="img" aria-label="Temporada: 34 partidos, 28 victorias, 6 empates, 0 derrotas, 89 goles a favor y 24 en contra">
-      <div><span class="sb-num" id="sb-pj"></span><span class="sb-lab">partidos</span></div>
-      <div><span class="sb-num" id="sb-v"></span><span class="sb-lab">victorias</span></div>
-      <div><span class="sb-num" id="sb-e"></span><span class="sb-lab">empates</span></div>
-      <div><span class="sb-num zero" id="sb-d"></span><span class="sb-lab">derrotas</span></div>
-      <div><span class="sb-num" id="sb-g"></span><span class="sb-lab">goles</span></div>
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="?" aria-label="PitchIQ, inicio">
+      <svg viewBox="0 0 26 18" aria-hidden="true"><rect x="1" y="1" width="24" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><line x1="13" y1="1" x2="13" y2="17" stroke="currentColor" stroke-width="1.6"/><circle cx="13" cy="9" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Pitch<span class="iq">IQ</span></span>
+    </a>
+    <label class="team-pick">
+      <span hidden>Equipo</span>
+      <select id="equipo" aria-label="Equipo">
+        {%- set ns = namespace(grupo=None) %}
+        {%- for t in teams %}
+          {%- set g = t.competicion ~ ' ' ~ t.temporada %}
+          {%- if g != ns.grupo %}{% if ns.grupo %}</optgroup>{% endif %}<optgroup label="{{ g }}">{% set ns.grupo = g %}{% endif %}
+          <option value="{{ t.slug }}"{% if t.slug == initial %} selected{% endif %}>{{ t.nombre }}</option>
+        {%- endfor %}
+        {%- if ns.grupo %}</optgroup>{% endif %}
+      </select>
+    </label>
+    <nav class="secnav" aria-label="Secciones">
+      <a href="#informe">Informe</a>
+      <a href="#presion">Presión</a>
+      <a href="#defensa">Defensa</a>
+      <a href="#balon-parado">Balón parado</a>
+      <a href="#partidos">Partidos</a>
+      <a href="#comparar" id="nav-comparar">Comparar</a>
+    </nav>
+  </div>
+</header>
+{% if is_sample_data %}<div class="banner">Datos de muestra: los datos reales se publican con <code>scripts/precompute.py --demo-data</code>.</div>{% endif %}
+
+<main class="wrap">
+  <section class="team-head" aria-labelledby="t-nombre">
+    <p class="comp" id="t-comp"></p>
+    <h1 id="t-nombre"></h1>
+    <div class="record" id="t-record"></div>
+    <div class="kpis" id="t-kpis"></div>
+  </section>
+
+  <section class="block" id="informe" aria-labelledby="h-informe">
+    <div class="sec-head">
+      <h2 id="h-informe">Informe</h2>
+      <p class="sec-note" id="informe-nota"></p>
     </div>
-    <p class="sb-note">Datos reales de StatsBomb: cada pase, cada robo y, en muchas jugadas, dónde estaba cada jugador.</p>
-  </header>
-
-  <section id="idea">
-    <p class="kicker">La idea</p>
-    <h2>Una IA a la que no se le permite inventar</h2>
-    <p>Las inteligencias artificiales redactan muy bien, pero a veces se inventan cifras con total seguridad. En PitchIQ la IA solo puede escribir con los números que ha calculado el programa, y un comprobador revisa el texto cifra a cifra.</p>
-    <p><b>Pruébalo:</b> cambia algún número del texto o pulsa «Inventar una cifra».</p>
-
-    <div class="panel checker">
-      <label for="texto">Texto a comprobar</label>
-      <textarea id="texto" spellcheck="false"></textarea>
-      <div class="actions">
-        <button class="btn primary" id="inventar" type="button">Inventar una cifra</button>
-        <button class="btn" id="restaurar" type="button">Volver al texto original</button>
+    <div class="report">
+      <div>
+        <article class="panel">
+          <p class="report-kicker">Claves</p>
+          <div class="report-body" id="resumen"></div>
+        </article>
+        <article class="panel report-ai" id="informe-ia" hidden>
+          <p class="report-kicker" id="informe-ia-kicker">Informe del analista</p>
+          <div class="report-body" id="informe-ia-body"></div>
+        </article>
       </div>
-      <div id="veredicto" class="verdict ok" role="status" aria-live="polite"></div>
-      <p class="rendered" id="renderizado"></p>
-      <ul class="sources" id="fuentes"></ul>
-      <p class="fineprint">Frases de ejemplo escritas para esta demo con las cifras reales de la temporada. El comprobador sigue la misma regla que PitchIQ aplica a los informes de la IA: cada número tiene que coincidir con una métrica calculada, admitiendo redondeos.</p>
+      <aside class="panel verif" aria-live="polite">
+        <span class="verif-badge" id="verif-badge"></span>
+        <span class="big" id="verif-num"></span>
+        <p>Cada cifra de este informe se contrasta automáticamente con las métricas calculadas a partir de los datos de los partidos. Pasa el cursor por una cifra para ver de dónde sale.</p>
+        <div class="dl-links">
+          <a class="btn-sm" href="/api/evidence">Evidencia</a>
+          <a class="btn-sm" id="api-equipo" href="/api/equipos">Datos (JSON)</a>
+        </div>
+      </aside>
     </div>
   </section>
 
-  
-  {% if report_html %}
-  <section id="informe">
-    <p class="kicker">El informe de la IA</p>
-    <h2>Lo que escribió la IA con estos datos</h2>
-    {% if is_sample_report %}
-    <p class="aviso">⚠️ <b>Datos de muestra.</b> Este informe es sintético: el real se genera en local con <code>scripts/precompute.py</code>.</p>
-    {% endif %}
-    <p class="verdict {{ 'ok' if n_grounded == n_figures else 'bad' }}">
-      {{ '✓' if n_grounded == n_figures else '✗' }} {{ n_grounded }} de {{ n_figures }} cifras comprobadas contra los datos
-    </p>
-    <div class="panel informe">{{ report_html | safe }}</div>
-    <p class="hint">Generado el {{ generated_at }} · evidencia completa en <a href="/api/evidence">/api/evidence</a></p>
-  </section>
-  {% else %}
-  <section id="informe">
-    <p class="kicker">El informe de la IA</p>
-    <h2>El informe completo, en preparación</h2>
-    <p>Las gráficas de esta página ya usan datos reales. El informe escrito por la IA se genera una sola vez en local, con una clave de API, y se publica aquí junto a su comprobación cifra a cifra. Esta web nunca llama a la IA: cada visita cuesta cero.</p>
-  </section>
-  {% endif %}
-
-  <section id="recuperaciones">
-    <p class="kicker">Presión</p>
-    <h2>Dónde le quita el balón al rival</h2>
-    <p>Cada casilla del campo cuenta las veces que un jugador del Leverkusen presionó, robó o interceptó un balón en esa zona durante toda la temporada. Cuanto más oscura, más acciones.</p>
-    <div class="kpis">
-      <div class="kpi"><span class="num" id="k-acc"></span><span>acciones defensivas en la temporada</span></div>
-      <div class="kpi"><span class="num"><em id="k-rival"></em></span><span>de ellas, en el campo del rival</span></div>
+  <section class="block" id="presion" aria-labelledby="h-presion">
+    <div class="sec-head">
+      <h2 id="h-presion">Presión</h2>
+      <p class="sec-note">Acciones defensivas: presiones, entradas, intercepciones y recuperaciones</p>
     </div>
-    <figure class="panel" style="margin-inline:0">
-      <svg class="pitch" id="campo-recuperaciones" viewBox="-2 -2 124 84" role="img" aria-label="Mapa de calor del campo con las acciones defensivas por zona"></svg>
-      <div class="panel-foot">
-        <span>← Su portería</span>
-        <span class="ramp"><span>menos</span><i></i><span>más</span></span>
-        <span>Portería rival →</span>
-      </div>
-      <p class="hint" style="margin:8px 0 0">Toca o pasa el ratón por una casilla para ver el dato.</p>
-    </figure>
-    <p>Más de la mitad de sus acciones defensivas ocurren lejos de su portería: el Leverkusen no espera atrás, sale a buscar el balón.</p>
-  </section>
-
-  <section id="bloque">
-    <p class="kicker">Forma defensiva</p>
-    <h2>Cómo se colocan cuando defienden</h2>
-    <p>La mancha roja muestra dónde estaban los jugadores del Leverkusen en el momento de cada acción defensiva. La línea discontinua marca la altura media de su defensa.</p>
-    <figure class="panel" style="margin-inline:0">
-      <svg class="pitch" id="campo-bloque" viewBox="-2 -2 124 84" role="img" aria-label="Densidad de posiciones de los jugadores al defender, con la altura media de la línea defensiva"></svg>
-      <div class="panel-foot">
-        <span>← Su portería</span>
-        <span>Portería rival →</span>
-      </div>
-    </figure>
-    <p>La defensa se sitúa de media a <b id="t-linea"></b> de 120 medidos desde su portería, casi en el medio campo: es un equipo que defiende adelantado, no encerrado en su área.</p>
-  </section>
-
-  <section id="temporada">
-    <p class="kicker">Partido a partido</p>
-    <h2>A qué altura defendió cada jornada</h2>
-    <p>Cada punto es un partido. Cuanto más arriba, más adelantada estaba su defensa. Los huecos son partidos sin datos de posiciones de los jugadores: el programa los deja vacíos antes que inventarse un valor.</p>
-    <figure class="panel" style="margin-inline:0">
-      <div class="chart-key" aria-hidden="true">
-        <span><i class="k-ref"></i>medio campo (60)</span>
-        <span><i class="k-mean"></i>su media (<b id="t-media"></b>)</span>
-        <span><i class="k-null"></i>partido sin datos de posiciones</span>
-      </div>
-      <div id="linea" role="img" aria-label="Altura media de la línea defensiva en cada uno de los 34 partidos"></div>
-      <p class="hint" style="margin:8px 0 0">Toca la gráfica o pasa el ratón para ver cada partido y su resultado.</p>
-    </figure>
-  </section>
-
-  <section id="corners">
-    <p class="kicker">Balón parado</p>
-    <h2>Los córners, un arma más</h2>
-    <p>Cada punto es el lugar donde cayó uno de sus córners. Casi un tercio los sacó en corto, a un compañero cercano, en lugar de colgar el balón al área.</p>
-    <div class="kpis">
-      <div class="kpi"><span class="num" id="k-corners"></span><span>córners a favor, frente a <b id="k-corners-contra"></b> en contra</span></div>
-      <div class="kpi"><span class="num"><em id="k-contacto"></em></span><span>de las veces tocó primero el balón tras sacar</span></div>
+    <div class="grid-2">
+      <figure class="panel" style="margin:0">
+        <p class="panel-title">Dónde defiende <span>acciones por zona</span></p>
+        <svg class="pitch" id="campo-recuperaciones" viewBox="-2 -2 124 84" role="img" aria-label="Acciones defensivas por zona del campo"></svg>
+        <div class="panel-foot">
+          <span>← Portería propia</span>
+          <span class="ramp"><span>menos</span><i></i><span>más</span></span>
+          <span>Portería rival →</span>
+        </div>
+      </figure>
+      <div class="panel"><dl class="stats" id="stats-presion"></dl></div>
     </div>
-    <figure class="panel" style="margin-inline:0">
-      <svg class="pitch" id="campo-corners" viewBox="57 -3 66 86" role="img" aria-label="Puntos de caída de los córners a favor en la mitad de campo rival"></svg>
-    </figure>
+    <div class="panel" style="margin-top:16px">
+      <p class="panel-title">PPDA por partido <span>más bajo = presión más intensa</span></p>
+      <div class="key" id="key-ppda"></div>
+      <div class="chart" id="chart-ppda" role="img" aria-label="PPDA en cada partido"></div>
+    </div>
+  </section>
+
+  <section class="block" id="defensa" aria-labelledby="h-defensa">
+    <div class="sec-head">
+      <h2 id="h-defensa">Defensa</h2>
+      <p class="sec-note">Posiciones de los jugadores visibles en la retransmisión</p>
+    </div>
+    <div class="panel empty" id="defensa-vacia" hidden>
+      <p class="empty-title">Sin datos de posiciones para esta competición</p>
+      <p>StatsBomb no publica las posiciones de los jugadores (datos 360) para <span id="defensa-vacia-comp"></span>. Las métricas de bloque y altura de la defensa no se estiman: se muestran solo donde hay datos.</p>
+    </div>
+    <div id="defensa-contenido">
+    <div class="grid-2">
+      <figure class="panel" style="margin:0">
+        <p class="panel-title">Bloque defensivo <span>densidad de posiciones al defender</span></p>
+        <svg class="pitch" id="campo-bloque" viewBox="-2 -2 124 84" role="img" aria-label="Densidad de posiciones de los jugadores al defender y altura media de la defensa"></svg>
+        <div class="panel-foot"><span>← Portería propia</span><span>Portería rival →</span></div>
+      </figure>
+      <div class="panel"><dl class="stats" id="stats-defensa"></dl></div>
+    </div>
+    <div class="panel" style="margin-top:16px">
+      <p class="panel-title">Altura de la defensa por partido <span>0 = portería propia · 120 = portería rival</span></p>
+      <div class="key" id="key-linea"></div>
+      <div class="chart" id="chart-linea" role="img" aria-label="Altura media de la línea defensiva en cada partido"></div>
+    </div>
+    </div>
+  </section>
+
+  <section class="block" id="balon-parado" aria-labelledby="h-bp">
+    <div class="sec-head">
+      <h2 id="h-bp">Balón parado</h2>
+      <p class="sec-note">Córners</p>
+    </div>
+    <div class="grid-cards">
+      <div class="panel">
+        <p class="panel-title">A favor <span>destino de cada saque</span></p>
+        <svg class="pitch" id="campo-corners" viewBox="57 -3 66 86" role="img" aria-label="Destino de los córners a favor"></svg>
+        <div class="bars" id="zonas" style="margin-top:14px"></div>
+        <dl class="stats" id="stats-corners-favor" style="margin-top:14px"></dl>
+      </div>
+      <div class="panel">
+        <p class="panel-title">En contra</p>
+        <dl class="stats" id="stats-corners-contra"></dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="partidos" aria-labelledby="h-partidos">
+    <div class="sec-head">
+      <h2 id="h-partidos">Partidos</h2>
+      <p class="sec-note" id="partidos-nota"></p>
+    </div>
+    <div class="table-wrap">
+      <table id="tabla">
+        <thead>
+          <tr>
+            <th class="n" data-k="j" aria-sort="ascending"><button type="button">J <span class="arrow">▲</span></button></th>
+            <th data-k="fecha"><button type="button">Fecha <span class="arrow">▲</span></button></th>
+            <th data-k="rival"><button type="button">Rival <span class="arrow">▲</span></button></th>
+            <th data-k="campo"><button type="button">Campo <span class="arrow">▲</span></button></th>
+            <th data-k="res"><button type="button">Resultado <span class="arrow">▲</span></button></th>
+            <th class="n" data-k="ppda"><button type="button">PPDA <span class="arrow">▲</span></button></th>
+            <th class="n" data-k="linea"><button type="button">Altura def. <span class="arrow">▲</span></button></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="block" id="comparar" aria-labelledby="h-comparar">
+    <div class="sec-head">
+      <h2 id="h-comparar">Comparar</h2>
+      <p class="sec-note">Muestras de tamaño distinto: orientativo</p>
+    </div>
     <div class="panel">
-      <div class="bars" id="zonas"></div>
-    </div>
-  </section>
-
-  <section id="espana">
-    <p class="kicker">Comparación</p>
-    <h2>¿Y España, campeona de la Euro 2024?</h2>
-    <p>El mismo programa, sin cambiar una línea, analizando a España en la Euro. Sirve para comprobar que no está hecho a medida del Leverkusen. Salen dos campeones con un estilo muy parecido: presión alta y defensa adelantada.</p>
-    <div class="panel">
-      <div class="legend">
-        <span style="--c: var(--accent)">Bayer Leverkusen (34 partidos de liga)</span>
-        <span style="--c: var(--espana)">España (7 partidos de la Euro)</span>
+      <div class="compare-head">
+        <span class="sw" style="--c: var(--accent)" id="compare-a"></span>
+        <span>frente a</span>
+        <label class="team-pick"><span hidden>Rival</span><select id="rival" aria-label="Equipo con el que comparar"></select></label>
+        <span class="sw" style="--c: var(--other)" id="compare-b"></span>
       </div>
-      <div class="bars" id="comparacion"></div>
+      <div class="compare-grid" id="compare-grid"></div>
     </div>
-    <p class="hint">Son muestras de tamaño muy distinto, así que la comparación es orientativa.</p>
-  </section>
-
-  <section id="limites">
-    <p class="kicker">Con honestidad</p>
-    <h2>Lo que este programa no hace</h2>
-    <ul class="limits">
-      <li><b>No sustituye a un entrenador ni a un analista.</b> Mide y cuenta con cifras fiables; las decisiones siguen siendo de las personas.</li>
-      <li><b>Solo ve a los jugadores que salen en la imagen de la tele.</b> Las posiciones son aproximadas, y 3 de los 34 partidos no tienen esos datos.</li>
-      <li><b>Estudia un equipo, no la liga entera.</b> Todo sale de los 34 partidos del Leverkusen.</li>
-      <li><b>Las explicaciones tácticas están en revisión.</b> Las cifras están comprobadas; los textos que las interpretan aún esperan la revisión de una persona.</li>
-    </ul>
   </section>
 
   <footer>
-    <p>Datos: <a href="https://github.com/statsbomb/open-data">StatsBomb Open Data</a>. Proyecto PitchIQ de Nico Timoneda · <a href="https://github.com/nicotimoneda/pitchiq">código</a> · <a href="/api/report">/api/report</a> · <a href="/api/evidence">/api/evidence</a>.</p>
-    <p>Las frases del comprobador son de ejemplo, escritas con las cifras calculadas; el informe completo lo redacta la IA.</p>
+    <div class="foot-grid">
+      <div>Datos: <a href="https://github.com/statsbomb/open-data">StatsBomb Open Data</a></div>
+      <div class="foot-links">
+        <a href="/api/equipos">API</a>
+        <a href="/api/evidence">Evidencia del informe</a>
+        <a href="https://github.com/nicotimoneda/pitchiq">Código</a>
+      </div>
+    </div>
+    <details class="method">
+      <summary>Metodología y límites</summary>
+      <ul>
+        <li><b>Cifras verificadas.</b> Todas las cifras de los informes salen de métricas calculadas sobre los eventos de cada partido. Un validador automático contrasta cada número del texto y marca cualquiera sin respaldo.</li>
+        <li><b>Posiciones visibles.</b> Las métricas de defensa usan las posiciones de los jugadores que aparecen en la imagen de la retransmisión (datos 360). Son aproximadas, y los partidos sin esos datos se excluyen.</li>
+        <li><b>Unidades.</b> El campo mide 120 × 80 yardas; distancias en yardas y áreas en yardas².</li>
+        <li><b>PPDA.</b> Incluye las presiones como acción defensiva, por lo que sus valores no son comparables con los de otras fuentes.</li>
+        <li><b>Marcaje en córners.</b> La distancia al marcador más cercano es una aproximación; no clasifica sistemas de marcaje.</li>
+        <li><b>Interpretación.</b> Los informes redactados se apoyan en un glosario táctico en revisión.</li>
+      </ul>
+    </details>
   </footer>
-</div>
+</main>
 
 <div id="tip" hidden></div>
 
 <script>
-const D = {{ demo_data | tojson }};
-const T = D.herramientas;
+const TEAMS = {{ teams | tojson }};
+const REPORTS = {{ reports | tojson }};
+const INITIAL = {{ initial | tojson }};
+
 const NS = "http://www.w3.org/2000/svg";
 const $ = (s) => document.querySelector(s);
-const fmt = (v, d = 1) => v.toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmt = (v, d = 1) => Number(v).toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d });
 const fmtInt = (v) => String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 function svgEl(tag, attrs, parent) {
   const e = document.createElementNS(NS, tag);
   for (const k in attrs) e.setAttribute(k, attrs[k]);
   if (parent) parent.appendChild(e);
   return e;
-}
-function escapeHtml(s) {
-  return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
 /* ---------- tooltip ---------- */
@@ -458,153 +555,134 @@ function showTip(html, x, y) {
   tip.style.left = Math.max(8, left) + "px";
   tip.style.top = Math.max(8, top) + "px";
 }
-function hideTip() { tip.hidden = true; }
+const hideTip = () => { tip.hidden = true; };
 document.addEventListener("scroll", hideTip, { passive: true });
+function bindTip(el, html) {
+  const at = (e) => {
+    const r = el.getBoundingClientRect();
+    showTip(typeof html === "function" ? html() : html, e.clientX ?? r.left + r.width / 2, e.clientY ?? r.top + r.height / 2);
+  };
+  el.addEventListener("pointermove", at);
+  el.addEventListener("pointerdown", at);
+  el.addEventListener("focus", () => at({}));
+  el.addEventListener("pointerleave", hideTip);
+  el.addEventListener("blur", hideTip);
+}
 
-/* ---------- marcador ---------- */
-const P = D.partidos;
-const V = P.filter((p) => p.goles_favor > p.goles_contra).length;
-const E = P.filter((p) => p.goles_favor === p.goles_contra).length;
-const Lz = P.filter((p) => p.goles_favor < p.goles_contra).length;
-const GF = P.reduce((a, p) => a + p.goles_favor, 0);
-const GC = P.reduce((a, p) => a + p.goles_contra, 0);
-$("#sb-pj").textContent = P.length;
-$("#sb-v").textContent = V;
-$("#sb-e").textContent = E;
-$("#sb-d").textContent = Lz;
-$("#sb-g").textContent = GF + ":" + GC;
+/* ---------- derivados deterministas ---------- */
+function resultados(team) {
+  const P = team.partidos;
+  return {
+    partidos: P.length,
+    victorias: P.filter((p) => p.goles_favor > p.goles_contra).length,
+    empates: P.filter((p) => p.goles_favor === p.goles_contra).length,
+    derrotas: P.filter((p) => p.goles_favor < p.goles_contra).length,
+    goles_favor: P.reduce((a, p) => a + p.goles_favor, 0),
+    goles_contra: P.reduce((a, p) => a + p.goles_contra, 0),
+  };
+}
 
-/* ---------- comprobador de cifras ---------- */
+/* ---------- verificación de cifras (misma regla que el validador) ---------- */
 const NOMBRES = {
-  "presion.n_partidos": "partidos jugados",
-  "presion.acciones_defensivas_totales": "acciones defensivas de la temporada",
+  "resultados.partidos": "partidos jugados",
+  "resultados.victorias": "victorias",
+  "resultados.empates": "empates",
+  "resultados.derrotas": "derrotas",
+  "resultados.goles_favor": "goles a favor",
+  "resultados.goles_contra": "goles en contra",
+  "presion.n_partidos": "partidos analizados",
+  "presion.acciones_defensivas_totales": "acciones defensivas totales",
   "presion.acciones_defensivas_por_partido": "acciones defensivas por partido",
-  "presion.ppda_medio": "PPDA medio: pases que deja dar al rival antes de presionar",
+  "presion.ppda_medio": "PPDA medio",
   "presion.pct_acciones_campo_rival": "% de acciones defensivas en campo rival",
-  "forma_defensiva.hull_area_media_yd2": "área media que ocupa el bloque",
-  "forma_defensiva.anchura_media": "anchura media del bloque",
-  "forma_defensiva.profundidad_media": "profundidad media del bloque",
+  "forma_defensiva.hull_area_media_yd2": "área media del bloque (yardas²)",
+  "forma_defensiva.anchura_media": "anchura media del bloque (yardas)",
+  "forma_defensiva.profundidad_media": "profundidad media del bloque (yardas)",
   "forma_defensiva.altura_linea_media": "altura media de la línea defensiva",
-  "forma_defensiva.soporte_presion_medio": "compañeros que ayudan en cada presión",
+  "forma_defensiva.soporte_presion_medio": "compañeros a menos de 10 yardas en cada presión",
   "forma_defensiva.partidos_con_360": "partidos con datos de posiciones",
   "corners_ataque.n_corners": "córners a favor",
-  "corners_ataque.box_load_atacantes_medio": "atacantes en el área al sacar un córner",
+  "corners_ataque.box_load_atacantes_medio": "atacantes en el área al sacar",
   "corners_ataque.box_load_defensores_medio": "defensores rivales en el área al sacar",
-  "corners_ataque.pct_primer_contacto_ganado": "% de córners en los que toca primero",
-  "corners_ataque.xg_a_favor": "goles esperados generados en córners",
+  "corners_ataque.pct_primer_contacto_ganado": "% de primer contacto ganado",
+  "corners_ataque.xg_a_favor": "xG generado en córners",
   "corners_defensa.n_corners": "córners en contra",
-  "corners_defensa.indice_orientacion_hombre": "índice de marcaje en córners (aproximado)",
-  "corners_defensa.pct_primer_contacto_concedido": "% de córners en contra que toca primero el rival",
-  "corners_defensa.xg_en_contra": "goles esperados concedidos en córners",
+  "corners_defensa.indice_orientacion_hombre": "distancia media al marcador en córners",
+  "corners_defensa.pct_primer_contacto_concedido": "% de primer contacto del rival",
+  "corners_defensa.xg_en_contra": "xG concedido en córners",
 };
-const EVIDENCIA = [];
-for (const tool in T) {
-  for (const field in T[tool]) {
-    const v = T[tool][field];
-    if (typeof v === "number") EVIDENCIA.push([tool + "." + field, v]);
-    else if (v && typeof v === "object") {
-      for (const k in v) if (typeof v[k] === "number") EVIDENCIA.push([tool + "." + field + "." + k, v[k]]);
+function evidencia(team) {
+  const ev = [];
+  const T = team.herramientas;
+  for (const tool in T) {
+    for (const field in T[tool]) {
+      const v = T[tool][field];
+      if (typeof v === "number") ev.push([tool + "." + field, v]);
+      else if (v && typeof v === "object") {
+        for (const k in v) if (typeof v[k] === "number") ev.push([tool + "." + field + "." + k, v[k]]);
+      }
     }
   }
+  const R = resultados(team);
+  for (const k in R) ev.push(["resultados." + k, R[k]]);
+  return ev;
 }
 function nombreMetrica(key) {
   if (NOMBRES[key]) return NOMBRES[key];
   const m = key.match(/^corners_ataque\.zonas_saque\.(.+)$/);
-  if (m) return "córners sacados a la zona «" + m[1] + "»";
-  return key;
+  return m ? "córners al «" + m[1] + "»" : key;
 }
 const roundTo = (x, d) => Math.round(x * 10 ** d) / 10 ** d;
-function buscarRespaldo(raw) {
+function respaldo(raw, ev) {
   const value = parseFloat(raw.replace(",", "."));
   const parts = raw.split(/[.,]/);
-  const decimals = parts.length > 1 ? parts[1].replace(/0+$/, "").length : 0;
-  for (const [key, ev] of EVIDENCIA) {
-    const tol = Math.max(1e-4 * Math.max(Math.abs(value), Math.abs(ev)), 1e-9);
-    if (Math.abs(value - ev) <= tol || Math.abs(roundTo(ev, decimals) - value) < 1e-9) return key;
+  const dec = parts.length > 1 ? parts[1].replace(/0+$/, "").length : 0;
+  for (const [key, x] of ev) {
+    const tol = Math.max(1e-4 * Math.max(Math.abs(value), Math.abs(x)), 1e-9);
+    if (Math.abs(value - x) <= tol || Math.abs(roundTo(x, dec) - value) < 1e-9) return key;
   }
   return null;
 }
-function analizar(texto) {
-  const limpio = texto.replace(/\b(?:19|20)\d{2}[\/-]\d{2}\b/g, (m) => " ".repeat(m.length));
-  const cifras = [];
-  const re = /\d+(?:[.,]\d+)?/g;
-  let m;
-  while ((m = re.exec(limpio))) {
-    if (/^(?:19|20)\d{2}$/.test(m[0])) continue;
-    cifras.push({ raw: m[0], start: m.index, end: m.index + m[0].length, fuente: buscarRespaldo(m[0]) });
+function marcarCifras(root, ev) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: (n) => n.parentElement.closest("code, pre, .cifra") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
+  });
+  const nodos = [];
+  while (walker.nextNode()) nodos.push(walker.currentNode);
+  let total = 0, ok = 0;
+  for (const node of nodos) {
+    const text = node.nodeValue;
+    const limpio = text.replace(/\b(?:19|20)\d{2}[\/-]\d{2}\b/g, (m) => " ".repeat(m.length));
+    const re = /\d+(?:[.,]\d+)?/g;
+    let m, pos = 0, frag = null;
+    while ((m = re.exec(limpio))) {
+      if (/^(?:19|20)\d{2}$/.test(m[0])) continue;
+      frag = frag || document.createDocumentFragment();
+      frag.append(text.slice(pos, m.index));
+      const fuente = respaldo(m[0], ev);
+      const span = document.createElement("span");
+      span.className = "cifra" + (fuente ? "" : " sin");
+      span.tabIndex = 0;
+      span.textContent = text.slice(m.index, m.index + m[0].length);
+      bindTip(span, fuente
+        ? "<b>✓ Cifra verificada</b><br>" + esc(nombreMetrica(fuente))
+        : "<b>Sin respaldo</b><br>No coincide con ninguna métrica calculada");
+      frag.append(span);
+      pos = m.index + m[0].length;
+      total++;
+      if (fuente) ok++;
+    }
+    if (frag) {
+      frag.append(text.slice(pos));
+      node.replaceWith(frag);
+    }
   }
-  return cifras;
+  return { total, ok };
 }
 
-const TEXTO_ORIGINAL =
-  "En la temporada 2023/24 el Leverkusen jugó " + T.presion.n_partidos +
-  " partidos y firmó " + fmt(T.presion.acciones_defensivas_por_partido) +
-  " acciones defensivas por partido. Su PPDA medio fue de " + fmt(T.presion.ppda_medio, 2) +
-  ", así que el rival apenas podía encadenar pases, y el " + fmt(T.presion.pct_acciones_campo_rival) +
-  " % de esas acciones ocurrió en campo contrario. Sacó " + T.corners_ataque.n_corners +
-  " córners, tocó primero el balón en el " + fmt(T.corners_ataque.pct_primer_contacto_ganado) +
-  " % y generó " + fmt(T.corners_ataque.xg_a_favor, 2) + " goles esperados.";
-const INVENTADAS = [
-  " Además marcó 41 goles de cabeza.",
-  " Su portero hizo 157 paradas.",
-  " Cada jugador corrió 19 kilómetros por partido.",
-];
-let inventadaIdx = 0;
-
-const ta = $("#texto");
-function pintarComprobador() {
-  const texto = ta.value;
-  const cifras = analizar(texto);
-  let html = "", pos = 0;
-  for (const c of cifras) {
-    html += escapeHtml(texto.slice(pos, c.start));
-    const cls = c.fuente ? "ok" : "bad";
-    const ico = c.fuente ? "✓" : "✗";
-    const title = c.fuente ? "Sale de: " + nombreMetrica(c.fuente) : "No coincide con ninguna métrica calculada";
-    html += '<mark class="' + cls + '" title="' + escapeHtml(title) + '">' + escapeHtml(c.raw) + '<span class="ico" aria-hidden="true">' + ico + "</span></mark>";
-    pos = c.end;
-  }
-  html += escapeHtml(texto.slice(pos));
-  $("#renderizado").innerHTML = html;
-
-  const malas = cifras.filter((c) => !c.fuente).length;
-  const v = $("#veredicto");
-  if (cifras.length === 0) {
-    v.className = "verdict ok";
-    v.textContent = "No hay cifras que comprobar";
-  } else if (malas === 0) {
-    v.className = "verdict ok";
-    v.textContent = "✓ Las " + cifras.length + " cifras salen de los datos";
-  } else {
-    v.className = "verdict bad";
-    v.textContent = "✗ " + malas + (malas === 1 ? " cifra inventada" : " cifras inventadas") +
-      ": el sistema la" + (malas === 1 ? "" : "s") + " marcaría como no verificada" + (malas === 1 ? "" : "s");
-  }
-
-  $("#fuentes").innerHTML = cifras.map((c) =>
-    "<li>" +
-    (c.fuente ? '<span class="ok-t" aria-hidden="true">✓</span>' : '<span class="bad-t" aria-hidden="true">✗</span>') +
-    '<span class="n">' + escapeHtml(c.raw) + "</span>" +
-    "<span>" + (c.fuente ? escapeHtml(nombreMetrica(c.fuente)) : "<b>no aparece en ningún dato calculado</b>") + "</span>" +
-    "</li>"
-  ).join("");
-}
-ta.value = TEXTO_ORIGINAL;
-ta.addEventListener("input", pintarComprobador);
-$("#inventar").addEventListener("click", () => {
-  ta.value = ta.value.trimEnd() + INVENTADAS[inventadaIdx % INVENTADAS.length];
-  inventadaIdx++;
-  pintarComprobador();
-});
-$("#restaurar").addEventListener("click", () => {
-  ta.value = TEXTO_ORIGINAL;
-  inventadaIdx = 0;
-  pintarComprobador();
-});
-pintarComprobador();
-
-/* ---------- campo de fútbol ---------- */
+/* ---------- campo ---------- */
 function dibujarCampo(svg) {
+  svg.innerHTML = "";
   const bg = svgEl("g", {}, svg);
   svgEl("rect", { x: 0, y: 0, width: 120, height: 80, class: "pbg" }, bg);
   const datos = svgEl("g", {}, svg);
@@ -622,208 +700,396 @@ function dibujarCampo(svg) {
   L("rect", { x: -1.6, y: 36, width: 1.6, height: 8 });
   L("rect", { x: 120, y: 36, width: 1.6, height: 8 });
   for (const [cx, cy] of [[12, 40], [108, 40], [60, 40]]) svgEl("circle", { cx, cy, r: 0.6, class: "spot" }, lineas);
-  // capa superior: etiquetas que no deben quedar tapadas por las líneas del campo
   const encima = svgEl("g", { "pointer-events": "none" }, svg);
-  return { datos, lineas, encima };
+  return { datos, encima };
 }
 
-/* recuperaciones: rejilla 6x5 */
-(function () {
-  const svg = $("#campo-recuperaciones");
-  const { datos, encima } = dibujarCampo(svg);
-  const Z = D.zonas_recuperacion;
-  const max = Math.max(...Z.flat());
-  const cw = 20, ch = 16;
-  let activa = null;
-  Z.forEach((fila, iy) => fila.forEach((v, ix) => {
-    const p = Math.round((100 * v) / max);
-    const rect = svgEl("rect", {
-      x: ix * cw, y: iy * ch, width: cw, height: ch, class: "cell", tabindex: 0,
-      style: "fill: color-mix(in oklab, var(--seq-hi) " + p + "%, var(--seq-lo))",
-      "aria-label": v + " acciones defensivas en esta zona",
-    }, datos);
-    svgEl("text", {
-      x: ix * cw + cw / 2, y: iy * ch + ch / 2 + 1.4, "text-anchor": "middle",
-      "font-size": 4.2, class: "clab" + (p > 62 ? " hi" : ""),
-    }, encima).textContent = v;
-    const zona = ix < 2 ? "cerca de su propia portería" : ix < 4 ? "en el centro del campo" : "cerca de la portería rival";
-    const html = "<b>" + v + " acciones defensivas</b><br>" + zona;
-    const on = (e) => {
-      if (activa) activa.classList.remove("active");
-      activa = rect; rect.classList.add("active");
-      const cx = e.clientX ?? rect.getBoundingClientRect().left;
-      const cy = e.clientY ?? rect.getBoundingClientRect().top;
-      showTip(html, cx, cy);
-    };
-    rect.addEventListener("pointermove", on);
-    rect.addEventListener("pointerdown", on);
-    rect.addEventListener("focus", () => {
-      const r = rect.getBoundingClientRect();
-      on({ clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 });
-    });
-    rect.addEventListener("pointerleave", () => { rect.classList.remove("active"); hideTip(); });
-    rect.addEventListener("blur", () => { rect.classList.remove("active"); hideTip(); });
-  }));
-  $("#k-acc").textContent = fmtInt(T.presion.acciones_defensivas_totales);
-  $("#k-rival").textContent = fmt(T.presion.pct_acciones_campo_rival) + " %";
-})();
-
-/* bloque defensivo: densidad 24x16 + línea media */
-(function () {
-  const svg = $("#campo-bloque");
-  const { datos, encima } = dibujarCampo(svg);
-  const B = D.bloque_densidad;
-  B.forEach((fila, iy) => fila.forEach((v, ix) => {
-    if (v < 0.02) return;
-    svgEl("rect", {
-      x: ix * 5, y: iy * 5, width: 5, height: 5,
-      style: "fill: var(--accent); fill-opacity: " + Math.min(0.92, Math.pow(v, 0.85)).toFixed(3),
-    }, datos);
-  }));
-  const lh = T.forma_defensiva.altura_linea_media;
-  svgEl("line", { x1: lh, y1: -1, x2: lh, y2: 81, class: "annline" }, encima);
-  const lab = svgEl("text", { x: lh - 1.2, y: 4.6, "text-anchor": "end", "font-size": 3.6, class: "ann" }, encima);
-  lab.textContent = "línea media: " + fmt(lh);
-  $("#t-linea").textContent = fmt(lh);
-})();
-
-/* partido a partido */
-(function () {
-  const cont = $("#linea");
-  const serie = P.map((p) => p.altura_linea);
-  const validos = serie.filter((v) => v != null);
-  const iMax = serie.indexOf(Math.max(...validos));
-  const iMin = serie.indexOf(Math.min(...validos));
-  const media = T.forma_defensiva.altura_linea_media;
-  const fecha = (s) => s.slice(8, 10) + "/" + s.slice(5, 7) + "/" + s.slice(0, 4);
-  const resultado = (p) => p.goles_favor > p.goles_contra ? "victoria" : p.goles_favor === p.goles_contra ? "empate" : "derrota";
-  let ultimoAncho = 0;
-
+/* ---------- gráfica de línea por partido ---------- */
+const observadores = new Map();
+function lineChart(cont, cfg) {
+  const { values, domain, refs = [], tooltip, labelFmt, extremes = true } = cfg;
+  let ultimo = 0;
   function dibujar() {
     const W = Math.max(280, Math.round(cont.clientWidth));
-    if (W === ultimoAncho) return;
-    ultimoAncho = W;
-    const H = W < 460 ? 250 : 290;
+    if (W === ultimo) return;
+    ultimo = W;
+    const n = values.length;
+    const H = W < 520 ? 230 : 260;
     const m = { l: 34, r: 14, t: 26, b: 30 };
-    const y0 = 30, y1 = 75;
-    const step = (W - m.l - m.r) / (P.length - 1);
-    const X = (i) => m.l + i * step;
+    const [y0, y1] = domain;
+    const step = n > 1 ? (W - m.l - m.r) / (n - 1) : 0;
+    const X = (i) => n > 1 ? m.l + i * step : W / 2;
     const Y = (v) => m.t + ((y1 - v) / (y1 - y0)) * (H - m.t - m.b);
-
     cont.innerHTML = "";
     const svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H }, cont);
     const ax = svgEl("g", { class: "ax" }, svg);
-    for (const t of [40, 50, 60, 70]) {
+    for (const t of cfg.ticks) {
       svgEl("line", { x1: m.l, x2: W - m.r, y1: Y(t), y2: Y(t) }, ax);
-      svgEl("text", { x: m.l - 6, y: Y(t) + 4, "text-anchor": "end" }, ax).textContent = t;
+      svgEl("text", { x: m.l - 6, y: Y(t) + 4, "text-anchor": "end" }, ax).textContent = cfg.tickFmt ? cfg.tickFmt(t) : t;
     }
-    for (const i of [0, 9, 19, 33]) {
-      svgEl("text", { x: X(i), y: H - 8, "text-anchor": i === 0 ? "start" : i === 33 ? "end" : "middle" }, ax).textContent = "J" + (i + 1);
+    const xt = n <= 8 ? [...Array(n).keys()] : [0, Math.round((n - 1) / 3), Math.round((2 * (n - 1)) / 3), n - 1];
+    for (const i of xt) {
+      svgEl("text", { x: X(i), y: H - 8, "text-anchor": n > 1 && i === 0 ? "start" : n > 1 && i === n - 1 ? "end" : "middle" }, ax).textContent = "J" + (i + 1);
     }
-    svgEl("line", { x1: m.l, x2: W - m.r, y1: Y(60), y2: Y(60), class: "refline" }, svg);
-    svgEl("line", { x1: m.l, x2: W - m.r, y1: Y(media), y2: Y(media), class: "meanline" }, svg);
-
+    for (const r of refs) svgEl("line", { x1: m.l, x2: W - m.r, y1: Y(r.value), y2: Y(r.value), class: r.cls }, svg);
     let d = "", abierto = false;
-    serie.forEach((v, i) => {
+    values.forEach((v, i) => {
       if (v == null) { abierto = false; return; }
       d += (abierto ? " L" : " M") + X(i).toFixed(1) + " " + Y(v).toFixed(1);
       abierto = true;
     });
-    svgEl("path", { d: d.trim(), class: "series" }, svg);
-    serie.forEach((v, i) => {
+    if (d) svgEl("path", { d: d.trim(), class: "series" }, svg);
+    values.forEach((v, i) => {
       if (v == null) svgEl("circle", { cx: X(i), cy: Y(y0) - 4, r: 3, class: "mk-null" }, svg);
       else svgEl("circle", { cx: X(i), cy: Y(v), r: 4, class: "mk" }, svg);
     });
-    const etiqueta = (i, arriba) => {
-      const frac = X(i) / W;
-      const anchor = frac > 0.62 ? "end" : frac < 0.38 ? "start" : "middle";
-      const x = anchor === "end" ? Math.min(X(i) + 8, W - m.r) : anchor === "start" ? Math.max(X(i) - 8, m.l) : X(i);
-      svgEl("text", { x, y: Y(serie[i]) + (arriba ? -11 : 20), "text-anchor": anchor, class: "extlab" }, svg)
-        .textContent = fmt(serie[i]) + " · " + P[i].rival;
-    };
-    etiqueta(iMax, true);
-    etiqueta(iMin, false);
-
+    const validos = values.filter((v) => v != null);
+    if (extremes && validos.length > 2) {
+      const etiqueta = (i, arriba) => {
+        const frac = X(i) / W;
+        const anchor = frac > 0.62 ? "end" : frac < 0.38 ? "start" : "middle";
+        const x = anchor === "end" ? Math.min(X(i) + 8, W - m.r) : anchor === "start" ? Math.max(X(i) - 8, m.l) : X(i);
+        svgEl("text", { x, y: Y(values[i]) + (arriba ? -11 : 20), "text-anchor": anchor, class: "extlab" }, svg).textContent = labelFmt(i);
+      };
+      etiqueta(values.indexOf(Math.max(...validos)), true);
+      etiqueta(values.indexOf(Math.min(...validos)), false);
+    }
     const xhair = svgEl("line", { y1: m.t - 8, y2: H - m.b, class: "xhair", visibility: "hidden" }, svg);
     const hl = svgEl("circle", { r: 6, class: "hl", visibility: "hidden" }, svg);
-    const zona = svgEl("rect", { x: m.l - step / 2, y: 0, width: W - m.l - m.r + step, height: H, fill: "transparent" }, svg);
+    const zona = svgEl("rect", { x: m.l - step / 2 - 10, y: 0, width: W - m.l - m.r + step + 20, height: H, fill: "transparent" }, svg);
     const mover = (e) => {
       const r = svg.getBoundingClientRect();
       const px = ((e.clientX - r.left) / r.width) * W;
-      const i = Math.max(0, Math.min(P.length - 1, Math.round((px - m.l) / step)));
-      const p = P[i], v = serie[i];
-      xhair.setAttribute("x1", X(i)); xhair.setAttribute("x2", X(i));
-      xhair.setAttribute("visibility", "visible");
-      if (v != null) {
-        hl.setAttribute("cx", X(i)); hl.setAttribute("cy", Y(v));
-        hl.setAttribute("visibility", "visible");
+      const i = n > 1 ? Math.max(0, Math.min(n - 1, Math.round((px - m.l) / step))) : 0;
+      xhair.setAttribute("x1", X(i)); xhair.setAttribute("x2", X(i)); xhair.setAttribute("visibility", "visible");
+      if (values[i] != null) {
+        hl.setAttribute("cx", X(i)); hl.setAttribute("cy", Y(values[i])); hl.setAttribute("visibility", "visible");
       } else hl.setAttribute("visibility", "hidden");
-      const lugar = p.local ? "En casa contra " : "En el campo del ";
-      showTip(
-        "<b>Jornada " + (i + 1) + "</b> · " + fecha(p.fecha) + "<br>" +
-        lugar + escapeHtml(p.rival) + ": " + p.goles_favor + "-" + p.goles_contra + " (" + resultado(p) + ")<br>" +
-        (v != null ? "Altura de la defensa: <b>" + fmt(v) + "</b>" : "Sin datos de posiciones en este partido"),
-        e.clientX, e.clientY
-      );
+      showTip(tooltip(i), e.clientX, e.clientY);
     };
-    const salir = () => { xhair.setAttribute("visibility", "hidden"); hl.setAttribute("visibility", "hidden"); hideTip(); };
     zona.addEventListener("pointermove", mover);
     zona.addEventListener("pointerdown", mover);
-    zona.addEventListener("pointerleave", salir);
+    zona.addEventListener("pointerleave", () => { xhair.setAttribute("visibility", "hidden"); hl.setAttribute("visibility", "hidden"); hideTip(); });
   }
-  $("#t-media").textContent = fmt(media);
+  if (observadores.has(cont)) observadores.get(cont).disconnect();
+  const ro = new ResizeObserver(dibujar);
+  ro.observe(cont);
+  observadores.set(cont, ro);
   dibujar();
-  new ResizeObserver(dibujar).observe(cont);
-})();
+}
 
-/* córners */
-(function () {
+const fechaCorta = (s) => s.slice(8, 10) + "/" + s.slice(5, 7) + "/" + s.slice(0, 4);
+const letra = (p) => p.goles_favor > p.goles_contra ? "V" : p.goles_favor === p.goles_contra ? "E" : "D";
+function tipPartido(team, i, extra) {
+  const p = team.partidos[i];
+  return "<b>J" + (i + 1) + " · " + (p.local ? "vs " : "en ") + esc(p.rival) + "</b><br>" +
+    fechaCorta(p.fecha) + " · " + p.goles_favor + "-" + p.goles_contra + " (" + ({ V: "victoria", E: "empate", D: "derrota" })[letra(p)] + ")<br>" + extra;
+}
+const has = (v) => v !== null && v !== undefined;
+const statsHtml = (rows) => rows.filter(Boolean).map(([dt, sub, dd, unit]) =>
+  "<div><dt>" + dt + (sub ? "<small>" + sub + "</small>" : "") + "</dt><dd>" + dd + (unit ? "<small>" + unit + "</small>" : "") + "</dd></div>"
+).join("");
+
+/* ---------- render por secciones ---------- */
+function renderCabecera(team) {
+  const T = team.herramientas, R = resultados(team);
+  document.title = "PitchIQ · " + team.nombre;
+  $("#t-comp").textContent = team.competicion + " · " + team.temporada;
+  $("#t-nombre").textContent = team.nombre;
+  $("#t-record").innerHTML =
+    '<span class="pill"><b>' + R.partidos + "</b> partidos</span>" +
+    '<span class="pill"><b>' + R.victorias + "</b> V</span>" +
+    '<span class="pill"><b>' + R.empates + "</b> E</span>" +
+    '<span class="pill' + (R.derrotas === 0 ? " loss-zero" : "") + '"><b>' + R.derrotas + "</b> D</span>" +
+    '<span class="pill"><b>' + R.goles_favor + "–" + R.goles_contra + "</b> goles</span>";
+  const altura = T.forma_defensiva.altura_linea_media;
+  $("#t-kpis").innerHTML = [
+    ["PPDA medio", fmt(T.presion.ppda_medio, 2), "", "pases rivales por acción defensiva"],
+    ["Presión en campo rival", fmt(T.presion.pct_acciones_campo_rival), "%", "de sus acciones defensivas"],
+    has(altura)
+      ? ["Altura de la defensa", fmt(altura), "/120", "yardas desde su portería"]
+      : ["Goles por partido", fmt(R.goles_favor / Math.max(1, R.partidos), 2), "", fmt(R.goles_contra / Math.max(1, R.partidos), 2) + " encajados"],
+    ["xG en córners", fmt(T.corners_ataque.xg_a_favor, 2), "", fmt(T.corners_defensa.xg_en_contra, 2) + " concedido"],
+  ].map(([lab, num, unit, sub]) =>
+    '<div class="kpi"><span class="lab">' + lab + '</span><span class="num">' + num + (unit ? "<small>" + unit + "</small>" : "") + '</span><span class="sub">' + sub + "</span></div>"
+  ).join("");
+}
+
+function renderInforme(team) {
+  const T = team.herramientas, R = resultados(team);
+  const ev = evidencia(team);
+  const P = T.presion, F = T.forma_defensiva, CA = T.corners_ataque, CD = T.corners_defensa;
+  const balance = R.derrotas === 0 ? " sin conocer la derrota" : "";
+  $("#resumen").innerHTML = [
+    team.nombre + " disputó " + R.partidos + " partidos de " + team.competicion + " " + team.temporada + balance +
+      ": " + R.victorias + " victorias, " + R.empates + " empates y " + R.derrotas + " derrotas, con " +
+      R.goles_favor + " goles a favor y " + R.goles_contra + " en contra.",
+    "Presiona con un PPDA medio de " + fmt(P.ppda_medio, 2) + " y firma " + fmt(P.acciones_defensivas_por_partido) +
+      " acciones defensivas por partido; el " + fmt(P.pct_acciones_campo_rival) + " % ocurre en campo rival.",
+    has(F.altura_linea_media)
+      ? "Su línea defensiva se sitúa de media a " + fmt(F.altura_linea_media) + " de 120 yardas desde su portería, con un bloque de " +
+        fmt(F.anchura_media) + " yardas de ancho por " + fmt(F.profundidad_media) + " de profundidad."
+      : null,
+    "A balón parado lanzó " + CA.n_corners + " córners, tocó primero el balón en el " + fmt(CA.pct_primer_contacto_ganado) +
+      " % y generó " + fmt(CA.xg_a_favor, 2) + " de xG; en contra concedió " + CD.n_corners + " córners y " + fmt(CD.xg_en_contra, 2) + " de xG.",
+  ].filter(Boolean).map((t) => "<p>" + esc(t) + "</p>").join("");
+  let { total, ok } = marcarCifras($("#resumen"), ev);
+
+  const rep = REPORTS[team.slug];
+  const ia = $("#informe-ia");
+  if (rep) {
+    ia.hidden = false;
+    $("#informe-ia-kicker").textContent = "Informe del analista · " + fechaCorta(rep.generated_at) + (rep.sample ? " · muestra" : "");
+    $("#informe-ia-body").innerHTML = rep.html;
+    const r2 = marcarCifras($("#informe-ia-body"), ev);
+    total += r2.total; ok += r2.ok;
+    $("#informe-nota").textContent = "Resumen de métricas e informe redactado";
+  } else {
+    ia.hidden = true;
+    $("#informe-ia-body").innerHTML = "";
+    $("#informe-nota").textContent = "Resumen generado a partir de las métricas de " + R.partidos + " partidos";
+  }
+  const todo = ok === total;
+  $("#verif-badge").className = "verif-badge" + (todo ? "" : " sin");
+  $("#verif-badge").textContent = todo ? "✓ Cifras verificadas" : "Cifras sin respaldo";
+  $("#verif-num").innerHTML = ok + "<small> / " + total + "</small>";
+  $("#api-equipo").href = "/api/equipos/" + team.slug;
+}
+
+function renderPresion(team) {
+  const T = team.herramientas;
+  const svg = $("#campo-recuperaciones");
+  const { datos, encima } = dibujarCampo(svg);
+  const Z = team.zonas_recuperacion;
+  const max = Math.max(1, ...Z.flat());
+  const total = Z.flat().reduce((a, b) => a + b, 0) || 1;
+  Z.forEach((fila, iy) => fila.forEach((v, ix) => {
+    const p = Math.round((100 * v) / max);
+    const rect = svgEl("rect", {
+      x: ix * 20, y: iy * 16, width: 20, height: 16, class: "cell", tabindex: 0,
+      style: "fill: color-mix(in oklab, var(--seq-hi) " + p + "%, var(--seq-lo))",
+      "aria-label": v + " acciones defensivas",
+    }, datos);
+    svgEl("text", { x: ix * 20 + 10, y: iy * 16 + 9.4, "text-anchor": "middle", "font-size": 4.2, class: "clab" + (p > 62 ? " hi" : "") }, encima).textContent = fmtInt(v);
+    const tercio = ix < 2 ? "tercio defensivo" : ix < 4 ? "tercio central" : "tercio ofensivo";
+    bindTip(rect, "<b>" + fmtInt(v) + " acciones defensivas</b><br>" + fmt((100 * v) / total) + " % del total · " + tercio);
+    rect.addEventListener("pointerenter", () => rect.classList.add("active"));
+    rect.addEventListener("pointerleave", () => rect.classList.remove("active"));
+  }));
+
+  $("#stats-presion").innerHTML = statsHtml([
+    ["PPDA medio", "pases rivales por acción defensiva", fmt(T.presion.ppda_medio, 2)],
+    ["Acciones defensivas", "por partido", fmt(T.presion.acciones_defensivas_por_partido)],
+    ["En campo rival", "de las acciones defensivas", fmt(T.presion.pct_acciones_campo_rival), "%"],
+    has(T.forma_defensiva.soporte_presion_medio)
+      ? ["Apoyo en la presión", "compañeros a menos de 10 yardas", fmt(T.forma_defensiva.soporte_presion_medio, 2)]
+      : null,
+    ["Acciones defensivas", "en total", fmtInt(T.presion.acciones_defensivas_totales)],
+  ]);
+
+  const vals = team.partidos.map((p) => p.ppda);
+  const validos = vals.filter((v) => v != null);
+  const techo = Math.max(1, Math.ceil(Math.max(...validos, 1) + 0.5));
+  $("#key-ppda").innerHTML = '<span><i class="k-series"></i>PPDA del partido</span><span><i class="k-mean"></i>media (' + fmt(T.presion.ppda_medio, 2) + ")</span>";
+  lineChart($("#chart-ppda"), {
+    values: vals, domain: [0, techo], ticks: [...Array(techo + 1).keys()].filter((t) => t > 0),
+    refs: [{ value: T.presion.ppda_medio, cls: "meanline" }],
+    labelFmt: (i) => fmt(vals[i], 2) + " · " + team.partidos[i].rival,
+    tooltip: (i) => tipPartido(team, i, vals[i] != null ? "PPDA: <b>" + fmt(vals[i], 2) + "</b>" : "Sin PPDA calculable"),
+  });
+}
+
+function renderDefensa(team) {
+  const T = team.herramientas;
+  const con360 = has(T.forma_defensiva.altura_linea_media);
+  $("#defensa-vacia").hidden = con360;
+  $("#defensa-contenido").hidden = !con360;
+  $("#tabla").classList.toggle("sin-360", !con360);
+  if (!con360) {
+    $("#defensa-vacia-comp").textContent = team.competicion + " " + team.temporada;
+    return;
+  }
+  const svg = $("#campo-bloque");
+  const { datos, encima } = dibujarCampo(svg);
+  team.bloque_densidad.forEach((fila, iy) => fila.forEach((v, ix) => {
+    if (v < 0.02) return;
+    svgEl("rect", { x: ix * 5, y: iy * 5, width: 5, height: 5, style: "fill: var(--accent); fill-opacity: " + Math.min(0.92, Math.pow(v, 0.85)).toFixed(3) }, datos);
+  }));
+  const lh = T.forma_defensiva.altura_linea_media;
+  svgEl("line", { x1: lh, y1: -1, x2: lh, y2: 81, class: "annline" }, encima);
+  svgEl("text", { x: lh - 1.2, y: 4.6, "text-anchor": "end", "font-size": 3.6, class: "ann" }, encima).textContent = "línea media " + fmt(lh);
+
+  const R = resultados(team);
+  $("#stats-defensa").innerHTML = statsHtml([
+    ["Altura de la línea", "media, desde su portería", fmt(lh), "/120"],
+    ["Anchura del bloque", "yardas", fmt(T.forma_defensiva.anchura_media)],
+    ["Profundidad del bloque", "yardas", fmt(T.forma_defensiva.profundidad_media)],
+    ["Área del bloque", "yardas²", fmtInt(T.forma_defensiva.hull_area_media_yd2)],
+    ["Partidos con posiciones", "datos 360 disponibles", T.forma_defensiva.partidos_con_360 + "<small>/" + R.partidos + "</small>"],
+  ]);
+
+  const vals = team.partidos.map((p) => p.altura_linea);
+  $("#key-linea").innerHTML =
+    '<span><i class="k-series"></i>altura del partido</span><span><i class="k-ref"></i>medio campo (60)</span>' +
+    '<span><i class="k-mean"></i>media (' + fmt(lh) + ')</span>' +
+    (vals.some((v) => v == null) ? '<span><i class="k-null"></i>sin datos de posiciones</span>' : "");
+  lineChart($("#chart-linea"), {
+    values: vals, domain: [30, 75], ticks: [40, 50, 60, 70],
+    refs: [{ value: 60, cls: "refline" }, { value: lh, cls: "meanline" }],
+    labelFmt: (i) => fmt(vals[i]) + " · " + team.partidos[i].rival,
+    tooltip: (i) => tipPartido(team, i, vals[i] != null ? "Altura de la defensa: <b>" + fmt(vals[i]) + "</b>" : "Sin datos de posiciones"),
+  });
+}
+
+function renderBalonParado(team) {
+  const T = team.herramientas;
   const svg = $("#campo-corners");
   const { datos } = dibujarCampo(svg);
-  for (const c of D.corners) svgEl("circle", { cx: c.x, cy: c.y, r: 0.7, class: "dot" }, datos);
+  for (const c of team.corners) svgEl("circle", { cx: c.x, cy: c.y, r: 0.7, class: "dot" }, datos);
 
-  const zonas = T.corners_ataque.zonas_saque;
-  const explicacion = {
-    "corto": "a un compañero cerca, sin colgarlo al área",
-    "centro": "al corazón del área, delante del portero",
-    "primer palo": "al poste más cercano al que saca",
-    "segundo palo": "al poste más lejano",
-  };
-  const orden = Object.entries(zonas).sort((a, b) => b[1] - a[1]);
-  const max = orden[0][1];
-  $("#zonas").innerHTML =
-    '<div class="bar-group"><h3>A dónde los saca</h3><p>Número de córners por zona de destino</p></div>' +
-    orden.map(([zona, n]) =>
-      '<div class="bar-row"><span class="who">' + zona + "</span>" +
-      '<div class="track"><span class="fill lev" style="width:calc((100% - 48px) * ' + (n / max).toFixed(3) + ')"></span>' +
-      '<span class="val">' + n + "</span></div>" +
-      '<span class="sub">' + explicacion[zona] + "</span></div>"
-    ).join("");
-  $("#k-corners").textContent = T.corners_ataque.n_corners;
-  $("#k-corners-contra").textContent = T.corners_defensa.n_corners;
-  $("#k-contacto").textContent = fmt(T.corners_ataque.pct_primer_contacto_ganado) + " %";
-})();
-
-/* comparación con España */
-(function () {
-  const S = D.espana;
-  if (!S) { $("#espana").hidden = true; return; }
-  const filas = [
-    { t: "Acciones defensivas por partido", nota: "veces que intenta quitar el balón", lev: T.presion.acciones_defensivas_por_partido, esp: S.acciones_defensivas_por_partido, d: 1, max: 260 },
-    { t: "PPDA medio", nota: "pases que deja dar al rival antes de presionar: cuanto menos, más aprieta", lev: T.presion.ppda_medio, esp: S.ppda_medio, d: 2, max: 3 },
-    { t: "Altura de la defensa", nota: "de 0 (su portería) a 120 (la portería rival)", lev: T.forma_defensiva.altura_linea_media, esp: S.altura_linea_media, d: 1, max: 120 },
-    { t: "Espacio que ocupa el bloque", nota: "cuanto menos, más juntos defienden", lev: T.forma_defensiva.hull_area_media_yd2, esp: S.hull_area_media_yd2, d: 0, max: 700 },
-  ];
-  const barra = (quien, cls, v, f) =>
-    '<div class="bar-row"><span class="who">' + quien + "</span>" +
-    '<div class="track"><span class="fill ' + cls + '" style="width:calc((100% - 60px) * ' + (v / f.max).toFixed(3) + ')"></span>' +
-    '<span class="val">' + fmt(v, f.d) + "</span></div></div>";
-  $("#comparacion").innerHTML = filas.map((f) =>
-    '<div class="bar-group"><h3>' + f.t + "</h3><p>" + f.nota + "</p>" +
-    barra("Leverkusen", "lev", f.lev, f) + barra("España", "esp", f.esp, f) + "</div>"
+  const zonas = Object.entries(T.corners_ataque.zonas_saque).sort((a, b) => b[1] - a[1]);
+  const max = Math.max(1, ...zonas.map((z) => z[1]));
+  const tot = zonas.reduce((a, z) => a + z[1], 0) || 1;
+  $("#zonas").innerHTML = zonas.map(([zona, n]) =>
+    '<div class="bar-row"><span class="who">' + esc(zona) + '</span><div class="track">' +
+    '<span class="fill a" style="width:calc((100% - 86px) * ' + (n / max).toFixed(3) + ')"></span>' +
+    '<span class="val">' + n + '</span><span class="na" style="font-size:13px">' + fmt((100 * n) / tot, 0) + " %</span></div></div>"
   ).join("");
-})();
-</script>
 
+  $("#stats-corners-favor").innerHTML = statsHtml([
+    ["Córners", "lanzados", fmtInt(T.corners_ataque.n_corners)],
+    ["Primer contacto", "tocó primero el balón", fmt(T.corners_ataque.pct_primer_contacto_ganado), "%"],
+    ["xG generado", "remates tras córner", fmt(T.corners_ataque.xg_a_favor, 2)],
+    has(T.corners_ataque.box_load_atacantes_medio)
+      ? ["Ocupación del área", "atacantes / defensores rivales", fmt(T.corners_ataque.box_load_atacantes_medio) + "<small> / " + fmt(T.corners_ataque.box_load_defensores_medio) + "</small>"]
+      : null,
+  ]);
+  $("#stats-corners-contra").innerHTML = statsHtml([
+    ["Córners", "concedidos", fmtInt(T.corners_defensa.n_corners)],
+    ["Primer contacto del rival", "tras sus saques", fmt(T.corners_defensa.pct_primer_contacto_concedido), "%"],
+    ["xG concedido", "remates rivales tras córner", fmt(T.corners_defensa.xg_en_contra, 2)],
+    has(T.corners_defensa.indice_orientacion_hombre)
+      ? ["Distancia al marcador", "media, aproximada · yardas", fmt(T.corners_defensa.indice_orientacion_hombre, 2)]
+      : null,
+  ]);
+}
+
+let orden = { k: "j", dir: 1 };
+function renderPartidos(team) {
+  const filas = team.partidos.map((p, i) => ({
+    j: i + 1, fecha: p.fecha, rival: p.rival, campo: p.local ? "Local" : "Visitante",
+    res: (p.goles_favor - p.goles_contra) * 100 + p.goles_favor, p, ppda: p.ppda, linea: p.altura_linea,
+  }));
+  const k = orden.k;
+  filas.sort((a, b) => {
+    const va = a[k], vb = b[k];
+    if (va == null && vb == null) return 0;
+    if (va == null) return 1;
+    if (vb == null) return -1;
+    return (va > vb ? 1 : va < vb ? -1 : 0) * orden.dir;
+  });
+  $("#tabla tbody").innerHTML = filas.map((f) =>
+    "<tr><td class=\"n\">" + f.j + "</td><td>" + fechaCorta(f.fecha) + "</td><td>" + esc(f.rival) + "</td><td>" + f.campo + "</td>" +
+    '<td><span class="res"><i class="' + letra(f.p) + '">' + letra(f.p) + "</i>" + f.p.goles_favor + "–" + f.p.goles_contra + "</span></td>" +
+    '<td class="n">' + (f.ppda != null ? fmt(f.ppda, 2) : '<span class="na">—</span>') + "</td>" +
+    '<td class="n">' + (f.linea != null ? fmt(f.linea) : '<span class="na">—</span>') + "</td></tr>"
+  ).join("");
+  document.querySelectorAll("#tabla th").forEach((th) => {
+    const activo = th.dataset.k === k;
+    th.setAttribute("aria-sort", activo ? (orden.dir === 1 ? "ascending" : "descending") : "none");
+    th.querySelector(".arrow").textContent = activo && orden.dir === -1 ? "▼" : "▲";
+  });
+  const R = resultados(team);
+  $("#partidos-nota").textContent = R.partidos + " partidos · pulsa una columna para ordenar";
+}
+document.querySelectorAll("#tabla th").forEach((th) => {
+  th.querySelector("button").addEventListener("click", () => {
+    orden = { k: th.dataset.k, dir: orden.k === th.dataset.k ? -orden.dir : 1 };
+    renderPartidos(actual());
+  });
+});
+
+let rivalSlug = null;
+function renderComparar(team) {
+  const otros = TEAMS.filter((t) => t.slug !== team.slug);
+  $("#comparar").hidden = otros.length === 0;
+  $("#nav-comparar").hidden = otros.length === 0;
+  if (!otros.length) return;
+  // rival por defecto: el siguiente equipo de la misma competición
+  if (!rivalSlug || rivalSlug === team.slug || !bySlug[rivalSlug]) {
+    const misma = otros.filter((t) => t.competicion === team.competicion && t.temporada === team.temporada);
+    rivalSlug = (misma[0] || otros[0]).slug;
+  }
+  const sel = $("#rival");
+  let grupo = null, opciones = "";
+  for (const t of otros) {
+    const g = t.competicion + " " + t.temporada;
+    if (g !== grupo) { opciones += (grupo ? "</optgroup>" : "") + '<optgroup label="' + esc(g) + '">'; grupo = g; }
+    opciones += '<option value="' + t.slug + '"' + (t.slug === rivalSlug ? " selected" : "") + ">" + esc(t.nombre) + "</option>";
+  }
+  sel.innerHTML = opciones + (grupo ? "</optgroup>" : "");
+  const b = bySlug[rivalSlug];
+  const pp = (t, v) => v / Math.max(1, t.partidos.length);
+  $("#compare-a").textContent = team.nombre + " · " + team.partidos.length + " partidos";
+  $("#compare-b").textContent = b.partidos.length + " partidos";
+  const metricas = [
+    ["PPDA medio", "más bajo = presión más intensa", (t) => t.herramientas.presion.ppda_medio, 2],
+    ["Acciones defensivas por partido", "", (t) => t.herramientas.presion.acciones_defensivas_por_partido, 1],
+    ["Presión en campo rival", "% de las acciones defensivas", (t) => t.herramientas.presion.pct_acciones_campo_rival, 1],
+    ["Altura de la defensa", "de 120 yardas", (t) => t.herramientas.forma_defensiva.altura_linea_media, 1],
+    ["Área del bloque", "yardas² · más bajo = más compacto", (t) => t.herramientas.forma_defensiva.hull_area_media_yd2, 0],
+    ["Goles por partido", "", (t) => pp(t, resultados(t).goles_favor), 2],
+    ["Córners a favor por partido", "", (t) => pp(t, t.herramientas.corners_ataque.n_corners), 1],
+    ["Primer contacto en córners", "% ganado", (t) => t.herramientas.corners_ataque.pct_primer_contacto_ganado, 1],
+  ];
+  $("#compare-grid").innerHTML = metricas.filter(([, , get]) => has(get(team)) && has(get(b))).map(([titulo, nota, get, d]) => {
+    const va = get(team), vb = get(b), max = Math.max(va, vb) || 1;
+    const fila = (who, cls, v) =>
+      '<div class="bar-row"><span class="who">' + esc(who) + '</span><div class="track"><span class="fill ' + cls +
+      '" style="width:calc((100% - 60px) * ' + (v / max).toFixed(3) + ')"></span><span class="val">' + fmt(v, d) + "</span></div></div>";
+    return '<div class="bar-group"><h3>' + titulo + "</h3>" + (nota ? "<p>" + nota + "</p>" : "") +
+      fila(team.nombre, "a", va) + fila(b.nombre, "b", vb) + "</div>";
+  }).join("");
+}
+
+/* ---------- navegación ---------- */
+const bySlug = Object.fromEntries(TEAMS.map((t) => [t.slug, t]));
+let slugActual = INITIAL;
+const actual = () => bySlug[slugActual];
+function render() {
+  const team = actual();
+  renderCabecera(team);
+  renderInforme(team);
+  renderPresion(team);
+  renderDefensa(team);
+  renderBalonParado(team);
+  orden = { k: "j", dir: 1 };
+  renderPartidos(team);
+  renderComparar(team);
+}
+$("#rival").addEventListener("change", (e) => {
+  rivalSlug = e.target.value;
+  renderComparar(actual());
+});
+$("#equipo").addEventListener("change", (e) => {
+  slugActual = e.target.value;
+  try { history.replaceState(null, "", "?equipo=" + encodeURIComponent(slugActual) + location.hash); } catch (err) { /* sin historial */ }
+  render();
+});
+try {
+  const pedido = new URLSearchParams(location.search).get("equipo");
+  if (pedido && bySlug[pedido]) { slugActual = pedido; $("#equipo").value = pedido; }
+} catch (err) { /* sin URL */ }
+render();
+
+const enlaces = [...document.querySelectorAll(".secnav a")];
+const io = new IntersectionObserver((entries) => {
+  for (const en of entries) {
+    if (!en.isIntersecting) continue;
+    enlaces.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + en.target.id));
+  }
+}, { rootMargin: "-45% 0px -50% 0px" });
+document.querySelectorAll("section.block").forEach((s) => io.observe(s));
+</script>
 </body>
 </html>

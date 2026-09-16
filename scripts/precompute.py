@@ -3,15 +3,15 @@
 La app FastAPI de producción no genera nada: solo sirve lo que este script deja
 en app/static/report/. Hay dos tipos de artefacto:
 
-- demo_data.json: los datos de las gráficas interactivas. Solo métricas
-  deterministas sobre la caché de StatsBomb, SIN key.
+- teams/<slug>.json: las métricas y gráficas de cada equipo publicado (lista
+  en scripts/publicacion.yaml). Solo métricas deterministas, SIN key.
 - report.md + evidence.json: el informe escrito por el LLM y su evidencia,
   CON key (la única llamada cara).
 
 El humano corre esto en local, revisa el resultado y COMMITEA los artefactos.
 
 Uso:
-    uv run python scripts/precompute.py --demo-data     # gráficas reales (sin key)
+    uv run python scripts/precompute.py --demo-data     # métricas de los equipos (sin key)
     ANTHROPIC_API_KEY=sk-ant-... uv run python scripts/precompute.py   # todo
     uv run python scripts/precompute.py --sample        # fixtures sintéticas (sin key)
 """
@@ -28,6 +28,79 @@ from datetime import date
 from pitchiq import config
 
 REPORT_DIR = config.ROOT_DIR / "app" / "static" / "report"
+TEAMS_DIR = REPORT_DIR / "teams"
+
+
+PUBLICACION = config.ROOT_DIR / "scripts" / "publicacion.yaml"
+
+
+def _slugify(text: str) -> str:
+    """Texto a slug de URL: minúsculas, sin acentos, guiones."""
+    import re
+    import unicodedata
+
+    plain = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
+    return re.sub(r"[^a-z0-9]+", "-", plain.lower()).strip("-")
+
+
+def _temporada_corta(season_name: str) -> str:
+    """'2015/2016' -> '2015/16'; '2024' se queda igual."""
+    parts = str(season_name).split("/")
+    return f"{parts[0]}/{parts[1][-2:]}" if len(parts) == 2 else str(season_name)
+
+
+def clasificacion(matches) -> "list[str]":
+    """Equipos ordenados por la clasificación que dan los resultados."""
+    tabla: dict[str, list[int]] = {}
+    for _, m in matches.iterrows():
+        for team, gf, gc in ((m["home_team"], m["home_score"], m["away_score"]),
+                             (m["away_team"], m["away_score"], m["home_score"])):
+            fila = tabla.setdefault(team, [0, 0, 0])  # puntos, diferencia, goles
+            fila[0] += 3 if gf > gc else 1 if gf == gc else 0
+            fila[1] += int(gf) - int(gc)
+            fila[2] += int(gf)
+    return sorted(tabla, key=lambda t: (-tabla[t][0], -tabla[t][1], -tabla[t][2], t))
+
+
+def equipos_a_publicar() -> "list[dict]":
+    """Resuelve publicacion.yaml a la lista de equipos (con su competición)."""
+    import yaml
+
+    from pitchiq.data.loader import load_competitions, load_matches
+
+    conf = yaml.safe_load(PUBLICACION.read_text(encoding="utf-8"))
+    catalogo = load_competitions()
+    entradas = []
+    for bloque in conf["competiciones"]:
+        cid, sid = int(bloque["competition_id"]), int(bloque["season_id"])
+        fila = catalogo[(catalogo["competition_id"] == cid) & (catalogo["season_id"] == sid)]
+        if fila.empty:
+            raise SystemExit(f"competición {cid}/{sid} no está en StatsBomb Open Data")
+        competicion = str(fila.iloc[0]["competition_name"]).replace("1. Bundesliga", "Bundesliga")
+        temporada = _temporada_corta(fila.iloc[0]["season_name"])
+        if "equipos" in bloque:
+            equipos = list(bloque["equipos"])
+        else:
+            equipos = clasificacion(load_matches(competition_id=cid, season_id=sid))[: int(bloque["top"])]
+        for equipo in equipos:
+            entradas.append({
+                "equipo": equipo, "competition_id": cid, "season_id": sid,
+                "competicion": competicion, "temporada": temporada,
+                "slug": _slugify(f"{equipo} {temporada}"),
+            })
+    return entradas
+
+
+def _sin_nan(obj):
+    """Sustituye NaN por None en estructuras anidadas (JSON válido, sin inventar)."""
+    if isinstance(obj, float) and math.isnan(obj):
+        return None
+    if isinstance(obj, dict):
+        return {k: _sin_nan(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_sin_nan(v) for v in obj]
+    return obj
+
 
 # Figuras de temporada (M1-M3) que acompañan al informe en la web
 SEASON_FIGURES = [
@@ -71,27 +144,27 @@ SAMPLE_EVIDENCE = {
 }
 
 
-def _sample_demo_data() -> dict:
-    """Datos de gráficas sintéticos, con la misma forma que los reales."""
-    rivales = ["Equipo B", "Equipo C", "Equipo D", "Equipo E"]
+def _sample_team(slug: str, nombre: str, orden: int, desplaz: float) -> dict:
+    """Equipo sintético con la misma forma que los reales."""
+    rivales = ["Rival A", "Rival B", "Rival C", "Rival D"]
     return {
-        "equipo": "Equipo Muestra",
-        "temporada": "muestra",
+        "slug": slug, "equipo": nombre, "nombre": nombre, "orden": orden,
+        "competicion": "Liga de muestra", "temporada": "2026",
         "herramientas": {
             "presion": {
-                "team": "Equipo Muestra", "n_partidos": 4,
+                "team": nombre, "n_partidos": 4,
                 "acciones_defensivas_totales": 800,
-                "acciones_defensivas_por_partido": 200.0,
+                "acciones_defensivas_por_partido": 200.0 + desplaz,
                 "ppda_medio": 2.48, "pct_acciones_campo_rival": 50.0,
             },
             "forma_defensiva": {
-                "team": "Equipo Muestra", "hull_area_media_yd2": 500.0,
+                "team": nombre, "hull_area_media_yd2": 500.0 + desplaz,
                 "anchura_media": 35.0, "profundidad_media": 24.0,
                 "altura_linea_media": 52.9, "soporte_presion_medio": 1.3,
                 "partidos_con_360": 3,
             },
             "corners_ataque": {
-                "team": "Equipo Muestra", "n_corners": 236,
+                "team": nombre, "n_corners": 236,
                 "zonas_saque": {"corto": 4, "centro": 3, "primer palo": 2,
                                 "segundo palo": 1},
                 "box_load_atacantes_medio": 5.0,
@@ -99,7 +172,7 @@ def _sample_demo_data() -> dict:
                 "pct_primer_contacto_ganado": 60.0, "xg_a_favor": 1.5,
             },
             "corners_defensa": {
-                "team": "Equipo Muestra", "n_corners": 5,
+                "team": nombre, "n_corners": 5,
                 "indice_orientacion_hombre": 3.0,
                 "pct_primer_contacto_concedido": 40.0, "xg_en_contra": 0.5,
             },
@@ -119,11 +192,6 @@ def _sample_demo_data() -> dict:
             {"x": 115.0, "y": 40.0, "desde_arriba": False, "zona": "centro"},
             {"x": 118.0, "y": 78.0, "desde_arriba": True, "zona": "corto"},
         ],
-        "espana": {
-            "equipo": "Equipo Comparado", "n_partidos": 3, "partidos_con_360": 3,
-            "acciones_defensivas_por_partido": 210.0, "ppda_medio": 2.2,
-            "hull_area_media_yd2": 520.0, "altura_linea_media": 54.0,
-        },
     }
 
 
@@ -131,15 +199,21 @@ def build_sample() -> None:
     """Genera las fixtures sintéticas de sample/ (sin key, para tests y CI)."""
     sample_dir = REPORT_DIR / "sample"
     figures_dir = sample_dir / "figures"
+    teams_dir = sample_dir / "teams"
     figures_dir.mkdir(parents=True, exist_ok=True)
+    teams_dir.mkdir(parents=True, exist_ok=True)
 
     (sample_dir / "report.md").write_text(SAMPLE_MARKDOWN, encoding="utf-8")
     (sample_dir / "evidence.json").write_text(
         json.dumps(SAMPLE_EVIDENCE, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-    (sample_dir / "demo_data.json").write_text(
-        json.dumps(_sample_demo_data(), ensure_ascii=False), encoding="utf-8"
-    )
+    for team in (
+        _sample_team("equipo-muestra", "Equipo Muestra", 0, 0.0),
+        _sample_team("equipo-rival", "Equipo Rival", 1, 10.0),
+    ):
+        (teams_dir / f"{team['slug']}.json").write_text(
+            json.dumps(team, ensure_ascii=False), encoding="utf-8"
+        )
 
     import matplotlib
 
@@ -154,25 +228,35 @@ def build_sample() -> None:
     print(f"fixtures de muestra en {sample_dir}")
 
 
-def build_demo_data(team: str) -> None:
-    """Exporta los datos reales de las gráficas interactivas (sin key)."""
+def build_team_data(entry: dict, orden: int) -> None:
+    """Exporta las métricas y gráficas de un equipo publicado (sin key)."""
+    import warnings
+
+    warnings.filterwarnings("ignore", category=RuntimeWarning)  # medias de listas vacías sin 360
     import numpy as np
 
-    from pitchiq.agent.tools import run_all_tools
-    from pitchiq.data.loader import load_events, load_frames, load_matches
+    from pitchiq.agent import tools as agent_tools
+    from pitchiq.data.loader import has_360, load_events, load_frames, load_matches
     from pitchiq.metrics.frames import merge_frames_events, visible_teammates
     from pitchiq.metrics.pressing import defensive_actions, ppda
     from pitchiq.metrics.set_pieces import delivery_zone, find_corners
     from pitchiq.metrics.spatial import defensive_line_height
 
-    matches = load_matches().sort_values("match_date").reset_index(drop=True)
+    team = entry["equipo"]
+    competition_id, season_id = entry["competition_id"], entry["season_id"]
+    matches = load_matches(competition_id=competition_id, season_id=season_id)
+    matches = matches[
+        (matches["home_team"] == team) | (matches["away_team"] == team)
+    ].sort_values("match_date").reset_index(drop=True)
+
     recovery = np.zeros((5, 6), dtype=int)  # filas = ancho (y), columnas = largo (x)
     block = np.zeros((16, 24))  # densidad de posiciones visibles al defender
     per_match, corner_ends = [], []
 
     for _, m in matches.iterrows():
         match_id = int(m["match_id"])
-        events, frames = load_events(match_id), load_frames(match_id)
+        events = load_events(match_id)
+        frames = load_frames(match_id) if has_360(m) else None
         home = m["home_team"] == team
 
         actions = defensive_actions(events, team)
@@ -180,8 +264,8 @@ def build_demo_data(team: str) -> None:
                                     range=[[0, 120], [0, 80]])
         recovery += grid.T.astype(int)
 
-        merged = merge_frames_events(frames, events)
-        if not merged.empty:
+        merged = merge_frames_events(frames, events) if frames is not None else None
+        if merged is not None and not merged.empty:
             ids = set(actions["id"])
             for _, frame in merged[merged["event_uuid"].isin(ids)].groupby("event_uuid"):
                 xy = visible_teammates(frame, team)
@@ -190,7 +274,8 @@ def build_demo_data(team: str) -> None:
                                                 range=[[0, 120], [0, 80]])
                     block += dens.T
 
-        line = defensive_line_height(frames, events, team).mean("line_height")
+        line = (defensive_line_height(frames, events, team).mean("line_height")
+                if frames is not None else float("nan"))
         match_ppda = ppda(events, team)
         per_match.append({
             "fecha": str(m["match_date"])[:10],
@@ -212,35 +297,49 @@ def build_demo_data(team: str) -> None:
                     "zona": delivery_zone(c),
                 })
 
-    generalization = config.ROOT_DIR / "eval" / "results" / "generalization.json"
-    espana = (
-        json.loads(generalization.read_text(encoding="utf-8"))
-        if generalization.exists() else None
-    )
+    tools = agent_tools.run_all_tools(team, competition_id=competition_id, season_id=season_id)
+    agent_tools._season_data.cache_clear()  # un equipo de liga completa ocupa cientos de MB
     payload = {
+        "slug": entry["slug"],
         "equipo": team,
-        "temporada": "2023/24",
-        "herramientas": {k: v.model_dump() for k, v in run_all_tools(team).items()},
+        "nombre": team,
+        "con_360": bool(tools["forma_defensiva"].partidos_con_360),
+        "competicion": entry["competicion"],
+        "temporada": entry["temporada"],
+        "orden": orden,
+        "herramientas": {k: v.model_dump() for k, v in tools.items()},
         "zonas_recuperacion": recovery.tolist(),
         "bloque_densidad": (block / max(block.max(), 1)).round(3).tolist(),
         "partidos": per_match,
         "corners": corner_ends,
-        "espana": espana,
     }
-    REPORT_DIR.mkdir(parents=True, exist_ok=True)
-    out = REPORT_DIR / "demo_data.json"
-    out.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
-    print(f"datos de gráficas en {out} ({len(per_match)} partidos)")
+    TEAMS_DIR.mkdir(parents=True, exist_ok=True)
+    out = TEAMS_DIR / f"{entry['slug']}.json"
+    out.write_text(json.dumps(_sin_nan(payload), ensure_ascii=False), encoding="utf-8")
+    print(f"{team} ({entry['competicion']} {entry['temporada']}): {len(per_match)} partidos", flush=True)
+
+
+def build_demo_data() -> None:
+    """Exporta todos los equipos de publicacion.yaml (sin key), borrando los retirados."""
+    entradas = equipos_a_publicar()
+    print(f"publicando {len(entradas)} equipos", flush=True)
+    TEAMS_DIR.mkdir(parents=True, exist_ok=True)
+    vigentes = {f"{e['slug']}.json" for e in entradas}
+    for viejo in TEAMS_DIR.glob("*.json"):
+        if viejo.name not in vigentes:
+            viejo.unlink()
+    for orden, entry in enumerate(entradas):
+        build_team_data(entry, orden)
 
 
 def build_real(team: str) -> None:
-    """Genera gráficas, figuras y el informe real (requiere ANTHROPIC_API_KEY)."""
+    """Genera métricas, figuras y el informe real (requiere ANTHROPIC_API_KEY)."""
     if not os.environ.get("ANTHROPIC_API_KEY"):
         raise SystemExit(
             "Falta ANTHROPIC_API_KEY: el precómputo genera el informe con el LLM "
             "una única vez, en local. Exporta la key y relanza:\n"
             "  ANTHROPIC_API_KEY=sk-ant-... uv run python scripts/precompute.py\n"
-            "Las gráficas no necesitan key: uv run python scripts/precompute.py --demo-data"
+            "Las métricas no necesitan key: uv run python scripts/precompute.py --demo-data"
         )
 
     from pitchiq.agent.report import generate_report
@@ -264,8 +363,8 @@ def build_real(team: str) -> None:
         else:
             print(f"  aviso: falta {src.name}")
 
-    print("2/4 exportando datos de las gráficas interactivas (sin key)...")
-    build_demo_data(team)
+    print("2/4 exportando métricas de los equipos publicados (sin key)...")
+    build_demo_data()
 
     print("3/4 generando el informe con el LLM (única llamada cara)...")
     retriever = open_default_retriever()
@@ -302,13 +401,13 @@ def main() -> None:
     parser.add_argument("--sample", action="store_true",
                         help="genera solo las fixtures sintéticas (sin key)")
     parser.add_argument("--demo-data", action="store_true",
-                        help="exporta solo los datos de las gráficas (sin key)")
+                        help="exporta solo las métricas de los equipos (sin key)")
     args = parser.parse_args()
 
     if args.sample:
         build_sample()
     elif args.demo_data:
-        build_demo_data(args.team)
+        build_demo_data()
     else:
         build_real(args.team)
 

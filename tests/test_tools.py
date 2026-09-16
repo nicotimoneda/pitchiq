@@ -65,3 +65,26 @@ def test_numeric_values_identifica_cada_metrica(synthetic_season):
     assert values["zonas_saque.centro"] == 1.0
     assert values["xg_a_favor"] == 0.3
     assert all(isinstance(v, float) for v in values.values())
+
+
+def test_season_data_filtra_partidos_ajenos_al_equipo(monkeypatch):
+    """En un torneo la competición trae partidos de otros equipos: no deben contar."""
+    import pandas as pd
+
+    from pitchiq.agent import tools
+
+    tools._season_data.cache_clear()
+    matches = pd.DataFrame(
+        [
+            {"match_id": 1, "match_date": "2024-06-01", "home_team": "A", "away_team": "B"},
+            {"match_id": 2, "match_date": "2024-06-02", "home_team": "C", "away_team": "D"},
+            {"match_id": 3, "match_date": "2024-06-03", "home_team": "E", "away_team": "A"},
+        ]
+    )
+    monkeypatch.setattr(tools, "load_matches", lambda **kwargs: matches)
+    monkeypatch.setattr(tools, "load_events", lambda match_id: pd.DataFrame())
+    monkeypatch.setattr(tools, "load_frames", lambda match_id: pd.DataFrame())
+
+    data = tools._season_data("A", 55, 282)
+    tools._season_data.cache_clear()
+    assert [match_id for match_id, _, _ in data] == [1, 3]

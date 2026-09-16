@@ -87,7 +87,9 @@ scripts/precompute.py                        app FastAPI mínima
         └── git commit ──────────────────▶  imagen Docker pequeña
 ```
 
-La página principal es una demo interactiva con datos reales: mapa de recuperaciones y bloque defensivo sobre el campo, la altura de la defensa partido a partido, los córners, la comparación con España (Euro 2024) y un comprobador de cifras donde el visitante puede inventarse un número y ver cómo el validador lo marca. El informe escrito por el LLM aparece como sección propia, con su recuento de cifras comprobadas, en cuanto se precomputa.
+La web es una herramienta de análisis por equipo: selector de equipo, cabecera con balance y cifras clave, y secciones de Informe (resumen con cada cifra verificada contra las métricas), Presión, Defensa, Balón parado, una tabla de partidos ordenable y Comparar contra cualquier otro equipo publicado. El informe redactado por el LLM aparece dentro de Informe, con su recuento de cifras verificadas, en cuanto se precomputa.
+
+Qué equipos se publican lo decide [`scripts/publicacion.yaml`](scripts/publicacion.yaml): por competición de StatsBomb Open Data, una lista de equipos o los N primeros de la clasificación. Ahora mismo: Bayer Leverkusen (Bundesliga 2023/24, con datos de posiciones 360) y los 10 primeros de La Liga 2015/16 (temporada completa, sin 360). Donde no hay posiciones, la sección de Defensa lo indica y esas métricas no se estiman.
 
 **Por qué así:** la app de producción no lleva `ANTHROPIC_API_KEY` (imposible filtrarla: no existe allí), no importa torch/langgraph/anthropic (imagen mínima, el CI lo verifica), y cada visita cuesta cero llamadas de LLM. Las gráficas y el informe son artefactos independientes: la web enseña datos reales aunque el informe todavía no exista. El pipeline de generación completo sigue en el repo para quien clone y ponga su key.
 

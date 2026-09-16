@@ -42,6 +42,21 @@ def load_matches(
     return matches
 
 
+def load_competitions() -> pd.DataFrame:
+    """Devuelve el catálogo de competiciones y temporadas de StatsBomb Open Data."""
+    cached = _read_cache("competitions")
+    if cached is not None:
+        return cached
+    competitions = sb.competitions()
+    _write_cache("competitions", competitions)
+    return competitions
+
+
+def has_360(match: "pd.Series | dict") -> bool:
+    """True si StatsBomb publica freeze-frames 360 para ese partido."""
+    return match.get("match_status_360") == "available"
+
+
 def load_events(match_id: int) -> pd.DataFrame:
     """Devuelve los eventos de un partido (incluye a los dos equipos)."""
     key = f"events_{match_id}"

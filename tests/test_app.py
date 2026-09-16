@@ -18,60 +18,66 @@ def _base_con_sample(tmp_path: Path) -> Path:
     return tmp_path
 
 
+def _copiar_equipos_como_reales(base: Path) -> Path:
+    """Copia los equipos de muestra a teams/ para simular métricas reales publicadas."""
+    shutil.copytree(SAMPLE_DIR / "teams", base / "teams")
+    return base / "teams"
+
+
 @pytest.fixture(scope="module")
 def client(tmp_path_factory):
-    """App sin artefactos reales: todo cae a sample/.
-
-    Así los tests no dependen de si los artefactos reales están commiteados.
-    """
+    """App sin artefactos reales: todo cae a sample/."""
     return TestClient(create_app(report_dir=_base_con_sample(tmp_path_factory.mktemp("a"))))
 
 
 def test_health(client):
     r = client.get("/health")
     assert r.status_code == 200
-    assert r.json() == {"status": "ok", "sample_data": True, "sample_report": True}
+    assert r.json() == {"status": "ok", "sample_data": True, "sample_report": True, "equipos": 2}
 
 
-def test_index_con_graficas_comprobador_e_informe(client):
+def test_index_con_selector_secciones_y_datos(client):
     r = client.get("/")
     assert r.status_code == 200
     html = r.text
-    # las gráficas interactivas y el comprobador de cifras
-    for elemento in ['id="campo-recuperaciones"', 'id="linea"', 'id="texto"', 'id="comparacion"']:
-        assert elemento in html
-    # los datos se inyectan en la página (no hay llamadas a la API desde el cliente)
-    assert '"zonas_recuperacion"' in html
-    # el informe de muestra, con su recuento de cifras comprobadas
-    assert "3 de 3 cifras comprobadas" in html
-    assert "Informe táctico" in html
+    # selector con todos los equipos publicados, agrupados por competición
+    assert '<optgroup label="Liga de muestra 2026">' in html
+    assert 'value="equipo-muestra"' in html and 'value="equipo-rival"' in html
+    for seccion in ['id="informe"', 'id="presion"', 'id="defensa"', 'id="balon-parado"',
+                    'id="partidos"', 'id="comparar"']:
+        assert seccion in html
+    # los datos de todos los equipos se inyectan en la página (sin llamadas desde el cliente)
+    assert html.count('"zonas_recuperacion"') == 2
+    # el informe del LLM (muestra) viaja con su recuento de cifras verificadas
+    assert '"n_grounded": 3' in html
+    assert "Datos de muestra" in html
 
 
-def test_fallback_a_sample_avisa(client):
-    """Sin artefactos reales, la página avisa de que son datos de muestra."""
-    assert client.get("/").text.count("Datos de muestra") == 2  # gráficas + informe
+def test_equipo_inicial_por_query(client):
+    html = client.get("/?equipo=equipo-rival").text
+    assert "<title>PitchIQ · Equipo Rival</title>" in html
+    assert 'const INITIAL = "equipo-rival";' in html
+    # un slug desconocido cae al primer equipo publicado
+    assert 'const INITIAL = "equipo-muestra";' in client.get("/?equipo=no-existe").text
 
 
-def test_api_report_estructura(client):
-    data = client.get("/api/report").json()
-    assert {"team", "generated_at", "sample", "grounding_ratio", "markdown"} <= set(data)
-    assert data["grounding_ratio"] == 1.0
-    assert data["markdown"].startswith("#")
+def test_api_equipos(client):
+    equipos = client.get("/api/equipos").json()
+    assert [e["slug"] for e in equipos] == ["equipo-muestra", "equipo-rival"]
+    assert {"slug", "nombre", "competicion", "temporada"} == set(equipos[0])
+
+    detalle = client.get("/api/equipos/equipo-rival").json()
+    assert {"herramientas", "zonas_recuperacion", "bloque_densidad", "partidos", "corners"} <= set(detalle)
+    assert client.get("/api/equipos/no-existe").status_code == 404
 
 
-def test_api_evidence_estructura(client):
-    data = client.get("/api/evidence").json()
-    assert {"team", "grounding", "tool_outputs"} <= set(data)
-    assert "ratio" in data["grounding"]
-    assert all("grounded" in f for f in data["grounding"]["figures"])
-
-
-def test_api_demo_data_estructura(client):
-    data = client.get("/api/demo-data").json()
-    assert {"herramientas", "zonas_recuperacion", "bloque_densidad", "partidos",
-            "corners", "espana"} <= set(data)
-    assert len(data["zonas_recuperacion"]) == 5
-    assert all(len(fila) == 6 for fila in data["zonas_recuperacion"])
+def test_api_report_y_evidence(client):
+    report = client.get("/api/report").json()
+    assert {"team", "generated_at", "sample", "grounding_ratio", "markdown"} <= set(report)
+    assert report["markdown"].startswith("#")
+    evidence = client.get("/api/evidence").json()
+    assert {"team", "grounding", "tool_outputs"} <= set(evidence)
+    assert all("grounded" in f for f in evidence["grounding"]["figures"])
 
 
 def test_figuras_estaticas_se_sirven(client):
@@ -80,26 +86,27 @@ def test_figuras_estaticas_se_sirven(client):
     assert r.headers["content-type"] == "image/png"
 
 
-def test_graficas_reales_sin_informe_no_mezcla_la_muestra(tmp_path):
-    """Con datos de gráficas reales pero sin informe, no enseña el informe falso."""
+def test_metricas_reales_sin_informe_no_mezcla_la_muestra(tmp_path):
+    """Con métricas reales pero sin informe real, no se publica el informe de muestra."""
     base = _base_con_sample(tmp_path)
-    shutil.copy(SAMPLE_DIR / "demo_data.json", base / "demo_data.json")
+    _copiar_equipos_como_reales(base)
     client = TestClient(create_app(report_dir=base))
 
     html = client.get("/").text
-    assert "El informe completo, en preparación" in html
-    assert "Informe táctico" not in html
+    assert "const REPORTS = {};" in html
     assert "Datos de muestra" not in html
     assert client.get("/health").json()["sample_data"] is False
 
 
-def test_sin_espana_la_seccion_se_oculta_en_cliente(tmp_path):
-    """Si no hay datos de comparación, la página los recibe como null."""
+def test_equipo_sin_datos_360_llega_como_null(tmp_path):
+    """Sin posiciones 360, las métricas espaciales viajan como null (no se estiman)."""
     base = _base_con_sample(tmp_path)
-    datos = json.loads((SAMPLE_DIR / "demo_data.json").read_text(encoding="utf-8"))
-    datos["espana"] = None
-    (base / "demo_data.json").write_text(json.dumps(datos), encoding="utf-8")
+    teams = _copiar_equipos_como_reales(base)
+    path = teams / "equipo-rival.json"
+    datos = json.loads(path.read_text(encoding="utf-8"))
+    for campo in ("altura_linea_media", "anchura_media", "hull_area_media_yd2"):
+        datos["herramientas"]["forma_defensiva"][campo] = None
+    path.write_text(json.dumps(datos), encoding="utf-8")
 
-    html = TestClient(create_app(report_dir=base)).get("/").text
-    assert '"espana": null' in html
-    assert 'if (!S) { $("#espana").hidden = true; return; }' in html
+    detalle = TestClient(create_app(report_dir=base)).get("/api/equipos/equipo-rival").json()
+    assert detalle["herramientas"]["forma_defensiva"]["altura_linea_media"] is None

@@ -13,7 +13,7 @@ import pandas as pd
 from pydantic import BaseModel
 
 from pitchiq import config
-from pitchiq.data.loader import load_events, load_frames, load_matches
+from pitchiq.data.loader import has_360, load_events, load_frames, load_matches
 from pitchiq.metrics.frames import merge_frames_events
 from pitchiq.metrics.pressing import defensive_actions, ppda, recovery_zones
 from pitchiq.metrics.set_pieces import (
@@ -34,9 +34,11 @@ from pitchiq.metrics.spatial import (
 
 
 class ToolInput(BaseModel):
-    """Entrada común: el equipo a analizar."""
+    """Entrada común: el equipo a analizar y la competición donde se mide."""
 
     team: str = config.DEFAULT_TEAM
+    competition_id: int = config.COMPETITION_ID
+    season_id: int = config.SEASON_ID
 
 
 class ToolOutput(BaseModel):
@@ -60,11 +62,24 @@ class ToolOutput(BaseModel):
 
 
 @lru_cache(maxsize=4)
-def _season_data(team: str) -> "tuple[tuple[int, pd.DataFrame, pd.DataFrame], ...]":
-    """Carga (match_id, eventos, frames) de todos los partidos, cacheado en memoria."""
-    matches = load_matches().sort_values("match_date")
+def _season_data(
+    team: str,
+    competition_id: int = config.COMPETITION_ID,
+    season_id: int = config.SEASON_ID,
+) -> "tuple[tuple[int, pd.DataFrame, pd.DataFrame], ...]":
+    """Carga (match_id, eventos, frames) de los partidos del equipo, cacheado en memoria."""
+    matches = load_matches(competition_id=competition_id, season_id=season_id)
+    # en un torneo la competición incluye partidos ajenos al equipo
+    matches = matches[
+        (matches["home_team"] == team) | (matches["away_team"] == team)
+    ].sort_values("match_date")
     return tuple(
-        (int(m["match_id"]), load_events(int(m["match_id"])), load_frames(int(m["match_id"])))
+        (
+            int(m["match_id"]),
+            load_events(int(m["match_id"])),
+            # sin 360 publicado no se pide a la red: las métricas espaciales quedan en NaN
+            load_frames(int(m["match_id"])) if has_360(m) else pd.DataFrame(),
+        )
         for _, m in matches.iterrows()
     )
 
@@ -87,7 +102,7 @@ class PressingOutput(ToolOutput):
 def pressing_tool(params: ToolInput) -> PressingOutput:
     """Presión del equipo (M1): volumen de acciones defensivas, dónde, y PPDA medio."""
     totals, ppdas, high = [], [], []
-    for _, events, _ in _season_data(params.team):
+    for _, events, _ in _season_data(params.team, params.competition_id, params.season_id):
         zones = recovery_zones(events, params.team)
         totals.append(zones.total)
         match_ppda = ppda(events, params.team)
@@ -126,7 +141,7 @@ def shape_tool(params: ToolInput) -> ShapeOutput:
     """Forma defensiva del equipo (M2), computada sobre freeze-frames 360 visibles."""
     hulls, widths, depths, lines, supports = [], [], [], [], []
     n_con_360 = 0
-    for _, events, frames in _season_data(params.team):
+    for _, events, frames in _season_data(params.team, params.competition_id, params.season_id):
         comp = defensive_compactness(frames, events, params.team)
         if comp.n_events == 0:
             continue
@@ -168,7 +183,7 @@ def corners_attack_tool(params: ToolInput) -> CornersAttackOutput:
     zonas: dict[str, int] = {}
     att_box, def_box, contacts, xg = [], [], [], 0.0
     n = 0
-    for _, events, frames in _season_data(params.team):
+    for _, events, frames in _season_data(params.team, params.competition_id, params.season_id):
         merged = merge_frames_events(frames, events)
         attacking, _ = find_corners(events, params.team)
         n += len(attacking)
@@ -207,7 +222,7 @@ def corners_defense_tool(params: ToolInput) -> CornersDefenseOutput:
     """Córners defensivos del equipo (M3); el índice de marcaje es un proxy heurístico."""
     mois, conceded, xg = [], [], 0.0
     n = 0
-    for _, events, frames in _season_data(params.team):
+    for _, events, frames in _season_data(params.team, params.competition_id, params.season_id):
         merged = merge_frames_events(frames, events)
         _, defensive = find_corners(events, params.team)
         n += len(defensive)
@@ -261,7 +276,11 @@ TOOLS: "dict[str, tuple[str, object]]" = {
 }
 
 
-def run_all_tools(team: str) -> "dict[str, ToolOutput]":
+def run_all_tools(
+    team: str,
+    competition_id: int = config.COMPETITION_ID,
+    season_id: int = config.SEASON_ID,
+) -> "dict[str, ToolOutput]":
     """Ejecuta todas las herramientas para un equipo y devuelve sus salidas tipadas."""
-    params = ToolInput(team=team)
+    params = ToolInput(team=team, competition_id=competition_id, season_id=season_id)
     return {name: fn(params) for name, (_, fn) in TOOLS.items()}

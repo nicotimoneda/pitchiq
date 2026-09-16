@@ -1,0 +1,20 @@
+# Equipos publicados en la web de PitchIQ.
+#
+# Cada bloque es una competición/temporada de StatsBomb Open Data (ids en
+# `statsbombpy.sb.competitions()`). Se publican los equipos de `equipos` o, con
+# `top: N`, los N primeros de la clasificación calculada con los resultados
+# (3 puntos por victoria; desempate por diferencia de goles y goles a favor).
+# `top` solo tiene sentido en temporadas completas: las parciales (p. ej. la
+# Bundesliga 2023/24, que solo trae los partidos del Leverkusen) usan `equipos`.
+#
+# Regenerar tras cambiar este archivo (sin API key):
+#   uv run python scripts/precompute.py --demo-data
+
+competiciones:
+  - competition_id: 9     # 1. Bundesliga 2023/24 (con datos de posiciones 360)
+    season_id: 281
+    equipos: ["Bayer Leverkusen"]
+
+  - competition_id: 11    # La Liga 2015/16 (temporada completa, sin 360)
+    season_id: 27
+    top: 10

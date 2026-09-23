@@ -1,0 +1,51 @@
+name: Catálogo StatsBomb
+
+# Cada lunes compara el catálogo de StatsBomb Open Data con la foto versionada
+# (scripts/catalogo_statsbomb.json) y abre o actualiza una issue si hay temporadas
+# nuevas o que ganan datos 360. No descarga partidos: solo competitions.json.
+on:
+  schedule:
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  catalogo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.11"
+          enable-cache: true
+
+      - name: Buscar novedades
+        id: diff
+        run: |
+          uv run --no-default-groups python scripts/check_catalogo.py > novedades.md
+          echo "hay=$( [ -s novedades.md ] && echo si || echo no )" >> "$GITHUB_OUTPUT"
+          cat novedades.md
+
+      - name: Abrir o actualizar la issue
+        if: steps.diff.outputs.hay == 'si'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          titulo="Novedades en StatsBomb Open Data"
+          {
+            echo "StatsBomb ha publicado cambios en su catálogo:"
+            echo
+            cat novedades.md
+            echo
+            echo "Para publicarlas: añádelas a \`scripts/publicacion.yaml\`, regenera con"
+            echo "\`uv run python scripts/precompute.py --demo-data\` y actualiza la foto con"
+            echo "\`uv run python scripts/check_catalogo.py --update\`."
+          } > cuerpo.md
+          n=$(gh issue list --state open --search "\"$titulo\" in:title" --json number --jq '.[0].number')
+          if [ -n "$n" ]; then gh issue edit "$n" --body-file cuerpo.md
+          else gh issue create --title "$titulo" --body-file cuerpo.md; fi

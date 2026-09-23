@@ -47,3 +47,25 @@ def test_temporada_completa_detecta_doble_vuelta():
     # solo los partidos de un equipo (como la Bundesliga 2023/24 del Leverkusen)
     parcial = completa[(completa["home_team"] == "A") | (completa["away_team"] == "A")]
     assert not precompute.temporada_completa(parcial.iloc[:3])
+
+
+_cat_spec = importlib.util.spec_from_file_location(
+    "check_catalogo", config.ROOT_DIR / "scripts" / "check_catalogo.py"
+)
+check_catalogo = importlib.util.module_from_spec(_cat_spec)
+_cat_spec.loader.exec_module(check_catalogo)
+
+
+def test_catalogo_detecta_temporadas_nuevas_y_360_nuevo():
+    base = {"competition_id": 1, "competition_name": "Liga", "season_name": "2024",
+            "competition_gender": "male", "match_updated": "x"}
+    antes = check_catalogo.resumen([
+        {**base, "season_id": 1, "match_available_360": None},
+    ])
+    ahora = check_catalogo.resumen([
+        {**base, "season_id": 1, "match_available_360": "2024-01-01"},
+        {**base, "season_id": 2, "season_name": "2025", "match_available_360": None},
+    ])
+    lineas = check_catalogo.novedades(antes, ahora)
+    assert lineas == ["- Ahora con 360: Liga 2024 (`1/1`)", "- Nueva: Liga 2025 (`1/2`)"]
+    assert check_catalogo.novedades(ahora, ahora) == []

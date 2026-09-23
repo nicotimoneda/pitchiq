@@ -39,3 +39,23 @@ jobs:
         run: |
           docker run --rm pitchiq-app pip list > deps.txt
           ! grep -iE "^(torch|langgraph|anthropic|sentence-transformers)" deps.txt
+
+  e2e:
+    # la web en un navegador real (Playwright + Chromium) sobre las fixtures sample/
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.11"
+          enable-cache: true
+
+      - name: Instalar dependencias y Chromium
+        run: |
+          uv sync
+          uv run playwright install --with-deps chromium
+
+      - name: Tests e2e
+        run: uv run pytest -m e2e

@@ -15,7 +15,7 @@
 ---
 
 <div align="center">
-<img src="assets/demo.gif" width="90%" alt="Recorrido por la web: buscador de equipos, cifra inventada detectada por el verificador, ficha de partido y mapa de estilos"/>
+<img src="assets/demo.gif" width="90%" alt="Recorrido por la web: buscador de equipos, informe con cifras verificadas, defensa, ficha de partido y mapa de estilos"/>
 </div>
 
 ## Qué es
@@ -93,7 +93,6 @@ La web es una herramienta de análisis por equipo:
 
 - **Buscador** de equipos (tecla `/`), cabecera con escudo, balance, puesto en la liga, racha y cifras clave con su evolución partido a partido.
 - **Informe**: resumen con cada cifra marcada y verificada contra las métricas (pasa el cursor para ver de dónde sale). Si existe, el informe redactado por el LLM, con su recuento de cifras verificadas.
-- **Pon a prueba el verificador**: el visitante escribe una frase con cifras reales o inventadas y la misma regla que valida los informes las marca al momento.
 - **Presión, Defensa y Balón parado**: mapas de campo y gráficas por partido.
 - **Partidos**: rendimiento local/visitante y por mitades de temporada, tabla ordenable y una **ficha de cada partido** (xG, PPDA, mapa de acciones defensivas y córners).
 - **Comparar**: mapa de estilos de todos los equipos (intensidad de presión frente a altura) y comparación uno a uno.

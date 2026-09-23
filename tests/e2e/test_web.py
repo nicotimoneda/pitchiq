@@ -64,14 +64,6 @@ def test_carga_con_todas_las_cifras_verificadas(pagina):
     assert "Cifras verificadas" in pagina.locator("#verif-badge").inner_text()
 
 
-def test_el_verificador_marca_una_cifra_inventada(pagina):
-    caja = pagina.locator("#probar-texto")
-    caja.fill("Marcó 999 goles.")
-    pagina.wait_for_timeout(300)
-    assert pagina.locator("#probar-out .cifra.sin").count() == 1
-    assert "sin respaldo" in pagina.locator("#probar-score").inner_text()
-
-
 def test_buscador_cambia_de_equipo_y_la_url(pagina):
     pagina.locator("#buscador-btn").click()
     pagina.locator("#buscador-input").fill("rival")

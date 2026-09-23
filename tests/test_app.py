@@ -44,7 +44,7 @@ def test_index_con_selector_secciones_y_datos(client):
     assert '<optgroup label="Liga de muestra 2026">' in html
     assert 'value="equipo-muestra"' in html and 'value="equipo-rival"' in html
     for seccion in ['id="informe"', 'id="presion"', 'id="defensa"', 'id="balon-parado"',
-                    'id="partidos"', 'id="comparar"', 'id="probar-texto"']:
+                    'id="partidos"', 'id="comparar"']:
         assert seccion in html
     # los datos de todos los equipos se inyectan en la página (sin llamadas desde el cliente)
     assert html.count('"zonas_recuperacion"') == 3  # los 2 ligeros + el inicial completo

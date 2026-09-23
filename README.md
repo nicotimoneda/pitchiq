@@ -15,7 +15,7 @@
 ---
 
 <div align="center">
-<img src="assets/demo.gif" width="90%" alt="Walkthrough: team search, the verifier flagging an invented figure, a match sheet and the style map"/>
+<img src="assets/demo.gif" width="90%" alt="Walkthrough: team search, the verified report, the defence section, a match sheet and the style map"/>
 </div>
 
 ## What it is
@@ -30,7 +30,6 @@ The app is available in English and Spanish. It picks the browser's language, an
 
 - **Search** any published team (press `/`). The header shows crest, record, league position, form and key metrics, each with a per-match sparkline.
 - **Report**: a summary where every number is highlighted and verified against the computed metrics. Hover a number to see which metric backs it.
-- **Try to fool the verifier**: type a sentence with real or invented figures, and the same rule that validates the LLM reports marks each number live.
 - **Pressing, Defence, Set pieces**: pitch maps (defensive actions by zone, block density from 360 freeze-frames, corner deliveries) and per-match charts.
 - **Matches**: home/away and first/second-half splits, a sortable table, and a **sheet for every match** (xG, PPDA, defensive-action map, corners).
 - **Compare**: a style map of all teams (pressing intensity vs. share of actions in the opponent's half) and head-to-head bars.

@@ -429,25 +429,10 @@
     .corners-panel #zonas { margin-top: 0 !important; }
   }
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .probar { margin-top: 16px; display: grid; gap: 12px; }
-  .probar-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
-  .probar-intro { margin: 0; color: var(--ink-2); max-width: 70ch; }
-  .probar textarea {
     font: inherit; font-size: 17px; line-height: 1.5; color: var(--ink); background: var(--bg);
     border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; resize: vertical; width: 100%; box-sizing: border-box;
     transition: border-color .15s ease;
   }
-  .probar textarea:hover { border-color: var(--rule-strong); }
-  .probar textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-  .probar-ejemplos { display: flex; flex-wrap: wrap; gap: 8px; }
-  .probar-ejemplos button { font: inherit; font-size: 14px; color: var(--ink-2); background: var(--surface-2); border: 1px solid var(--rule); border-radius: 999px; padding: 6px 12px; min-height: 36px; transition: border-color .15s ease, color .15s ease; }
-  .probar-ejemplos button:hover { border-color: var(--ink-2); color: var(--ink); }
-  .probar-out { min-height: 1.7em; }
-  .probar-out:empty::before { content: "Escribe algo con números para verificarlo."; color: var(--muted); }
-  .probar-score { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; padding: 8px 14px; border-radius: 999px; background: var(--surface-2); color: var(--ink-2); white-space: nowrap; }
-  .probar-score.ok { background: var(--ok-bg); color: var(--ok); }
-  .probar-score.sin { background: var(--warn-bg); color: var(--warn); }
-  .probar-score .ico { width: 16px; height: 16px; }
   .splits-panel { margin-bottom: 16px; }
   .splits-wrap { overflow-x: auto; }
   table.splits { width: auto; min-width: min(100%, 760px); }
@@ -523,7 +508,7 @@
     }
     @page { size: A4; margin: 12mm; }
     body { font-size: 12px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .topbar, .banner, .probar, #comparar, #ficha, #tip, footer, .dl-links, .hero-pitch, .splits-panel, #partidos { display: none !important; }
+    .topbar, .banner, #comparar, #ficha, #tip, footer, .dl-links, .hero-pitch, .splits-panel, #partidos { display: none !important; }
     .print-only { display: block; }
     .wrap { max-width: none; padding: 0; }
     .team-head { margin: 0; padding: 16px; box-shadow: none; }
@@ -705,19 +690,6 @@
           <a class="btn-sm" id="api-equipo" href="/api/equipos"><svg class="ico"><use href="#i-codigo"/></svg>Datos (JSON)</a>
         </div>
       </aside>
-    </div>
-    <div class="panel probar" id="probar">
-      <div class="probar-head">
-        <div>
-          <p class="report-kicker">Pon a prueba el verificador</p>
-          <p class="probar-intro">Escribe una frase sobre <b id="probar-equipo"></b> con cifras, reales o inventadas. Cada número se contrasta con las métricas calculadas, con la misma regla que valida los informes.</p>
-        </div>
-        <div class="probar-score" id="probar-score" aria-live="polite"></div>
-      </div>
-      <label for="probar-texto" class="sr-only">Frase a verificar</label>
-      <textarea id="probar-texto" rows="2" spellcheck="false"></textarea>
-      <div class="probar-ejemplos" id="probar-ejemplos" aria-label="Ejemplos"></div>
-      <div class="report-body probar-out" id="probar-out"></div>
     </div>
   </section>
 
@@ -938,12 +910,7 @@ const T_EN = {
   "Cifras sin respaldo": "Unsupported figures",
   "Cada cifra de este informe se contrasta automáticamente con las métricas calculadas a partir de los datos de los partidos. Pasa el cursor por una cifra para ver de dónde sale.":
     "Every figure in this report is automatically checked against the metrics computed from the match data. Hover over a figure to see where it comes from.",
-  "Evidencia": "Evidence", "Datos (JSON)": "Data (JSON)", "Pon a prueba el verificador": "Try to fool the verifier",
-  "Escribe una frase sobre": "Write a sentence about",
-  "con cifras, reales o inventadas. Cada número se contrasta con las métricas calculadas, con la misma regla que valida los informes.":
-    "with figures, real or made up. Each number is checked against the computed metrics, using the same rule that validates the reports.",
-  "Frase a verificar": "Sentence to verify", "Una cifra real": "A real figure", "Una inventada": "A made-up one", "Mezcla": "Mixed",
-  "Sin cifras": "No figures",
+  "Evidencia": "Evidence", "Datos (JSON)": "Data (JSON)",
   "Acciones defensivas: presiones, entradas, intercepciones y recuperaciones": "Defensive actions: pressures, tackles, interceptions and recoveries",
   "Dónde defiende": "Where it defends", "acciones por zona": "actions per zone", "← Portería propia": "← Own goal", "menos": "fewer",
   "más": "more", "Portería rival →": "Opponent's goal →", "Acciones defensivas": "Defensive actions", "por partido": "per match",
@@ -996,17 +963,17 @@ const T_EN = {
   "xG": "xG", "Dónde defendió": "Where it defended", "PPDA": "PPDA", "Ningún equipo coincide": "No team matches",
   "Cifra verificada": "Verified figure", "Sin respaldo": "Unsupported", "No coincide con ninguna métrica calculada": "Does not match any computed metric",
   "Sin PPDA calculable": "No PPDA available", "Pulsa para comparar": "Click to compare", "PPDA: ": "PPDA: ",
-  "Altura de la defensa: ": "Line height: ", "PPDA:": "PPDA:", "Altura de la defensa:": "Line height:", "Sin datos de posiciones": "No position data", "Escribe algo con números para verificarlo.": "Type something with numbers to verify it.",
+  "Altura de la defensa: ": "Line height: ", "PPDA:": "PPDA:", "Altura de la defensa:": "Line height:", "Sin datos de posiciones": "No position data", 
   // atributos
   "PitchIQ, inicio": "PitchIQ, home", "Buscar equipo o competición": "Search team or competition", "Equipos": "Teams", "Secciones": "Sections",
   "Exportar a PDF": "Export to PDF", "Cambiar tema": "Change theme", "Tema": "Theme", "Resultados partido a partido": "Results match by match",
-  "Ejemplos": "Examples", "Acciones defensivas por zona del campo": "Defensive actions by pitch zone", "PPDA en cada partido": "PPDA in each match",
+  "Acciones defensivas por zona del campo": "Defensive actions by pitch zone", "PPDA en cada partido": "PPDA in each match",
   "Densidad de posiciones de los jugadores al defender y altura media de la defensa": "Density of player positions when defending and average line height",
   "Altura media de la línea defensiva en cada partido": "Average defensive line height in each match", "Destino de los córners a favor": "Where corners for ended up",
   "Equipos según intensidad de la presión y porcentaje de acciones defensivas en campo rival": "Teams by pressing intensity and share of defensive actions in the opponent's half",
   "Equipo con el que comparar": "Team to compare with", "Partido anterior": "Previous match", "Partido siguiente": "Next match", "Cerrar": "Close",
   "Acciones defensivas por zona en este partido": "Defensive actions by zone in this match", "Destino de los córners a favor en este partido": "Where corners for ended up in this match",
-  "Cambiar idioma": "Change language", "Frase a verificar ": "Sentence to verify",
+  "Cambiar idioma": "Change language",
 };
 // métricas del verificador (tooltips)
 Object.assign(T_EN, {
@@ -1044,7 +1011,6 @@ const P_EN = [
   [/^PitchIQ · datos de StatsBomb Open Data · cada cifra contrastada con las métricas calculadas · (.+)$/, "PitchIQ · StatsBomb Open Data · every figure checked against the computed metrics · $1"],
 [/^(\d+) con tiro$/, "$1 with a shot"],
   [/^(.+) concedido$/, "$1 conceded"], [/^(.+) encajados$/, "$1 conceded"],
-  [/^(\d+) sin respaldo · (.+)$/, "$1 unsupported · $2"], [/^Todo verificado · (.+)$/, "All verified · $1"],
   [/^vs (.+)$/, "vs $1"], [/^(.+) \/ (.+)$/, "$1 / $2"],
   [/^Tema: (automático|claro|oscuro)\. Pulsa para cambiar$/, (m, t) => "Theme: " + ({ automático: "automatic", claro: "light", oscuro: "dark" })[t] + ". Click to change"],
 ];
@@ -1063,7 +1029,7 @@ function tr(txt) {
 function traducirArbol(root) {
   if (!EN) return;
   const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-    acceptNode: (n) => n.parentElement.closest("script, style, #resumen, #probar-out, #informe-ia-body, #probar-texto") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
+    acceptNode: (n) => n.parentElement.closest("script, style, #resumen, #informe-ia-body") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
   });
   const nodos = [];
   while (w.nextNode()) nodos.push(w.currentNode);
@@ -1699,45 +1665,6 @@ function renderComparar(team) {
 }
 
 
-/* ---------- probar el verificador ---------- */
-function ejemplosProbar(team) {
-  const T = team.herramientas, R = resultados(team);
-  const inventado = (v, d) => fmt(v * 1.23 + 1, d);
-  return EN ? [
-    ["A real figure", team.nombre + " won " + R.victorias + " matches and scored " + R.goles_favor + " goals."],
-    ["A made-up one", team.nombre + " scored " + (R.goles_favor + 7) + " goals with a PPDA of " + inventado(T.presion.ppda_medio, 2) + "."],
-    ["Mixed", "It took " + T.corners_ataque.n_corners + " corners and generated " + inventado(T.corners_ataque.xg_a_favor, 2) + " xG from set pieces."],
-  ] : [
-    ["Una cifra real", team.nombre + " ganó " + R.victorias + " partidos y marcó " + R.goles_favor + " goles."],
-    ["Una inventada", team.nombre + " marcó " + (R.goles_favor + 7) + " goles con un PPDA de " + inventado(T.presion.ppda_medio, 2) + "."],
-    ["Mezcla", "Lanzó " + T.corners_ataque.n_corners + " córners y generó " + inventado(T.corners_ataque.xg_a_favor, 2) + " de xG a balón parado."],
-  ];
-}
-function verificarProbar() {
-  const team = actual();
-  const out = $("#probar-out");
-  const texto = $("#probar-texto").value.trim();
-  out.innerHTML = texto ? "<p>" + esc(texto) + "</p>" : "";
-  const { total, ok } = marcarCifras(out, evidencia(team), nombresDe(team));
-  const sc = $("#probar-score");
-  if (!total) { sc.className = "probar-score"; sc.textContent = "Sin cifras"; return; }
-  const todo = ok === total;
-  sc.className = "probar-score " + (todo ? "ok" : "sin");
-  sc.innerHTML = icono(todo ? "verif" : "alerta") + (todo ? "Todo verificado · " : (total - ok) + " sin respaldo · ") + ok + "/" + total;
-}
-function renderProbar(team) {
-  $("#probar-equipo").textContent = team.nombre;
-  const ej = ejemplosProbar(team);
-  $("#probar-ejemplos").innerHTML = ej.map(([lab], i) => '<button type="button" data-i="' + i + '">' + lab + "</button>").join("");
-  $("#probar-ejemplos").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => {
-    $("#probar-texto").value = ej[+b.dataset.i][1];
-    verificarProbar();
-  }));
-  $("#probar-texto").value = ej[1][1];
-  verificarProbar();
-}
-let probarTimer = null;
-$("#probar-texto").addEventListener("input", () => { clearTimeout(probarTimer); probarTimer = setTimeout(verificarProbar, 120); });
 
 
 /* ---------- mapa de estilos ---------- */
@@ -1997,7 +1924,6 @@ function render() {
   pintarBoton(team);
   renderCabecera(team);
   renderInforme(team);
-  renderProbar(team);
   renderPresion(team);
   renderDefensa(team);
   renderBalonParado(team);

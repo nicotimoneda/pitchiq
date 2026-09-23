@@ -948,6 +948,10 @@ function resultados(team) {
     derrotas: P.filter((p) => p.goles_favor < p.goles_contra).length,
     goles_favor: P.reduce((a, p) => a + p.goles_favor, 0),
     goles_contra: P.reduce((a, p) => a + p.goles_contra, 0),
+    ...(P.length && P.every((p) => has(p.xg_favor)) ? {
+      xg_favor: Math.round(P.reduce((a, p) => a + p.xg_favor, 0) * 100) / 100,
+      xg_contra: Math.round(P.reduce((a, p) => a + p.xg_contra, 0) * 100) / 100,
+    } : {}),
   };
 }
 
@@ -960,6 +964,8 @@ const NOMBRES = {
   "resultados.derrotas": "derrotas",
   "resultados.goles_favor": "goles a favor",
   "resultados.goles_contra": "goles en contra",
+  "resultados.xg_favor": "xG generado (suma de sus remates)",
+  "resultados.xg_contra": "xG concedido (suma de los remates rivales)",
   "presion.n_partidos": "partidos analizados",
   "presion.acciones_defensivas_totales": "acciones defensivas totales",
   "presion.acciones_defensivas_por_partido": "acciones defensivas por partido",
@@ -1237,6 +1243,9 @@ function renderInforme(team) {
     team.nombre + " disputó " + R.partidos + " partidos de " + team.competicion + " " + team.temporada + balance +
       ": " + R.victorias + " victorias, " + R.empates + " empates y " + R.derrotas + " derrotas, con " +
       R.goles_favor + " goles a favor y " + R.goles_contra + " en contra.",
+    has(R.xg_favor)
+      ? "Sus remates sumaron " + fmt(R.xg_favor, 2) + " de xG y los del rival " + fmt(R.xg_contra, 2) + "."
+      : null,
     "Presiona con un PPDA medio de " + fmt(P.ppda_medio, 2) + " y firma " + fmt(P.acciones_defensivas_por_partido) +
       " acciones defensivas por partido; el " + fmt(P.pct_acciones_campo_rival) + " % ocurre en campo rival.",
     has(F.altura_linea_media)
@@ -1593,6 +1602,8 @@ function renderSplits(team) {
     ["Pts/partido", (g) => media(g, (p) => p.goles_favor > p.goles_contra ? 3 : p.goles_favor === p.goles_contra ? 1 : 0), 2, true],
     ["Goles a favor", (g) => media(g, (p) => p.goles_favor), 2, true],
     ["Goles en contra", (g) => media(g, (p) => p.goles_contra), 2, false],
+    ["xG a favor", (g) => media(g, (p) => p.xg_favor), 2, true],
+    ["xG en contra", (g) => media(g, (p) => p.xg_contra), 2, false],
     ["PPDA", (g) => media(g, (p) => p.ppda), 2, false],
     ["Altura def.", (g) => media(g, (p) => p.altura_linea), 1, true],
   ].filter(([, f]) => has(f(P)));

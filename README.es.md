@@ -27,7 +27,7 @@ Un pipeline que computa métricas tácticas deterministas sobre StatsBomb Open D
 Cada cifra pasa tres controles independientes antes de que alguien la lea:
 
 - **Contra la evidencia.** Cada número de un informe se empareja con la métrica que lo produjo, y un validador automático marca cualquiera sin respaldo.
-- **Contra una fuente pública.** En los 13 equipos de club, los datos publicados se contrastan partido a partido con [Understat](https://understat.com). Los goles coinciden en 481 de 481 partidos, el xG correlaciona 0,94 y el PPDA clásico ordena a los equipos igual (Spearman 0,97). El mismo ejercicio mostró que el PPDA de la web, que cuenta las presiones, mide otra cosa; ahora está documentado en vez de oculto. [Detalle](EVALUATION.md#validación-externa-understat-481-partidos-sin-key)
+- **Contra una fuente pública.** En los 43 equipos de club, los datos publicados se contrastan partido a partido con [Understat](https://understat.com). Los goles coinciden en 1.621 de 1.621 partidos, el xG correlaciona 0,93 y el PPDA clásico ordena a los equipos casi igual (Spearman 0,93). El mismo ejercicio mostró que el PPDA de la web, que cuenta las presiones, mide otra cosa; ahora está documentado en vez de oculto. [Detalle](EVALUATION.md#validación-externa-understat-1621-partidos-sin-key)
 - **Contra sí mismo.** Los cambios se miden antes de quedarse. Uno que parecía una mejora costaba 20 puntos de precisión en la búsqueda y se revirtió.
 
 ## El recorrido (M1–M7)

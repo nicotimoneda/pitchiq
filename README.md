@@ -29,7 +29,7 @@ The [evaluation](EVALUATION.md) measures everything that can be measured without
 Every number goes through three independent checks before anyone reads it:
 
 - **Against the evidence.** Each figure in a report is matched to the metric that produced it, and an automatic validator flags anything unsupported.
-- **Against a public source.** For the 13 club teams, the published data is compared match by match with [Understat](https://understat.com). Goals are identical in 481 of 481 matches, xG correlates at 0.94, and the classic PPDA ranks the teams the same way (Spearman 0.97). The same exercise showed that the app's own PPDA, which counts pressures, measures something different; that is now documented rather than hidden. [Details](EVALUATION.md#validación-externa-understat-481-partidos-sin-key)
+- **Against a public source.** For the 43 club teams, the published data is compared match by match with [Understat](https://understat.com). Goals are identical in 1,621 of 1,621 matches, xG correlates at 0.93, and the classic PPDA ranks the teams almost the same way (Spearman 0.93). The same exercise showed that the app's own PPDA, which counts pressures, measures something different; that is now documented rather than hidden. [Details](EVALUATION.md#validación-externa-understat-1621-partidos-sin-key)
 - **Against itself.** Changes are measured before they stay. One that looked like an improvement cost 20 points of retrieval accuracy and was reverted.
 
 ## The web app
@@ -115,7 +115,7 @@ The first run downloads from StatsBomb; later runs read from `data/cache/`.
 
 The caveats are part of the product:
 - **360 freeze-frames only include players visible in the broadcast.** Spatial metrics are approximations over visible players, never assume 11, and are left empty rather than estimated when too few players are visible.
-- **The PPDA shown in the app counts pressures as defensive actions.** It measures pressing volume, so it is lower than public PPDA and ranks teams differently (Spearman 0.48 against Understat). The classic definition is also exported (`ppda_clasico`) and matches public rankings (0.97).
+- **The PPDA shown in the app counts pressures as defensive actions.** It measures pressing volume, so it is lower than public PPDA and ranks teams less like public sources (Spearman 0.74 against Understat). The classic definition is also shown and matches public rankings (0.93).
 - **Everything is in metres.** StatsBomb's coordinates are yards on a normalised 120 × 80 pitch; every published figure is converted to metres (109.7 × 73.2 m), so the LLM, the web app and the verifier all work in metres.
 
 ## Stack

@@ -30,9 +30,15 @@ LIGAS = {
     ("La Liga", "2020/21"): ("La_liga", 2020),
     ("Bundesliga", "2023/24"): ("Bundesliga", 2023),
     ("Ligue 1", "2022/23"): ("Ligue_1", 2022),
+    ("Premier League", "2015/16"): ("EPL", 2015),
 }
 # nombres que Understat escribe distinto (tras normalizar)
-ALIAS = {"psg": "parissaintgermain", "parissaintgermain": "parissaintgermain"}
+ALIAS = {
+    "psg": "parissaintgermain", "parissaintgermain": "parissaintgermain",
+    "afcbournemouth": "bournemouth", "leicestercity": "leicester", "levanteud": "levante",
+    "norwichcity": "norwich", "rcdeportivolacoruna": "deportivolacoruna", "stokecity": "stoke",
+    "swanseacity": "swansea", "tottenhamhotspur": "tottenham", "westhamunited": "westham",
+}
 
 
 def _equipos() -> list:

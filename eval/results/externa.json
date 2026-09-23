@@ -2,16 +2,97 @@
  "fuente": "https://understat.com",
  "acceso": "2026-09-23",
  "resumen": {
-  "partidos_cruzados": 481,
-  "goles_coinciden": 481,
-  "xg_partido_pearson": 0.936,
-  "xg_partido_diferencia_media": -0.148,
-  "ppda_spearman_equipos": 0.481,
-  "ppda_ratio_medio": 0.29,
-  "ppda_clasico_spearman_equipos": 0.973,
-  "ppda_clasico_pearson_partido": 0.872
+  "partidos_cruzados": 1621,
+  "goles_coinciden": 1621,
+  "xg_partido_pearson": 0.926,
+  "xg_partido_diferencia_media": -0.063,
+  "ppda_spearman_equipos": 0.743,
+  "ppda_ratio_medio": 0.28,
+  "ppda_clasico_spearman_equipos": 0.926,
+  "ppda_clasico_pearson_partido": 0.826
  },
  "equipos": [
+  {
+   "equipo": "AFC Bournemouth",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    45,
+    45
+   ],
+   "xg_favor_por_partido": [
+    1.06,
+    1.02
+   ],
+   "xg_contra_por_partido": [
+    1.23,
+    1.42
+   ],
+   "ppda_medio": [
+    2.48,
+    9.58
+   ],
+   "ppda_clasico_medio": [
+    13.8,
+    9.58
+   ]
+  },
+  {
+   "equipo": "Arsenal",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    65,
+    65
+   ],
+   "xg_favor_por_partido": [
+    1.71,
+    1.94
+   ],
+   "xg_contra_por_partido": [
+    0.88,
+    0.89
+   ],
+   "ppda_medio": [
+    2.63,
+    8.79
+   ],
+   "ppda_clasico_medio": [
+    12.21,
+    8.79
+   ]
+  },
+  {
+   "equipo": "Aston Villa",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    27,
+    27
+   ],
+   "xg_favor_por_partido": [
+    0.78,
+    0.7
+   ],
+   "xg_contra_por_partido": [
+    1.57,
+    1.55
+   ],
+   "ppda_medio": [
+    3.06,
+    13.84
+   ],
+   "ppda_clasico_medio": [
+    17.88,
+    13.84
+   ]
+  },
   {
    "equipo": "Athletic Club",
    "competicion": "La Liga 2015/16",
@@ -175,6 +256,303 @@
    ]
   },
   {
+   "equipo": "Chelsea",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    59,
+    59
+   ],
+   "xg_favor_por_partido": [
+    1.41,
+    1.43
+   ],
+   "xg_contra_por_partido": [
+    1.26,
+    1.17
+   ],
+   "ppda_medio": [
+    2.47,
+    9.18
+   ],
+   "ppda_clasico_medio": [
+    11.4,
+    9.18
+   ]
+  },
+  {
+   "equipo": "Crystal Palace",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    39,
+    39
+   ],
+   "xg_favor_por_partido": [
+    1.12,
+    1.12
+   ],
+   "xg_contra_por_partido": [
+    1.39,
+    1.39
+   ],
+   "ppda_medio": [
+    2.6,
+    9.33
+   ],
+   "ppda_clasico_medio": [
+    12.21,
+    9.33
+   ]
+  },
+  {
+   "equipo": "Eibar",
+   "competicion": "La Liga 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    49,
+    49
+   ],
+   "xg_favor_por_partido": [
+    1.32,
+    1.39
+   ],
+   "xg_contra_por_partido": [
+    1.31,
+    1.33
+   ],
+   "ppda_medio": [
+    2.48,
+    7.8
+   ],
+   "ppda_clasico_medio": [
+    10.29,
+    7.8
+   ]
+  },
+  {
+   "equipo": "Espanyol",
+   "competicion": "La Liga 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    40,
+    40
+   ],
+   "xg_favor_por_partido": [
+    1.17,
+    1.21
+   ],
+   "xg_contra_por_partido": [
+    1.41,
+    1.6
+   ],
+   "ppda_medio": [
+    2.85,
+    8.5
+   ],
+   "ppda_clasico_medio": [
+    10.44,
+    8.5
+   ]
+  },
+  {
+   "equipo": "Everton",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    59,
+    59
+   ],
+   "xg_favor_por_partido": [
+    1.33,
+    1.42
+   ],
+   "xg_contra_por_partido": [
+    1.43,
+    1.44
+   ],
+   "ppda_medio": [
+    2.92,
+    12.47
+   ],
+   "ppda_clasico_medio": [
+    14.05,
+    12.47
+   ]
+  },
+  {
+   "equipo": "Getafe",
+   "competicion": "La Liga 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    37,
+    37
+   ],
+   "xg_favor_por_partido": [
+    1.04,
+    1.1
+   ],
+   "xg_contra_por_partido": [
+    1.47,
+    1.67
+   ],
+   "ppda_medio": [
+    2.68,
+    9.87
+   ],
+   "ppda_clasico_medio": [
+    11.61,
+    9.87
+   ]
+  },
+  {
+   "equipo": "Granada",
+   "competicion": "La Liga 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    46,
+    46
+   ],
+   "xg_favor_por_partido": [
+    1.05,
+    1.09
+   ],
+   "xg_contra_por_partido": [
+    1.53,
+    1.64
+   ],
+   "ppda_medio": [
+    2.81,
+    9.0
+   ],
+   "ppda_clasico_medio": [
+    11.4,
+    9.0
+   ]
+  },
+  {
+   "equipo": "Las Palmas",
+   "competicion": "La Liga 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    45,
+    45
+   ],
+   "xg_favor_por_partido": [
+    0.97,
+    1.02
+   ],
+   "xg_contra_por_partido": [
+    1.52,
+    1.56
+   ],
+   "ppda_medio": [
+    2.89,
+    10.08
+   ],
+   "ppda_clasico_medio": [
+    12.42,
+    10.08
+   ]
+  },
+  {
+   "equipo": "Leicester City",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    68,
+    68
+   ],
+   "xg_favor_por_partido": [
+    1.74,
+    1.8
+   ],
+   "xg_contra_por_partido": [
+    1.21,
+    1.18
+   ],
+   "ppda_medio": [
+    2.81,
+    10.1
+   ],
+   "ppda_clasico_medio": [
+    14.09,
+    10.1
+   ]
+  },
+  {
+   "equipo": "Levante UD",
+   "competicion": "La Liga 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    37,
+    37
+   ],
+   "xg_favor_por_partido": [
+    0.97,
+    1.03
+   ],
+   "xg_contra_por_partido": [
+    1.52,
+    1.67
+   ],
+   "ppda_medio": [
+    2.94,
+    10.85
+   ],
+   "ppda_clasico_medio": [
+    13.28,
+    10.85
+   ]
+  },
+  {
+   "equipo": "Liverpool",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    63,
+    63
+   ],
+   "xg_favor_por_partido": [
+    1.54,
+    1.43
+   ],
+   "xg_contra_por_partido": [
+    1.0,
+    1.0
+   ],
+   "ppda_medio": [
+    2.09,
+    7.92
+   ],
+   "ppda_clasico_medio": [
+    10.36,
+    7.92
+   ]
+  },
+  {
    "equipo": "Málaga",
    "competicion": "La Liga 2015/16",
    "partidos_nuestros": 38,
@@ -202,6 +580,114 @@
    ]
   },
   {
+   "equipo": "Manchester City",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    71,
+    71
+   ],
+   "xg_favor_por_partido": [
+    1.7,
+    1.74
+   ],
+   "xg_contra_por_partido": [
+    1.03,
+    0.99
+   ],
+   "ppda_medio": [
+    2.43,
+    8.19
+   ],
+   "ppda_clasico_medio": [
+    11.47,
+    8.19
+   ]
+  },
+  {
+   "equipo": "Manchester United",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    49,
+    49
+   ],
+   "xg_favor_por_partido": [
+    1.11,
+    1.2
+   ],
+   "xg_contra_por_partido": [
+    1.01,
+    1.04
+   ],
+   "ppda_medio": [
+    2.34,
+    8.07
+   ],
+   "ppda_clasico_medio": [
+    10.64,
+    8.07
+   ]
+  },
+  {
+   "equipo": "Newcastle United",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    44,
+    44
+   ],
+   "xg_favor_por_partido": [
+    1.07,
+    0.99
+   ],
+   "xg_contra_por_partido": [
+    1.48,
+    1.46
+   ],
+   "ppda_medio": [
+    2.91,
+    12.39
+   ],
+   "ppda_clasico_medio": [
+    13.98,
+    12.39
+   ]
+  },
+  {
+   "equipo": "Norwich City",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    39,
+    39
+   ],
+   "xg_favor_por_partido": [
+    1.02,
+    1.03
+   ],
+   "xg_contra_por_partido": [
+    1.56,
+    1.55
+   ],
+   "ppda_medio": [
+    3.12,
+    13.0
+   ],
+   "ppda_clasico_medio": [
+    15.44,
+    13.0
+   ]
+  },
+  {
    "equipo": "PSG",
    "competicion": "Ligue 1 2022/23",
    "partidos_nuestros": 32,
@@ -226,6 +712,60 @@
    "ppda_clasico_medio": [
     12.96,
     11.96
+   ]
+  },
+  {
+   "equipo": "Rayo Vallecano",
+   "competicion": "La Liga 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    52,
+    52
+   ],
+   "xg_favor_por_partido": [
+    1.33,
+    1.38
+   ],
+   "xg_contra_por_partido": [
+    1.58,
+    1.71
+   ],
+   "ppda_medio": [
+    2.31,
+    6.96
+   ],
+   "ppda_clasico_medio": [
+    10.19,
+    6.96
+   ]
+  },
+  {
+   "equipo": "RC Deportivo La Coruña",
+   "competicion": "La Liga 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    45,
+    45
+   ],
+   "xg_favor_por_partido": [
+    1.09,
+    1.15
+   ],
+   "xg_contra_por_partido": [
+    1.26,
+    1.38
+   ],
+   "ppda_medio": [
+    2.96,
+    11.32
+   ],
+   "ppda_clasico_medio": [
+    13.15,
+    11.32
    ]
   },
   {
@@ -337,6 +877,195 @@
    ]
   },
   {
+   "equipo": "Southampton",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    59,
+    59
+   ],
+   "xg_favor_por_partido": [
+    1.43,
+    1.48
+   ],
+   "xg_contra_por_partido": [
+    1.05,
+    1.17
+   ],
+   "ppda_medio": [
+    2.63,
+    9.65
+   ],
+   "ppda_clasico_medio": [
+    12.44,
+    9.65
+   ]
+  },
+  {
+   "equipo": "Sporting Gijón",
+   "competicion": "La Liga 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    40,
+    40
+   ],
+   "xg_favor_por_partido": [
+    1.08,
+    1.12
+   ],
+   "xg_contra_por_partido": [
+    1.53,
+    1.6
+   ],
+   "ppda_medio": [
+    3.08,
+    11.57
+   ],
+   "ppda_clasico_medio": [
+    12.98,
+    11.57
+   ]
+  },
+  {
+   "equipo": "Stoke City",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    41,
+    41
+   ],
+   "xg_favor_por_partido": [
+    1.06,
+    1.12
+   ],
+   "xg_contra_por_partido": [
+    1.45,
+    1.43
+   ],
+   "ppda_medio": [
+    3.0,
+    10.78
+   ],
+   "ppda_clasico_medio": [
+    14.25,
+    10.78
+   ]
+  },
+  {
+   "equipo": "Sunderland",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    48,
+    48
+   ],
+   "xg_favor_por_partido": [
+    1.12,
+    1.07
+   ],
+   "xg_contra_por_partido": [
+    1.61,
+    1.55
+   ],
+   "ppda_medio": [
+    3.22,
+    12.6
+   ],
+   "ppda_clasico_medio": [
+    14.86,
+    12.6
+   ]
+  },
+  {
+   "equipo": "Swansea City",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    42,
+    42
+   ],
+   "xg_favor_por_partido": [
+    1.11,
+    1.05
+   ],
+   "xg_contra_por_partido": [
+    1.34,
+    1.41
+   ],
+   "ppda_medio": [
+    2.7,
+    10.46
+   ],
+   "ppda_clasico_medio": [
+    13.65,
+    10.46
+   ]
+  },
+  {
+   "equipo": "Tottenham Hotspur",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    69,
+    69
+   ],
+   "xg_favor_por_partido": [
+    1.64,
+    1.67
+   ],
+   "xg_contra_por_partido": [
+    0.94,
+    0.98
+   ],
+   "ppda_medio": [
+    2.08,
+    6.68
+   ],
+   "ppda_clasico_medio": [
+    10.36,
+    6.68
+   ]
+  },
+  {
+   "equipo": "Valencia",
+   "competicion": "La Liga 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    46,
+    46
+   ],
+   "xg_favor_por_partido": [
+    1.23,
+    1.33
+   ],
+   "xg_contra_por_partido": [
+    1.5,
+    1.62
+   ],
+   "ppda_medio": [
+    2.54,
+    9.06
+   ],
+   "ppda_clasico_medio": [
+    11.15,
+    9.06
+   ]
+  },
+  {
    "equipo": "Villarreal",
    "competicion": "La Liga 2015/16",
    "partidos_nuestros": 38,
@@ -361,6 +1090,87 @@
    "ppda_clasico_medio": [
     12.42,
     9.92
+   ]
+  },
+  {
+   "equipo": "Watford",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    40,
+    40
+   ],
+   "xg_favor_por_partido": [
+    1.16,
+    1.14
+   ],
+   "xg_contra_por_partido": [
+    1.41,
+    1.36
+   ],
+   "ppda_medio": [
+    3.04,
+    9.86
+   ],
+   "ppda_clasico_medio": [
+    13.69,
+    9.86
+   ]
+  },
+  {
+   "equipo": "West Bromwich Albion",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    34,
+    34
+   ],
+   "xg_favor_por_partido": [
+    1.02,
+    1.05
+   ],
+   "xg_contra_por_partido": [
+    1.28,
+    1.37
+   ],
+   "ppda_medio": [
+    3.16,
+    12.34
+   ],
+   "ppda_clasico_medio": [
+    16.43,
+    12.34
+   ]
+  },
+  {
+   "equipo": "West Ham United",
+   "competicion": "Premier League 2015/16",
+   "partidos_nuestros": 38,
+   "partidos_cruzados": 38,
+   "goles_coinciden": 38,
+   "goles_favor": [
+    65,
+    65
+   ],
+   "xg_favor_por_partido": [
+    1.44,
+    1.43
+   ],
+   "xg_contra_por_partido": [
+    1.43,
+    1.46
+   ],
+   "ppda_medio": [
+    2.94,
+    9.67
+   ],
+   "ppda_clasico_medio": [
+    13.29,
+    9.67
    ]
   }
  ]

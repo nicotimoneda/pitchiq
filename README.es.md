@@ -147,14 +147,6 @@ pitchiq/
 - **Sin logos.** Los escudos oficiales son marcas registradas: los clubes llevan sus iniciales con sus colores y las selecciones su bandera.
 - **Generar una vez, servir estático.** La web de producción no tiene API key que filtrar y cada visita cuesta cero llamadas al LLM.
 
-## Próximos pasos
-
-- [ ] Despliegue público
-- [ ] Informes redactados por el LLM para todos los equipos (requiere una corrida con API key)
-- [ ] Preguntas en lenguaje natural respondidas con las mismas herramientas y el mismo validador
-- [ ] Informe previo a un partido: equipo A contra equipo B
-- [ ] Temporadas nuevas a medida que StatsBomb las publique (un workflow semanal ya avisa)
-
 ## Contacto
 
 Nicolás Timoneda · [nicotimoneda@gmail.com](mailto:nicotimoneda@gmail.com) · [@nicotimoneda](https://github.com/nicotimoneda)

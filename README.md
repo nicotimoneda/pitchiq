@@ -145,14 +145,6 @@ pitchiq/
 - **No logos.** Official crests are trademarks: clubs get their initials in club colours, national teams their flag.
 - **Generate once, serve static.** The production app has no API key to leak and costs zero LLM calls per visit.
 
-## Roadmap
-
-- [ ] Public deployment
-- [ ] LLM-written reports for every team (needs an API key run)
-- [ ] Natural-language questions answered with the same tools and validator
-- [ ] Written pre-match report: team A vs. team B
-- [ ] New seasons as StatsBomb releases them (a weekly workflow already flags them)
-
 ## Contact
 
 Nicolás Timoneda · [nicotimoneda@gmail.com](mailto:nicotimoneda@gmail.com) · [@nicotimoneda](https://github.com/nicotimoneda)

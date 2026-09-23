@@ -48,6 +48,7 @@
     --tip-ink: #f3f5f2;
     --bar-bg: rgba(243, 245, 242, .88);
     --rule-strong: #b9c2bb;
+    --win: #15803d; --on-win: #ffffff; --tie: #a6aea9; --on-tie: #121a15; --loss: #dc2626; --on-loss: #ffffff;
     --accent-soft: rgba(200, 16, 46, .09);
     --accent-ink: #a50d26;
     --hero-bg: linear-gradient(135deg, #fbfcfa 0%, #eef3ec 100%);
@@ -81,6 +82,8 @@
       --tip-ink: #0e1310;
       --bar-bg: rgba(14, 19, 16, .88);
       --rule-strong: #3d4a41;
+    --win: #10a37f; --on-win: #04130d; --tie: #b9c1bc; --on-tie: #0e1310; --loss: #f0524f; --on-loss: #1b0708;
+      --win: #10a37f; --on-win: #04130d; --tie: #b9c1bc; --on-tie: #0e1310; --loss: #f0524f; --on-loss: #1b0708;
       --accent-soft: rgba(239, 67, 85, .13);
       --accent-ink: #ff7a86;
       --hero-bg: linear-gradient(135deg, #172019 0%, #111712 100%);
@@ -209,9 +212,9 @@
   .stack { display: grid; gap: 16px; min-width: 0; }
   .form { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; margin: -14px 0 28px; }
   .form i { width: 11px; height: 11px; border-radius: 2px; cursor: default; }
-  .form i.V { background: var(--ok); }
-  .form i.E { background: var(--draw); }
-  .form i.D { background: var(--warn); }
+  .form i.V { background: var(--win); }
+  .form i.E { background: var(--tie); }
+  .form i.D { background: var(--loss); }
   .form i:hover, .form i:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
   .panel-title { font-size: 15px; font-weight: 700; margin: 0 0 10px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
   .panel-title span { font-weight: 400; color: var(--muted); font-size: 14px; }
@@ -320,9 +323,9 @@
   tbody tr:hover { background: var(--surface-2); }
   .res { display: inline-flex; align-items: center; gap: 8px; }
   .res i { font-style: normal; font-size: 12px; font-weight: 700; width: 22px; height: 22px; display: inline-grid; place-items: center; border-radius: 6px; }
-  .res i.V { background: var(--ok-bg); color: var(--ok); }
-  .res i.E { background: var(--draw-bg); color: var(--draw); }
-  .res i.D { background: var(--warn-bg); color: var(--warn); }
+  .res i.V { background: var(--win); color: var(--on-win); }
+  .res i.E { background: var(--tie); color: var(--on-tie); }
+  .res i.D { background: var(--loss); color: var(--on-loss); }
   .na { color: var(--muted); }
   #tabla.sin-360 th:nth-child(7), #tabla.sin-360 td:nth-child(7) { display: none; }
   .empty { border-style: dashed; background: transparent; }
@@ -515,7 +518,8 @@
     :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
       --bg: #ffffff; --surface: #ffffff; --surface-2: #f1f3f1; --ink: #111; --ink-2: #333; --muted: #555; --rule: #d0d5d1; --rule-strong: #b0b7b2;
       --pitch: #eef2ed; --pitch-line: #a9b8a9; --ok: #146c2e; --ok-bg: #e2f2e6; --warn: #9a3b04; --warn-bg: #fde8d6;
-      --seq-lo: #fbe8e9; --seq-hi: #8e0b1f; --on-hi: #fff; --accent: #c8102e; --accent-soft: rgba(200,16,46,.08); --shadow: none; --hero-bg: #fff; --zebra: transparent;
+      --seq-lo: #fbe8e9; --seq-hi: #8e0b1f; --on-hi: #fff; --accent: #c8102e;
+      --win: #15803d; --on-win: #fff; --tie: #a6aea9; --on-tie: #121a15; --loss: #dc2626; --on-loss: #fff; --accent-soft: rgba(200,16,46,.08); --shadow: none; --hero-bg: #fff; --zebra: transparent;
     }
     @page { size: A4; margin: 12mm; }
     body { font-size: 12px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -668,7 +672,7 @@
     <div class="form-row">
       <span class="form-lab">Forma</span>
       <div class="form" id="t-form" aria-label="Resultados partido a partido"></div>
-      <div class="form-legend"><span style="--c: var(--ok)">victoria</span><span style="--c: var(--draw)">empate</span><span style="--c: var(--warn)">derrota</span></div>
+      <div class="form-legend"><span style="--c: var(--win)">victoria</span><span style="--c: var(--tie)">empate</span><span style="--c: var(--loss)">derrota</span></div>
     </div>
     <div class="kpis" id="t-kpis"></div>
   </section>

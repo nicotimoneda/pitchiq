@@ -431,6 +431,24 @@
   .probar-score.ok { background: var(--ok-bg); color: var(--ok); }
   .probar-score.sin { background: var(--warn-bg); color: var(--warn); }
   .probar-score .ico { width: 16px; height: 16px; }
+  .splits-panel { margin-bottom: 16px; }
+  .splits-wrap { overflow-x: auto; }
+  table.splits { width: auto; min-width: min(100%, 760px); }
+  table.splits th, table.splits td { padding: 8px 14px; }
+  table.splits th { position: static; }
+  table.splits tbody tr:nth-child(even) { background: none; }
+  table.splits tr.sep td { border-top: 1px solid var(--rule-strong); }
+  table.splits td.lab { font-weight: 700; }
+  table.splits .best { color: var(--ok); font-weight: 700; }
+  .estilos .dot-e { stroke: var(--surface); stroke-width: 2; cursor: pointer; transition: r .15s ease; }
+  .estilos .dot-e.otro { fill: var(--muted); fill-opacity: .55; }
+  .estilos .dot-e.misma { fill: var(--ink-2); }
+  .estilos .dot-e.rival { fill: var(--other); }
+  .estilos .dot-e.yo { fill: var(--accent); }
+  .estilos .dot-e:hover, .estilos .dot-e:focus-visible { stroke: var(--ink); }
+  .estilos .quad { fill: var(--muted); font: 600 12px "Source Sans 3", system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; }
+  .estilos .axlab { fill: var(--ink-2); font: 600 13px "Source Sans 3", system-ui, sans-serif; }
+  .key .k-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
   main.fade { animation: fadein .28s ease; }
   @keyframes fadein { from { opacity: .35; } to { opacity: 1; } }
 
@@ -660,6 +678,10 @@
       <div class="sec-title"><span class="sec-icon"><svg class="ico"><use href="#i-partidos"/></svg></span><h2 id="h-partidos">Partidos</h2></div>
       <p class="sec-note" id="partidos-nota"></p>
     </div>
+    <div class="panel splits-panel">
+      <p class="panel-title">Por contexto <span>medias por partido</span></p>
+      <div class="splits-wrap"><table class="splits" id="splits"></table></div>
+    </div>
     <div class="table-wrap">
       <table id="tabla">
         <thead>
@@ -683,6 +705,11 @@
       <div class="sec-title"><span class="sec-icon"><svg class="ico"><use href="#i-comparar"/></svg></span><h2 id="h-comparar">Comparar</h2></div>
       <p class="sec-note">Muestras de tamaño distinto: orientativo</p>
     </div>
+    <figure class="panel estilos" style="margin:0 0 16px">
+      <p class="panel-title">Mapa de estilos <span>todos los equipos publicados · pulsa uno para compararlo</span></p>
+      <div class="key" id="key-estilos"></div>
+      <div class="chart" id="chart-estilos" role="img" aria-label="Equipos según intensidad de la presión y porcentaje de acciones defensivas en campo rival"></div>
+    </figure>
     <div class="panel">
       <div class="compare-head">
         <span class="sw" style="--c: var(--accent)" id="compare-a"></span>
@@ -1329,6 +1356,103 @@ function renderProbar(team) {
 let probarTimer = null;
 $("#probar-texto").addEventListener("input", () => { clearTimeout(probarTimer); probarTimer = setTimeout(verificarProbar, 120); });
 
+
+/* ---------- mapa de estilos ---------- */
+function renderEstilos(team) {
+  const cont = $("#chart-estilos");
+  const pts = TEAMS.filter((t) => has(t.herramientas.presion.ppda_medio) && has(t.herramientas.presion.pct_acciones_campo_rival));
+  const clase = (t) => t.slug === team.slug ? "yo" : t.slug === rivalSlug ? "rival"
+    : (t.competicion === team.competicion && t.temporada === team.temporada) ? "misma" : "otro";
+  const hayMisma = pts.some((t) => clase(t) === "misma");
+  const rv = bySlug[rivalSlug];
+  $("#key-estilos").innerHTML =
+    '<span><i class="k-dot" style="--c: var(--accent)"></i>' + esc(team.nombre) + "</span>" +
+    (rv ? '<span><i class="k-dot" style="--c: var(--other)"></i>' + esc(rv.nombre) + " (comparado)</span>" : "") +
+    (hayMisma ? '<span><i class="k-dot" style="--c: var(--ink-2)"></i>' + esc(team.competicion + " " + team.temporada) + "</span>" : "") +
+    '<span><i class="k-dot" style="--c: var(--muted)"></i>otras competiciones</span><span><i class="k-mean"></i>media de todos</span>';
+  const xs = pts.map((t) => t.herramientas.presion.ppda_medio), ys = pts.map((t) => t.herramientas.presion.pct_acciones_campo_rival);
+  const pad = (a, b, f) => [a - (b - a) * f, b + (b - a) * f];
+  const [x0, x1] = pad(Math.min(...xs), Math.max(...xs), 0.1), [y0, y1] = pad(Math.min(...ys), Math.max(...ys), 0.12);
+  const mx = xs.reduce((a, b) => a + b, 0) / xs.length, my = ys.reduce((a, b) => a + b, 0) / ys.length;
+  let ultimo = 0;
+  function dibujar() {
+    const W = Math.max(300, Math.round(cont.clientWidth));
+    if (W === ultimo) return;
+    ultimo = W;
+    const H = W < 560 ? 320 : 400;
+    const m = { l: 62, r: 16, t: 16, b: 44 };
+    // PPDA invertido: más a la derecha = presión más intensa
+    const X = (v) => m.l + ((x1 - v) / (x1 - x0)) * (W - m.l - m.r);
+    const Y = (v) => m.t + ((y1 - v) / (y1 - y0)) * (H - m.t - m.b);
+    cont.innerHTML = "";
+    const svg = svgEl("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H }, cont);
+    const ax = svgEl("g", { class: "ax" }, svg);
+    const paso = (x1 - x0) > 4 ? 1 : (x1 - x0) > 1.6 ? 0.5 : 0.25;
+    for (let t = Math.ceil(x0 / paso) * paso; t <= x1; t += paso) {
+      svgEl("line", { x1: X(t), x2: X(t), y1: m.t, y2: H - m.b }, ax);
+      svgEl("text", { x: X(t), y: H - m.b + 16, "text-anchor": "middle" }, ax).textContent = fmt(t, paso < 0.5 ? 2 : paso < 1 ? 1 : 0);
+    }
+    for (let t = Math.ceil(y0 / 5) * 5; t <= y1; t += 5) {
+      svgEl("line", { x1: m.l, x2: W - m.r, y1: Y(t), y2: Y(t) }, ax);
+      svgEl("text", { x: m.l - 6, y: Y(t) + 4, "text-anchor": "end" }, ax).textContent = t + " %";
+    }
+    svgEl("line", { x1: X(mx), x2: X(mx), y1: m.t, y2: H - m.b, class: "meanline" }, svg);
+    svgEl("line", { x1: m.l, x2: W - m.r, y1: Y(my), y2: Y(my), class: "meanline" }, svg);
+    svgEl("text", { x: W - m.r - 6, y: m.t + 14, "text-anchor": "end", class: "quad" }, svg).textContent = "Presión alta e intensa";
+    svgEl("text", { x: m.l + 6, y: H - m.b - 8, class: "quad" }, svg).textContent = "Espera y repliegue";
+    svgEl("text", { x: (m.l + W - m.r) / 2, y: H - 6, "text-anchor": "middle", class: "axlab" }, svg).textContent = "PPDA · más a la derecha = presiona más";
+    svgEl("text", { x: -(m.t + H - m.b) / 2, y: 16, transform: "rotate(-90)", "text-anchor": "middle", class: "axlab" }, svg).textContent = "% de acciones en campo rival";
+    const orden = ["otro", "misma", "rival", "yo"];
+    const ordenados = [...pts].sort((a, b) => orden.indexOf(clase(a)) - orden.indexOf(clase(b)));
+    for (const t of ordenados) {
+      const c = clase(t), P = t.herramientas.presion;
+      const dot = svgEl("circle", { cx: X(P.ppda_medio), cy: Y(P.pct_acciones_campo_rival), r: c === "yo" || c === "rival" ? 8 : 6, class: "dot-e " + c, tabindex: 0,
+        "aria-label": t.nombre + " " + t.temporada }, svg);
+      bindTip(dot, "<b>" + esc(t.nombre) + "</b> · " + esc(t.competicion + " " + t.temporada) + "<br>PPDA " + fmt(P.ppda_medio, 2) +
+        " · " + fmt(P.pct_acciones_campo_rival) + " % en campo rival" + (c === "yo" ? "" : "<br><i>Pulsa para comparar</i>"));
+      if (c !== "yo") {
+        const elegir = () => { rivalSlug = t.slug; renderComparar(actual()); renderEstilos(actual()); };
+        dot.addEventListener("click", elegir);
+        dot.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); elegir(); } });
+      }
+      if (c === "yo" || c === "rival") {
+        const x = X(P.ppda_medio), izq = x > W * 0.7;
+        svgEl("text", { x: x + (izq ? -12 : 12), y: Y(P.pct_acciones_campo_rival) + 4, "text-anchor": izq ? "end" : "start", class: "extlab" }, svg).textContent = t.nombre + " " + t.temporada;
+      }
+    }
+  }
+  if (observadores.has(cont)) observadores.get(cont).disconnect();
+  const ro = new ResizeObserver(dibujar);
+  ro.observe(cont);
+  observadores.set(cont, ro);
+  dibujar();
+}
+
+/* ---------- partidos por contexto ---------- */
+function renderSplits(team) {
+  const P = team.partidos, mitad = Math.ceil(P.length / 2);
+  const grupos = [
+    ["Local", P.filter((p) => p.local)],
+    ["Visitante", P.filter((p) => !p.local)],
+    ["1.ª mitad", P.slice(0, mitad)],
+    ["2.ª mitad", P.slice(mitad)],
+  ];
+  const media = (arr, f) => { const v = arr.map(f).filter(has); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
+  const cols = [
+    ["Pts/partido", (g) => media(g, (p) => p.goles_favor > p.goles_contra ? 3 : p.goles_favor === p.goles_contra ? 1 : 0), 2, true],
+    ["Goles a favor", (g) => media(g, (p) => p.goles_favor), 2, true],
+    ["Goles en contra", (g) => media(g, (p) => p.goles_contra), 2, false],
+    ["PPDA", (g) => media(g, (p) => p.ppda), 2, false],
+    ["Altura def.", (g) => media(g, (p) => p.altura_linea), 1, true],
+  ].filter(([, f]) => has(f(P)));
+  const filas = grupos.map(([lab, g]) => [lab, g.length, cols.map(([, f]) => g.length ? f(g) : null)]);
+  const mejor = (i, a, b) => { const va = filas[a][2][i], vb = filas[b][2][i]; if (!has(va) || !has(vb) || va === vb) return -1; return (va > vb) === cols[i][3] ? a : b; };
+  $("#splits").innerHTML = "<thead><tr><th></th><th class=\"n\">Partidos</th>" + cols.map(([c]) => '<th class="n">' + c + "</th>").join("") + "</tr></thead><tbody>" +
+    filas.map(([lab, n, vals], r) => '<tr' + (r === 2 ? ' class="sep"' : "") + '><td class="lab">' + lab + '</td><td class="n">' + n + "</td>" +
+      vals.map((v, i) => { const par = r < 2 ? [0, 1] : [2, 3]; const b = mejor(i, par[0], par[1]) === r;
+        return '<td class="n' + (b ? " best" : "") + '">' + (has(v) ? fmt(v, cols[i][2]) : '<span class="na">—</span>') + "</td>"; }).join("") + "</tr>").join("") + "</tbody>";
+}
+
 /* ---------- navegación ---------- */
 const bySlug = Object.fromEntries(TEAMS.map((t) => [t.slug, t]));
 let slugActual = INITIAL;
@@ -1344,10 +1468,13 @@ function render() {
   orden = { k: "j", dir: 1 };
   renderPartidos(team);
   renderComparar(team);
+  renderEstilos(team);
+  renderSplits(team);
 }
 $("#rival").addEventListener("change", (e) => {
   rivalSlug = e.target.value;
   renderComparar(actual());
+  renderEstilos(actual());
 });
 $("#equipo").addEventListener("change", (e) => {
   slugActual = e.target.value;

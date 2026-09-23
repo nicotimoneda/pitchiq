@@ -37,7 +37,7 @@ def generate_report(
     llm = llm if llm is not None else AnthropicClient()
     app = build_graph(llm, retriever=retriever)
     state = app.invoke({"team": team})
-    grounding = validate_grounding(state["draft"], state["evidence"])
+    grounding = validate_grounding(state["draft"], state["evidence"], ignore=[team])
 
     retries = 0
     while not grounding.is_grounded and retries < max_retries:
@@ -50,7 +50,7 @@ def generate_report(
                 "feedback": ", ".join(f.text for f in grounding.ungrounded),
             }
         )
-        grounding = validate_grounding(state["draft"], state["evidence"])
+        grounding = validate_grounding(state["draft"], state["evidence"], ignore=[team])
 
     markdown = state["draft"]
     if state.get("context"):

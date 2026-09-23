@@ -18,6 +18,10 @@ _NUMBER_RE = re.compile(r"\d+(?:[.,]\d+)?")
 _YEAR_RE = re.compile(r"^(19|20)\d{2}$")
 _SEASON_RE = re.compile(r"\b(19|20)\d{2}[/-]\d{2}\b")
 
+# Nombres propios con dígitos que no son cifras (competiciones y clubes). Se
+# añaden a los que se pasen en ``ignore`` (p. ej. el nombre del equipo).
+NOMBRES_CON_CIFRAS = ("1. Bundesliga", "2. Bundesliga", "Ligue 1", "Ligue 2")
+
 
 class Figure(BaseModel):
     """Una cifra extraída del texto del informe."""
@@ -45,8 +49,15 @@ class GroundingReport(BaseModel):
         return not self.ungrounded
 
 
-def extract_figures(text: str) -> "list[tuple[str, float]]":
-    """Extrae los números del texto (coma o punto decimal), excluyendo años."""
+def extract_figures(text: str, ignore: "tuple[str, ...] | list[str]" = ()) -> "list[tuple[str, float]]":
+    """Extrae los números del texto (coma o punto decimal), excluyendo años.
+
+    Tampoco cuentan los dígitos dentro de nombres propios ("Ligue 1", "Mainz 05"):
+    los de ``NOMBRES_CON_CIFRAS`` y los que se pasen en ``ignore``.
+    """
+    for nombre in sorted({*NOMBRES_CON_CIFRAS, *ignore}, key=len, reverse=True):
+        if nombre and any(c.isdigit() for c in nombre):
+            text = text.replace(nombre, " " * len(nombre))
     text = _SEASON_RE.sub(" ", text)  # "2023/24" no es una cifra métrica
     figures = []
     for match in _NUMBER_RE.finditer(text):
@@ -70,11 +81,12 @@ def _matches(value: float, evidence_value: float, rel_tol: float) -> bool:
 
 
 def validate_grounding(
-    text: str, evidence: "dict[str, float]", rel_tol: float = 1e-4
+    text: str, evidence: "dict[str, float]", rel_tol: float = 1e-4,
+    ignore: "tuple[str, ...] | list[str]" = (),
 ) -> GroundingReport:
     """Coteja cada cifra del informe contra la evidencia de las herramientas."""
     figures: list[Figure] = []
-    for raw, value in extract_figures(text):
+    for raw, value in extract_figures(text, ignore):
         matched = next(
             (name for name, ev in evidence.items() if _matches(value, ev, rel_tol)),
             None,

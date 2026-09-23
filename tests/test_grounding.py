@@ -48,3 +48,12 @@ def test_texto_sin_cifras_es_grounded():
     report = validate_grounding("El equipo presiona alto y es compacto.", EVIDENCE)
     assert report.ratio == 1.0
     assert report.is_grounded
+
+
+def test_digitos_de_nombres_propios_no_son_cifras():
+    texto = "El PSG ganó la Ligue 1 con un PPDA de 2,48 y superó al Mainz 05."
+    report = validate_grounding(texto, EVIDENCE, ignore=["Mainz 05"])
+    assert [f.text for f in report.figures] == ["2,48"]
+    assert report.is_grounded
+    # sin ignorarlo, el "05" del club sí se trataría como cifra (sin respaldo)
+    assert not validate_grounding(texto, EVIDENCE).is_grounded

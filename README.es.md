@@ -2,215 +2,163 @@
 
 # ⚽ PitchIQ
 
-**Informes tácticos con LLM donde inventarse una cifra es imposible por construcción — y una evaluación que no se maquilla ni a sí misma.**
+**Informes tácticos de 115 equipos de fútbol: un LLM redacta, pero no puede inventarse ni una cifra; cada número se contrasta con métricas calculadas a partir de los eventos de StatsBomb.**
 
 [![CI](https://github.com/nicotimoneda/pitchiq/actions/workflows/ci.yml/badge.svg)](https://github.com/nicotimoneda/pitchiq/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
-![StatsBomb](https://img.shields.io/badge/datos-StatsBomb%20Open%20Data-D50032)
+![LangGraph](https://img.shields.io/badge/LangGraph-1C3C3C?logo=langgraph&logoColor=white)
+![Claude](https://img.shields.io/badge/Claude-Anthropic-D97757?logo=anthropic&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-99%20passing-1A7F37?logo=pytest&logoColor=white)
+![Playwright](https://img.shields.io/badge/e2e-Playwright-2EAD33?logo=playwright&logoColor=white)
+![Ruff](https://img.shields.io/badge/lint-ruff-D7FF64?logo=ruff&logoColor=black)
+![License](https://img.shields.io/badge/License-MIT-1A7F37)
 
-[English](README.md) · **Español** · [📊 Evaluación honesta](EVALUATION.md)
+[English](README.md) · **Español**
 
 </div>
 
 ---
 
 <div align="center">
-<img src="assets/demo.gif" width="90%" alt="Recorrido por la web: puntos fuertes y débiles, buscador, mapa de tiros, jugadores, contexto según el marcador, ficha de partido y mapa de estilos"/>
+<img src="assets/demo.gif" width="92%" alt="Recorrido por la web: puntos fuertes y débiles, buscador, mapa de tiros, jugadores, contexto según el marcador, ficha de partido y mapa de estilos"/>
 </div>
 
-## Qué es
+## Qué hace
 
-Un pipeline que computa métricas tácticas deterministas sobre StatsBomb Open Data (115 equipos, desde temporadas completas de club hasta todas las selecciones de tres torneos internacionales, masculinos y femenino) y genera un informe con LLM donde **el modelo no puede calcular ni inventar números**: solo redacta sobre las salidas de las herramientas, y un validador coteja después cada cifra del texto contra la evidencia. La [evaluación](EVALUATION.md) mide todo lo medible sin key — incluido el hallazgo incómodo de que un "fix" de embeddings del propio proyecto resultó ser una regresión de −20 puntos al medirlo. Ese es el estándar del repo: números antes que sensaciones, también contra uno mismo.
+Un analista que prepara el próximo rival necesita dos cosas: los números y alguien que los explique. Los LLM son buenos en lo segundo y peligrosos en lo primero: escriben estadísticas que suenan bien y no lo son. PitchIQ reparte el trabajo. Python determinista calcula todas las métricas desde los eventos de StatsBomb (presión, forma defensiva con datos 360, balón parado, ataque, jugadores y estado del marcador) para **115 equipos**. El LLM solo redacta sobre esas salidas, y un **validador de grounding** coteja cada cifra del texto: si una no tiene respaldo se regenera el informe, y si persiste queda marcada en vez de publicarse como cierta.
 
-## Cómo se comprueba
+Además, cada métrica viene con contexto, su **percentil frente a su liga o torneo**, para que la página diga qué hace bien y mal el equipo, no solo lo que hizo.
 
-Cada cifra pasa tres controles independientes antes de que alguien la lea:
+## La web
 
-- **Contra la evidencia.** Cada número de un informe se empareja con la métrica que lo produjo, y un validador automático marca cualquiera sin respaldo.
-- **Contra una fuente pública.** En los 43 equipos de club, los datos publicados se contrastan partido a partido con [Understat](https://understat.com). Los goles coinciden en 1.621 de 1.621 partidos, el xG correlaciona 0,93 y el PPDA clásico ordena a los equipos casi igual (Spearman 0,93). El mismo ejercicio mostró que el PPDA de la web, que cuenta las presiones, mide otra cosa; ahora está documentado en vez de oculto. [Detalle](EVALUATION.md#validación-externa-understat-1621-partidos-sin-key)
-- **Contra sí mismo.** Los cambios se miden antes de quedarse. Uno que parecía una mejora costaba 20 puntos de precisión en la búsqueda y se revirtió.
+La ficha de un equipo empieza con su balance, su racha y cuatro cifras clave con su percentil. Bayer Leverkusen 2023/24: 34 partidos sin perder y **2,14 xG por partido (percentil 98)**:
 
-## El recorrido (M1–M7)
+![Portada del equipo](assets/app/es_overview.png)
 
-| Milestone | Qué añadió | Estado |
-|---|---|---|
-| **M1** | Ingesta con cache + zonas de recuperación + PPDA + CLI de heatmap | ✅ |
-| **M2** | Métricas 360: compacidad (convex hull), altura de línea, soporte de presión | ✅ |
-| **M3** | Córners: zonas de saque, box load, primer contacto, xG, MOI (proxy) | ✅ |
-| **M4** | LangGraph + validador de grounding: cifras del LLM verificadas una a una | ✅ |
-| **M5** | RAG interpretativo (glosario sin números, en revisión) + eval RAGAS | ✅ |
-| **M6** | Arquitectura precomputada: FastAPI mínima + Docker sin ML + Render | ✅ |
-| **M7** | [Evaluación honesta consolidada](EVALUATION.md) + kit factual del blog | ✅ |
+El informe: cada número aparece marcado y verificado (aquí 23 de 23; pasa el cursor por uno para ver de qué métrica sale), y debajo los **puntos fuertes y débiles** del equipo, calculados solos a partir de los percentiles:
 
-## La feature central: informes 100 % grounded (M4)
+![Informe verificado con puntos fuertes y débiles](assets/app/es_report.png)
 
-El LLM **no calcula ni inventa números**. Su único papel es redactar sobre las salidas de herramientas deterministas (las métricas de M1–M3, envueltas con esquemas pydantic), y un **validador automático post-generación** extrae cada cifra del texto y la coteja contra las salidas reales:
+Ataque: mapa de tiros con tamaño según el xG y los goles encima, y cada métrica frente a la liga. Barça 2015/16: 604 tiros, 109 goles, primero de La Liga en xG por partido y en dominio territorial:
 
-```
-equipo ──▶ [nodo de herramientas]──▶ [nodo de redacción (LLM)] ──▶ validador de grounding
-              deterministas              solo redacta                cifra a cifra
-                                                                        │
-                                              ¿cifra sin respaldo? ──▶ 1 reintento con feedback
-                                                                        │ si persiste
-                                                                   se marca en el informe
-```
+![Ataque](assets/app/es_attack.png)
 
-- El check es **automático y con test**: un informe con una cifra inventada baja el ratio de grounding, dispara una regeneración y, si persiste, la cifra queda marcada como no verificada en el propio informe. Nunca se publica como cierta.
-- El proveedor de LLM es **intercambiable**: una interfaz fina `LLMClient` con implementación por defecto para Anthropic (`claude-opus-4-8`). Cambiar de proveedor = implementar un método.
-- La evidencia completa (salidas de herramientas + reporte de grounding cifra a cifra) se guarda como `.json` junto al informe `.md`.
+Jugadores: minutos reconstruidos con alineaciones y cambios, en totales o por 90. El Barça 2015/16 sale tal como fue (Suárez 40 goles de liga, Messi 26 y Neymar 24), directamente de los eventos:
 
-```bash
-export ANTHROPIC_API_KEY=sk-ant-...   # solo para generar informes; nunca va al código ni al repo
-uv run python scripts/generate_report.py --team "Bayer Leverkusen"
-# → reports/informe_*.md + reports/informe_*.json + ratio de grounding por consola
-```
+![Jugadores](assets/app/es_players.png)
 
-Los tests mockean el `LLMClient`: ni CI ni la suite tocan la red o el LLM real.
+Cada partido tiene su ficha y su enlace (`#partido-12`). Real Madrid 0–4 Barcelona, con xG, dominio, PPDA, el mapa de acciones defensivas y el de tiros:
 
-### RAG interpretativo (M5): contexto, nunca cifras
+![Ficha de partido](assets/app/es_match.png)
 
-Sobre el pipeline anterior, una capa RAG (Qdrant local + embeddings `sentence-transformers`, todo sin API key) recupera conceptos de un **glosario táctico** y se los pasa al redactor como contexto interpretativo: qué significa en fútbol un PPDA bajo, un bloque compacto o un MOI corto. Tres garantías:
+Y un mapa de estilos con los 115 equipos (PPDA clásico frente a dominio territorial); al pulsar un punto se compara uno a uno:
 
-1. **El RAG no aporta números.** El glosario tiene un validador que **rechaza cualquier entrada con dígitos**; las cifras siguen saliendo solo de las herramientas y el validador de grounding de M4 se aplica sin cambios sobre el informe final. Hay un test explícito de que el contexto RAG no rompe el grounding.
-2. **⚠️ El glosario está EN REVISIÓN.** Lo redactó una IA como borrador: todas las entradas llevan `revisado: false` y sus interpretaciones **no son autoritativas hasta revisión humana**. Ninguna entrada cita fuentes que no se puedan garantizar (campo `fuente: pendiente de revisión humana`). El propio informe arrastra esta advertencia.
-3. **Evaluación medible.** `scripts/eval_rag.py` evalúa fidelidad y relevancia de contexto con RAGAS sobre un set de preguntas de interpretación. Usa un LLM juez de Anthropic → **cuesta llamadas de API y queda fuera de CI**. Corre en un entorno aislado (ragas es incompatible con langchain 1.x):
+![Mapa de estilos](assets/app/es_compare.png)
 
-```bash
-uv run python scripts/build_index.py                            # índice vectorial local
-ANTHROPIC_API_KEY=sk-ant-... uv run --script scripts/eval_rag.py  # evaluación RAGAS
-```
+También: rendimiento por campo, por mitad de temporada, según la fuerza del rival y según el marcador; filtro de partidos; exportar partidos y jugadores a CSV; exportar a PDF; español e inglés; tema claro y oscuro; escudos con los colores de cada club y banderas de las selecciones.
 
-### Arquitectura precomputada (M6): generar una vez, servir estático
+## Resultados
 
-La web pública **no genera nada**: separa la GENERACIÓN (cara, con LLM, en local) del SERVIDO (barato, estático, en producción).
+Todo lo de abajo se mide sin API key y se reproduce desde el repositorio ([evaluación completa](EVALUATION.md)).
 
-```
-LOCAL (humano)                                PRODUCCIÓN (Render, sin key)
-──────────────────────────────                ─────────────────────────────────
-scripts/precompute.py                         app FastAPI mínima (gzip)
-  ├─ --demo-data: métricas (SIN key)            ├─ GET /                   web de análisis
-  │    → teams/<slug>.json + og/<slug>.png      ├─ GET /api/equipos        equipos publicados
-  ├─ informe M4+M5 (CON key, 1 llamada)         ├─ GET /api/equipos/{slug} datos de un equipo
-  │    → report.md + evidence.json              ├─ GET /api/report         informe del LLM
-  └─ artefactos → app/static/report/            ├─ GET /api/evidence       grounding cifra a cifra
-        │                                       ├─ GET /og/{slug}.png      vista previa al compartir
-        └── git commit ───────────────────▶     └─ GET /health
-```
+| Comprobación | Resultado |
+|---|---|
+| Grounding de los resúmenes verificados | **100 %** de las cifras respaldadas, 115 equipos × 2 idiomas |
+| Goles frente a [Understat](https://understat.com), partido a partido | **1.621 de 1.621** idénticos (43 clubes) |
+| xG frente a Understat, partido a partido | correlación **0,93** (modelos distintos, mismo orden de partidos) |
+| PPDA clásico frente a Understat, orden de equipos | Spearman **0,93** |
+| PPDA de la web (con presiones) frente a Understat | Spearman 0,74: mide volumen de presión; documentado y se enseñan los dos |
+| Búsqueda en el glosario, embeddings en inglés frente a multilingües | **80 % frente a 60 %** top-1: un "arreglo" mío que empeoraba, medido y revertido |
 
-La web es una herramienta de análisis por equipo con **115 equipos**: La Liga y Premier League 2015/16 completas, todas las selecciones de la Euro 2024, el Mundial 2022 y la Eurocopa femenina 2025, y el Leverkusen 23/24, el Barça 20/21 y el PSG 22/23.
-
-- **Contexto en cada cifra.** Cada métrica se muestra como percentil frente a su liga o torneo, y el informe enumera solo los **puntos fuertes y débiles** del equipo: se lee como un informe del próximo rival.
-- **Informe**: resumen con cada cifra verificada contra las métricas (pasa el cursor para ver de dónde sale).
-- **Ataque**: mapa de tiros por xG, dominio territorial, pases y conducciones progresivos y entradas al último tercio por carril.
-- **Presión, Defensa y Balón parado**: mapas de campo y medias móviles de 5 partidos, con el PPDA en sus dos definiciones (con presiones y la clásica de las fuentes públicas).
-- **Jugadores**: tabla ordenable de toda la plantilla (totales o por 90 minutos): goles, xG, pases clave, acciones progresivas, presiones y acciones defensivas.
-- **Partidos**: rendimiento por campo, por mitad de temporada, según la fuerza del rival y según el marcador (ganando, empatando, perdiendo), tabla filtrable y ficha de cada partido con su propio enlace.
-- **Comparar**: mapa de estilos de los 115 equipos (PPDA clásico frente a dominio territorial) y comparación uno a uno.
-- **Además**: escudos con los colores de cada club y banderas de las selecciones, exportar partidos y jugadores a CSV, exportar a PDF, tema claro/oscuro, en **español e inglés**, vista previa al compartir y carga bajo demanda de cada equipo.
-
-Qué equipos se publican lo decide [`scripts/publicacion.yaml`](scripts/publicacion.yaml): por competición de StatsBomb Open Data, una lista de equipos o los N primeros de la clasificación, con nombres en español. Donde no hay datos de posiciones (La Liga 2015/16), la sección de Defensa lo indica y esas métricas no se estiman. Una tarea semanal de GitHub Actions compara el catálogo de StatsBomb y abre una issue si publica temporadas nuevas.
-
-**Por qué así:** la app de producción no lleva `ANTHROPIC_API_KEY` (imposible filtrarla: no existe allí), no importa torch/langgraph/anthropic (imagen mínima, el CI lo verifica), y cada visita cuesta cero llamadas de LLM. Las gráficas y el informe son artefactos independientes: la web enseña datos reales aunque el informe todavía no exista. El pipeline de generación completo sigue en el repo para quien clone y ponga su key.
-
-```bash
-# paso humano, en local:
-uv run python scripts/precompute.py --demo-data                    # gráficas reales, sin key
-ANTHROPIC_API_KEY=sk-ant-... uv run python scripts/precompute.py   # + informe del LLM
-git add app/static/report && git commit    # los artefactos se versionan
-
-# tests de la web en un navegador real (también en CI):
-uv run playwright install chromium && uv run pytest -m e2e
-
-# servir en local con Docker:
-docker build -t pitchiq-app . && docker run --rm -p 8000:8000 pitchiq-app
-# → http://localhost:8000  (sin artefactos reales sirve fixtures de muestra, con aviso)
-```
-
-El deploy en Render usa `render.yaml` (web service Docker, health check en `/health`, **sin variables secretas**).
-
-## Detalle de las métricas
-
-### Las tres métricas espaciales (M2)
-
-| Métrica | Qué mide | Sin datos suficientes |
-|---|---|---|
-| `defensive_compactness` | Dispersión del bloque de compañeros visibles en acciones defensivas: área del convex hull + anchura (rango y) × profundidad (rango x). Menos área = más compacto. | < 3 visibles → NaN (hull indefinido) |
-| `defensive_line_height` | Media de x de los 4 compañeros visibles más retrasados (portero excluido) durante acciones defensivas. | < 4 visibles → NaN (no se estima una línea con menos jugadores de los que la definen) |
-| `pressing_support` | Compañeros visibles a ≤ radio (por defecto 10 m) de la posición del evento Pressure (proxy del balón), sin contar al presionador. | Conteo mínimo: solo visibles |
-
-> ⚠️ **Caveat crítico de los datos 360**: los freeze-frames solo capturan a los jugadores dentro del **área visible de la retransmisión**, no siempre los 22. Todas las métricas espaciales se computan sobre los jugadores **visibles** y son una **aproximación**: nunca se asumen 11 por frame, y cuando no hay suficientes visibles para definir una métrica, el valor es NaN — no se inventa. Además, 360 es freeze-frame (foto en el instante de cada evento), no tracking continuo.
-
-> 📏 **Unidades: todo en metros.** StatsBomb da las coordenadas en yardas sobre un campo normalizado de 120 × 80. Todo lo publicado (salidas de herramientas que lee el LLM, web y verificador) se convierte a metros (109,7 × 73,2 m) y las áreas a m²; los umbrales se definen en metros (apoyo en la presión a 10 m, robo alto a 40 m).
-
-### Córners (M3)
-
-| Métrica | Qué mide | Lado |
-|---|---|---|
-| `delivery_zone` | Clasifica el saque por su destino: corto / primer palo / centro / segundo palo, relativo a la portería atacada (derivada del saque, sin orientación fija) | ataque |
-| `box_load` | Atacantes y defensores **visibles** dentro del área grande al sacar + diferencial | ataque |
-| `first_contact` | Equipo y localización del primer contacto tras el saque (ganado / perdido / concedido) | ambos |
-| `corner_xg_for` / `corner_xg_against` | xG a favor / en contra en remates atribuidos a córner | ambos |
-| `man_orientation_index` | **Proxy heurístico** de marcaje: distancia media de cada atacante rival visible a su defensor visible más cercano (portero excluido). Menor = más al hombre, mayor = más zonal | defensa |
-
-Temporada 2023/24 del Leverkusen: 236 córners a favor (68 % de primer contacto ganado, 10,8 xG) y 112 en contra (50 % de primer contacto concedido, 5,0 xG en contra).
-
-**Caveats de M3 — léelos antes de citar un número:**
-
-1. **El índice de orientación al hombre es un proxy heurístico continuo**, no un clasificador de sistema de marcaje: mide proximidad media al marcador más cercano sobre jugadores visibles. Sirve para comparar tendencias entre partidos/equipos, no para afirmar "juega al hombre".
-2. **Tamaño de muestra**: 236 córners a favor y 112 en contra en la temporada. Suficiente para patrones agregados (zonas de saque, % primer contacto); justa para subdivisiones finas (p. ej. "segundo palo con salida en corto en la segunda parte").
-3. **Regla de atribución de xG a córner**: un remate cuenta como "de córner" si su `play_pattern == "From Corner"` (definición de StatsBomb, codificada en `CORNER_PLAY_PATTERN`). Remates en segundas jugadas largas pueden quedar fuera.
-4. **Área visible de los 360** (caveat de arriba): `box_load` y el índice de orientación son cotas/aproximaciones sobre visibles; los córners sin freeze-frame quedan fuera de esas métricas (148/236 y 97/112 con 360 en la temporada).
-
-<div align="center">
-<img src="assets/corners_delivery_bayer_leverkusen_temporada.png" width="55%" alt="Zonas de saque de córner del Bayer Leverkusen 2023/24"/>
-<img src="assets/corners_first_contact_against_bayer_leverkusen_temporada.png" width="42%" alt="Primer contacto en córners en contra"/>
-</div>
-
-<div align="center">
-<img src="assets/defensive_block_bayer_leverkusen_season.png" width="70%" alt="Bloque defensivo medio del Bayer Leverkusen 2023/24"/>
-<img src="assets/line_height_by_match_bayer_leverkusen.png" width="90%" alt="Altura de línea defensiva por partido"/>
-</div>
-
-Los huecos en la gráfica son partidos sin datos 360: se muestran como NaN, no se interpolan.
-
-## Dataset
-
-Sujeto de análisis: **Bayer Leverkusen, temporada del título 2023/24** (Bundesliga, `competition_id=9`, `season_id=281`). Dos caveats honestos:
-
-- Son **los 34 partidos del Leverkusen**, no la liga entera: el sujeto es el equipo, y toda métrica se computa sobre esa muestra.
-- Los datos 360 son **freeze-frames** del área visible (ver caveat de arriba), no tracking continuo.
-
-## Quick start
+## Puesta en marcha
 
 Requiere [`uv`](https://github.com/astral-sh/uv).
 
 ```bash
+git clone https://github.com/nicotimoneda/pitchiq.git
+cd pitchiq
 uv sync
-
-# M1: mapa de zonas de recuperación + PPDA de un partido
-uv run python scripts/build_recovery_map.py --match-id 3895052 --team "Bayer Leverkusen"
-
-# M2: resumen espacial 360 — un partido o la temporada entera
-uv run python scripts/build_shape_report.py --match-id 3895052 --team "Bayer Leverkusen"
-uv run python scripts/build_shape_report.py --team "Bayer Leverkusen"
-
-# M3: resumen de córners (ataque + defensa)
-uv run python scripts/build_setpiece_report.py --team "Bayer Leverkusen"
-# → figures/corners_*.png
+uv run uvicorn app.main:app --port 8000     # → http://localhost:8000
 ```
 
-La primera ejecución descarga de StatsBomb; las siguientes leen del cache en `data/cache/`. La temporada completa son ~34 descargas de eventos + 360 la primera vez.
+Los datos calculados de los 115 equipos vienen en el repositorio: la web funciona tal cual, sin API key ni descargas.
+
+```bash
+uv run pytest                                                    # 87 tests (sin red, LLM simulado)
+uv run playwright install chromium && uv run pytest -m e2e       # 12 tests en navegador
+uv run python scripts/precompute.py --demo-data --jobs 6         # recalcula todos los equipos (~20 min)
+ANTHROPIC_API_KEY=sk-ant-... uv run python scripts/precompute.py # + el informe redactado por el LLM
+```
+
+## Cómo funciona
+
+| Etapa | Método | Detalle |
+|---|---|---|
+| Datos | StatsBomb Open Data | eventos + freeze-frames 360 con caché local; equipos elegidos en [`publicacion.yaml`](scripts/publicacion.yaml) |
+| Métricas | Python determinista, todo en metros | PPDA (dos definiciones), robos altos, bloque defensivo con 360, córners, tiros y xG, dominio, acciones progresivas, jugadores, estado del marcador |
+| Contexto | percentiles | frente a su liga o torneo si tiene 8 equipos o más; si no, frente a todos los clubes o selecciones publicados |
+| Informe | LangGraph + Claude | herramientas → redactor → validador de grounding (1 reintento con feedback y, si no, marca) |
+| Interpretación | RAG sobre un glosario táctico | Qdrant + MiniLM; el glosario **rechaza entradas con dígitos**: los números solo salen de las herramientas |
+| Servicio | FastAPI precomputada | sin API key ni librerías de ML en producción (CI revisa la imagen); datos de cada equipo bajo demanda |
+| Calidad | pytest, Playwright, GitHub Actions | tests unitarios y de navegador, build de Docker y aviso semanal de temporadas nuevas |
+
+```
+equipo ──▶ [herramientas deterministas] ──▶ [redactor (LLM)] ──▶ validador de grounding
+                                              solo prosa          cifra a cifra
+                                                                       │ ¿sin respaldo?
+                                                                       ▼
+                                                1 reintento con feedback ──▶ si persiste → se marca
+```
+
+Definiciones y salvedades de cada métrica: [`docs/metricas.md`](docs/metricas.md).
 
 ## Stack
 
-Python 3.11 · uv · statsbombpy · pandas / numpy / scipy · mplsoccer · pydantic v2 · LangGraph · anthropic (proveedor intercambiable) · Qdrant local · sentence-transformers · RAGAS (eval, fuera de CI) · pytest · ruff · GitHub Actions
+Python 3.11 · uv · statsbombpy · pandas / numpy / scipy · pydantic v2 · LangGraph · Anthropic (`LLMClient` intercambiable) · Qdrant · sentence-transformers · RAGAS · FastAPI · Playwright · pytest · ruff · Docker · GitHub Actions
 
-## Evaluación y material del proyecto
+## Estructura del proyecto
 
-- [**EVALUATION.md**](EVALUATION.md) — qué afirma el sistema (y qué no), todas las limitaciones sin maquillar y los números: grounding 1.0, comparación de embeddings antes/después, generalización a la Euro 2024.
-- [`docs/blog_kit.md`](docs/blog_kit.md) — material factual en crudo para el post (los hallazgos con números y un esquema); la prosa final la escribe el autor.
-- `uv run python scripts/run_eval.py` regenera la evaluación sin key, y `uv run python scripts/validacion_externa.py` el contraste con Understat.
+```text
+pitchiq/
+├── src/pitchiq/
+│   ├── data/            # cargador de StatsBomb con caché local
+│   ├── metrics/         # presión, forma 360, balón parado, ataque, jugadores (funciones puras)
+│   ├── agent/           # grafo LangGraph, herramientas, cliente LLM, validador de grounding
+│   ├── rag/             # glosario táctico (sin dígitos), buscador Qdrant, evaluación RAGAS
+│   └── eval/            # grounding, embeddings, generalización, contraste con Understat
+├── app/                 # FastAPI + la web (una plantilla, sin build)
+│   └── static/report/   # datos precalculados de los 115 equipos + imágenes para compartir
+├── scripts/
+│   ├── publicacion.yaml       # qué equipos se publican
+│   ├── precompute.py          # métricas (sin key) e informe del LLM (con key); --jobs en paralelo
+│   └── validacion_externa.py  # contraste con Understat
+├── tests/               # tests unitarios + e2e/ (Playwright)
+├── docs/metricas.md     # definiciones y salvedades de las métricas
+├── EVALUATION.md        # qué afirma el sistema, qué no, y todas sus limitaciones
+└── .github/workflows/   # CI (tests, e2e, Docker) + revisión semanal del catálogo
+```
 
-## Créditos
+## Notas de diseño
 
-Datos: [StatsBomb Open Data](https://github.com/statsbomb/open-data), usados bajo sus [términos de uso](https://github.com/statsbomb/open-data/blob/master/LICENSE.pdf). Gracias a StatsBomb por liberar datos de eventos y 360 de calidad profesional.
+- **El LLM nunca calcula.** Los números salen de las herramientas y el modelo redacta. La regla que verifica el informe del LLM es la misma que marca cada cifra en la web.
+- **Todo en metros.** StatsBomb trabaja en yardas sobre un campo normalizado de 120 × 80; los valores se convierten en origen (y los umbrales se definen en metros), no se cambia solo la etiqueta.
+- **Salvedades a la vista.** Los freeze-frames 360 solo muestran a los jugadores que salen en pantalla: las métricas espaciales son aproximadas y, si faltan datos, se dejan vacías en vez de estimarse. El xG es el modelo de StatsBomb y no se mezcla con el de otras fuentes.
+- **Sin logos.** Los escudos oficiales son marcas registradas: los clubes llevan sus iniciales con sus colores y las selecciones su bandera.
+- **Generar una vez, servir estático.** La web de producción no tiene API key que filtrar y cada visita cuesta cero llamadas al LLM.
+
+## Próximos pasos
+
+- [ ] Despliegue público
+- [ ] Informes redactados por el LLM para todos los equipos (requiere una corrida con API key)
+- [ ] Preguntas en lenguaje natural respondidas con las mismas herramientas y el mismo validador
+- [ ] Informe previo a un partido: equipo A contra equipo B
+- [ ] Temporadas nuevas a medida que StatsBomb las publique (un workflow semanal ya avisa)
+
+## Contacto
+
+Nicolás Timoneda · [nicotimoneda@gmail.com](mailto:nicotimoneda@gmail.com) · [@nicotimoneda](https://github.com/nicotimoneda)
+
+## Licencia
+
+MIT, véase [`LICENSE`](LICENSE). Datos: [StatsBomb Open Data](https://github.com/statsbomb/open-data), usados bajo sus [condiciones](https://github.com/statsbomb/open-data/blob/master/LICENSE.pdf).

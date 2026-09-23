@@ -1751,7 +1751,8 @@ function pintarZonas(svg, Z) {
 function pintarTiros(svg, team, tiros) {
   // medio campo en horizontal, portería rival arriba (igual que los córners)
   const { datos } = dibujarCampo(svg, "translate(0 120) rotate(-90)");
-  const orden = [...tiros].sort((a, b) => b.xg - a.xg);  // los grandes debajo
+  // fallos primero (grandes debajo) y los goles encima, para que no queden tapados
+  const orden = [...tiros].sort((a, b) => (a.gol - b.gol) || (b.xg - a.xg));
   for (const s of orden) {
     const denso = tiros.length > 120;
     const c = svgEl("circle", { cx: s.x, cy: s.y, r: ((denso ? 0.45 : 0.7) + (denso ? 1.7 : 2.6) * Math.sqrt(s.xg)).toFixed(2), class: "tiro" + (s.gol ? " gol" : ""), tabindex: 0 }, datos);

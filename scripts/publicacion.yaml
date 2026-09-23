@@ -1,8 +1,8 @@
 # Equipos publicados en la web de PitchIQ.
 #
 # Cada bloque es una competición/temporada de StatsBomb Open Data (ids en
-# `statsbombpy.sb.competitions()`). Se publican los equipos de `equipos` o, con
-# `top: N`, los N primeros de la clasificación calculada con los resultados
+# `statsbombpy.sb.competitions()`). Se publican los equipos de `equipos` (una lista
+# o `todos`) o, con `top: N`, los N primeros de la clasificación calculada con los resultados
 # (3 puntos por victoria; desempate por diferencia de goles y goles a favor).
 # `top` solo tiene sentido en temporadas completas: las parciales (p. ej. la
 # Bundesliga 2023/24, que solo trae los partidos del Leverkusen) usan `equipos`.
@@ -26,22 +26,26 @@ competiciones:
 
   - competition_id: 11    # La Liga 2015/16 (temporada completa, sin 360)
     season_id: 27
-    top: 10
+    equipos: todos
 
-  - competition_id: 55    # Eurocopa 2024 (todos los partidos con 360): semifinalistas
+  - competition_id: 2     # Premier League 2015/16 (temporada completa, sin 360)
+    season_id: 27
+    equipos: todos
+
+  - competition_id: 55    # Eurocopa 2024 (todos los partidos con 360)
     season_id: 282
     nombre: Eurocopa
-    equipos: ["Spain", "England", "France", "Netherlands"]
+    equipos: todos
 
-  - competition_id: 43    # Mundial 2022 (todos los partidos con 360): semifinalistas
+  - competition_id: 43    # Mundial 2022 (todos los partidos con 360)
     season_id: 106
     nombre: Mundial
-    equipos: ["Argentina", "France", "Croatia", "Morocco"]
+    equipos: todos
 
-  - competition_id: 53    # Eurocopa femenina 2025 (todos los partidos con 360): semifinalistas
+  - competition_id: 53    # Eurocopa femenina 2025 (todos los partidos con 360)
     season_id: 315
     nombre: Eurocopa femenina
-    equipos: ["England Women's", "Spain Women's", "Germany Women's", "Italy Women's"]
+    equipos: todos
 
 # Nombres en español para la web (equipos publicados y rivales). StatsBomb los
 # da en inglés; los que no aparecen aquí se muestran tal cual. En selecciones

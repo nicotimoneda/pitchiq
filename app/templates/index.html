@@ -1011,7 +1011,11 @@ Object.assign(T_EN, {
   "defensores rivales en el área al sacar": "opposing defenders in the box at delivery", "% de primer contacto ganado": "% of first contacts won",
   "xG generado en córners": "xG generated from corners", "córners en contra": "corners against", "distancia media al marcador en córners": "average distance to marker at corners",
   "% de primer contacto del rival": "% of opponent first contacts", "xG concedido en córners": "xG conceded from corners",
-  "xG generado (suma de sus remates)": "xG generated (sum of its shots)", "xG concedido (suma de los remates rivales)": "xG conceded (sum of opponent shots)",
+  "xG generado (suma de sus remates)": "xG generated (sum of its shots)",
+  "robos altos (a 40 yardas o menos de la portería rival)": "high turnovers (within 40 yards of the opponent's goal)",
+  "robos altos que acaban en tiro": "high turnovers ending in a shot",
+  "distancia máxima de un robo alto a la portería rival (40 yardas)": "maximum distance of a high turnover from the opponent's goal (40 yards)",
+  "Robos altos": "High turnovers", "Acaban en tiro": "Ending in a shot", "de los robos altos": "of high turnovers", "a 40 yardas o menos de la portería rival": "within 40 yards of the opponent's goal", "xG concedido (suma de los remates rivales)": "xG conceded (sum of opponent shots)",
 });
 const P_EN = [
   [/^Resumen generado a partir de las métricas de (\d+) partidos$/, "Summary built from the metrics of $1 matches"],
@@ -1028,6 +1032,7 @@ const P_EN = [
   [/^(.+) % del total · tercio (defensivo|central|ofensivo)$/, (m, v, t) => v + " % of total · " + ({ defensivo: "defensive", central: "middle", ofensivo: "attacking" })[t] + " third"],
   [/^PPDA (.+) · (.+) % en campo rival$/, "PPDA $1 · $2 % in the opponent's half"],
   [/^PitchIQ · datos de StatsBomb Open Data · cada cifra contrastada con las métricas calculadas · (.+)$/, "PitchIQ · StatsBomb Open Data · every figure checked against the computed metrics · $1"],
+[/^(\d+) con tiro$/, "$1 with a shot"],
   [/^(.+) concedido$/, "$1 conceded"], [/^(.+) encajados$/, "$1 conceded"],
   [/^(\d+) sin respaldo · (.+)$/, "$1 unsupported · $2"], [/^Todo verificado · (.+)$/, "All verified · $1"],
   [/^vs (.+)$/, "vs $1"], [/^(.+) \/ (.+)$/, "$1 / $2"],
@@ -1111,6 +1116,10 @@ function resultados(team) {
     derrotas: P.filter((p) => p.goles_favor < p.goles_contra).length,
     goles_favor: P.reduce((a, p) => a + p.goles_favor, 0),
     goles_contra: P.reduce((a, p) => a + p.goles_contra, 0),
+    ...(P.length && P.every((p) => has(p.robos_altos)) ? {
+      robos_altos: P.reduce((a, p) => a + p.robos_altos, 0),
+      robos_altos_tiro: P.reduce((a, p) => a + p.robos_altos_tiro, 0),
+    } : {}),
     ...(P.length && P.every((p) => has(p.xg_favor)) ? {
       xg_favor: Math.round(P.reduce((a, p) => a + p.xg_favor, 0) * 100) / 100,
       xg_contra: Math.round(P.reduce((a, p) => a + p.xg_contra, 0) * 100) / 100,
@@ -1128,6 +1137,9 @@ const NOMBRES = {
   "resultados.goles_favor": "goles a favor",
   "resultados.goles_contra": "goles en contra",
   "resultados.xg_favor": "xG generado (suma de sus remates)",
+  "resultados.robos_altos": "robos altos (a 40 yardas o menos de la portería rival)",
+  "resultados.robos_altos_tiro": "robos altos que acaban en tiro",
+  "campo.distancia_robo_alto": "distancia máxima de un robo alto a la portería rival (40 yardas)",
   "resultados.xg_contra": "xG concedido (suma de los remates rivales)",
   "presion.n_partidos": "partidos analizados",
   "presion.acciones_defensivas_totales": "acciones defensivas totales",
@@ -1164,7 +1176,8 @@ function evidencia(team) {
   }
   const R = resultados(team);
   for (const k in R) ev.push(["resultados." + k, R[k]]);
-  ev.push(["campo.largo", 120]);  // medida fija del campo StatsBomb (120 × 80 yardas)
+  ev.push(["campo.largo", 120]);
+  ev.push(["campo.distancia_robo_alto", 40]);  // umbral fijo de la métrica de robos altos  // medida fija del campo StatsBomb (120 × 80 yardas)
   return ev;
 }
 function nombreMetrica(key) {
@@ -1408,6 +1421,7 @@ function renderInforme(team) {
     team.nombre + " played " + R.partidos + " " + team.competicion + " " + team.temporada + " matches" + (R.derrotas === 0 ? " without losing" : "") +
       ": " + R.victorias + " wins, " + R.empates + " draws and " + R.derrotas + " losses, scoring " + R.goles_favor + " and conceding " + R.goles_contra + ".",
     has(R.xg_favor) ? "Its shots added up to " + fmt(R.xg_favor, 2) + " xG, against " + fmt(R.xg_contra, 2) + " for its opponents." : null,
+    has(R.robos_altos) ? "It won the ball back " + R.robos_altos + " times within 40 yards of the opponent's goal, and " + R.robos_altos_tiro + " of those possessions ended in a shot." : null,
     "It presses with an average PPDA of " + fmt(P.ppda_medio, 2) + " and makes " + fmt(P.acciones_defensivas_por_partido) +
       " defensive actions per match; " + fmt(P.pct_acciones_campo_rival) + " % of them in the opponent's half.",
     has(F.altura_linea_media)
@@ -1423,6 +1437,7 @@ function renderInforme(team) {
     has(R.xg_favor)
       ? "Sus remates sumaron " + fmt(R.xg_favor, 2) + " de xG y los del rival " + fmt(R.xg_contra, 2) + "."
       : null,
+    has(R.robos_altos) ? "Recuperó el balón " + R.robos_altos + " veces a 40 yardas o menos de la portería rival, y " + R.robos_altos_tiro + " de esas posesiones acabaron en tiro." : null,
     "Presiona con un PPDA medio de " + fmt(P.ppda_medio, 2) + " y firma " + fmt(P.acciones_defensivas_por_partido) +
       " acciones defensivas por partido; el " + fmt(P.pct_acciones_campo_rival) + " % ocurre en campo rival.",
     has(F.altura_linea_media)
@@ -1489,6 +1504,12 @@ function renderPresion(team) {
       ? ["Apoyo en la presión", "compañeros a menos de 10 yardas", fmt(T.forma_defensiva.soporte_presion_medio, 2)]
       : null,
     ["Acciones defensivas", "en total", fmtInt(T.presion.acciones_defensivas_totales)],
+    has(resultados(team).robos_altos)
+      ? ["Robos altos", "a 40 yardas o menos de la portería rival", fmtInt(resultados(team).robos_altos)]
+      : null,
+    has(resultados(team).robos_altos)
+      ? ["Acaban en tiro", "de los robos altos", fmt((100 * resultados(team).robos_altos_tiro) / Math.max(1, resultados(team).robos_altos)), "%"]
+      : null,
   ]);
 
   const vals = team.partidos.map((p) => p.ppda);
@@ -1788,6 +1809,7 @@ function renderSplits(team) {
     ["xG a favor", (g) => media(g, (p) => p.xg_favor), 2, true],
     ["xG en contra", (g) => media(g, (p) => p.xg_contra), 2, false],
     ["PPDA", (g) => media(g, (p) => p.ppda), 2, false],
+    ["Robos altos", (g) => media(g, (p) => p.robos_altos), 1, true],
     ["Altura def.", (g) => media(g, (p) => p.altura_linea), 1, true],
   ].filter(([, f]) => has(f(P)));
   const filas = grupos.map(([lab, g]) => [lab, g.length, cols.map(([, f]) => g.length ? f(g) : null)]);
@@ -1813,6 +1835,7 @@ function abrirFicha(i) {
     has(p.xg_favor) ? ["xG", fmt(p.xg_favor, 2) + "<small>vs " + fmt(p.xg_contra, 2) + "</small>"] : null,
     has(p.ppda) ? ["PPDA", fmt(p.ppda, 2) + "<small>media " + fmt(team.herramientas.presion.ppda_medio, 2) + "</small>"] : null,
     has(p.acciones_defensivas) ? ["Acciones defensivas", fmtInt(p.acciones_defensivas)] : null,
+    has(p.robos_altos) ? ["Robos altos", p.robos_altos + "<small>" + p.robos_altos_tiro + " con tiro</small>"] : null,
     has(p.altura_linea) ? ["Altura de la defensa", fmt(p.altura_linea) + "<small>/120</small>"] : null,
   ].filter(Boolean);
   $("#ficha-kpis").innerHTML = kp.map(([t, v]) => "<div><dt>" + t + "</dt><dd>" + v + "</dd></div>").join("");

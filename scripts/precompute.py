@@ -276,7 +276,7 @@ def build_team_data(entry: dict, orden: int) -> None:
     from pitchiq.agent import tools as agent_tools
     from pitchiq.data.loader import has_360, load_events, load_frames, load_matches
     from pitchiq.metrics.frames import merge_frames_events, visible_teammates
-    from pitchiq.metrics.pressing import defensive_actions, ppda
+    from pitchiq.metrics.pressing import defensive_actions, high_turnovers, ppda
     from pitchiq.metrics.set_pieces import delivery_zone, find_corners
     from pitchiq.metrics.spatial import defensive_line_height
 
@@ -318,6 +318,7 @@ def build_team_data(entry: dict, orden: int) -> None:
         rival = m["away_team"] if home else m["home_team"]
         shots = events[(events["type"] == "Shot") & (events["period"] < 5)]
         xg = shots.groupby("team")["shot_statsbomb_xg"].sum()
+        robos = high_turnovers(events, team)
         per_match.append({
             "fecha": str(m["match_date"])[:10],
             "rival": entry.get("traducir", str)(rival),
@@ -330,6 +331,8 @@ def build_team_data(entry: dict, orden: int) -> None:
             "xg_favor": round(float(xg.get(team, 0.0)), 2),
             "xg_contra": round(float(xg.drop(team, errors="ignore").sum()), 2),
             "acciones_defensivas": int(len(actions)),
+            "robos_altos": robos["n"],
+            "robos_altos_tiro": robos["con_tiro"],
             "zonas": grid.T.astype(int).tolist(),
         })
 

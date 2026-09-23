@@ -90,3 +90,36 @@ def ppda(events: pd.DataFrame, team: str) -> float:
     if n_def == 0:
         return float("inf")
     return n_passes / n_def
+
+
+# Robo alto: posesión propia que empieza en juego abierto a <= 40 yardas de la
+# portería rival (x >= 80 en coordenadas StatsBomb, donde cada equipo ataca hacia x=120)
+HIGH_TURNOVER_MIN_X = config.PITCH_LENGTH - 40
+OPEN_PLAY_PATTERNS = ("Regular Play", "From Counter")
+
+
+def high_turnovers(
+    events: pd.DataFrame, team: str, min_x: float = HIGH_TURNOVER_MIN_X
+) -> "dict[str, int]":
+    """Posesiones ganadas cerca de la portería rival y cuántas acaban en tiro.
+
+    Una posesión cuenta si es del equipo, su patrón es de juego abierto (no saques
+    de banda, de puerta, faltas ni córners) y el primer evento del equipo con
+    localización está a x >= min_x. "Con tiro" = la misma posesión incluye un
+    disparo del equipo. Es la idea de los "high turnovers" de Opta, con el umbral
+    en yardas de StatsBomb.
+    """
+    need = {"possession", "possession_team", "play_pattern", "team", "type", "location"}
+    if events.empty or not need <= set(events.columns):
+        return {"n": 0, "con_tiro": 0}
+    ev = events[events["possession_team"] == team].sort_values("index")
+    n = con_tiro = 0
+    for _, pos in ev.groupby("possession", sort=False):
+        if pos["play_pattern"].iloc[0] not in OPEN_PLAY_PATTERNS:
+            continue
+        propias = pos[(pos["team"] == team) & pos["location"].notna()]
+        if propias.empty or float(propias["location"].iloc[0][0]) < min_x:
+            continue
+        n += 1
+        con_tiro += int(((pos["team"] == team) & (pos["type"] == "Shot")).any())
+    return {"n": n, "con_tiro": con_tiro}

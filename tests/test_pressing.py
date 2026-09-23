@@ -65,3 +65,28 @@ def test_eventos_sin_columna_duel_type_no_rompe():
         [{"type": "Pressure", "team": "A", "location": [60, 40]}]
     )
     assert recovery_zones(events, "A").total == 1
+
+
+def test_robos_altos_cuenta_posesiones_de_juego_abierto_cerca_del_area():
+    from pitchiq.metrics.pressing import high_turnovers
+
+    filas = [
+        # posesión 1: robo alto que acaba en tiro
+        (1, 1, "A", "Regular Play", "A", "Ball Recovery", [95.0, 40.0]),
+        (2, 1, "A", "Regular Play", "A", "Pass", [96.0, 38.0]),
+        (3, 1, "A", "Regular Play", "A", "Shot", [108.0, 40.0]),
+        # posesión 2: robo en campo propio, no cuenta
+        (4, 2, "A", "Regular Play", "A", "Interception", [30.0, 20.0]),
+        # posesión 3: robo alto sin tiro (el primer evento con x es del rival)
+        (5, 3, "A", "From Counter", "B", "Dispossessed", None),
+        (6, 3, "A", "From Counter", "A", "Ball Recovery", [85.0, 10.0]),
+        # posesión 4: córner cerca del área, no es un robo
+        (7, 4, "A", "From Corner", "A", "Pass", [120.0, 0.0]),
+        # posesión 5: del rival
+        (8, 5, "B", "Regular Play", "B", "Pass", [100.0, 40.0]),
+    ]
+    events = pd.DataFrame(filas, columns=["index", "possession", "possession_team",
+                                          "play_pattern", "team", "type", "location"])
+    assert high_turnovers(events, "A") == {"n": 2, "con_tiro": 1}
+    assert high_turnovers(events, "B") == {"n": 1, "con_tiro": 0}
+    assert high_turnovers(pd.DataFrame(), "A") == {"n": 0, "con_tiro": 0}

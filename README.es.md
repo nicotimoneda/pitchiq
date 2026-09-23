@@ -22,6 +22,14 @@
 
 Un pipeline que computa métricas tácticas deterministas sobre StatsBomb Open Data (25 equipos: Bayer Leverkusen 23/24, Barça 20/21, PSG 22/23, el top 10 de La Liga 15/16 y los semifinalistas de la Euro 2024, el Mundial 2022 y la Eurocopa femenina 2025) y genera un informe con LLM donde **el modelo no puede calcular ni inventar números**: solo redacta sobre las salidas de las herramientas, y un validador coteja después cada cifra del texto contra la evidencia. La [evaluación](EVALUATION.md) mide todo lo medible sin key — incluido el hallazgo incómodo de que un "fix" de embeddings del propio proyecto resultó ser una regresión de −20 puntos al medirlo. Ese es el estándar del repo: números antes que sensaciones, también contra uno mismo.
 
+## Cómo se comprueba
+
+Cada cifra pasa tres controles independientes antes de que alguien la lea:
+
+- **Contra la evidencia.** Cada número de un informe se empareja con la métrica que lo produjo, y un validador automático marca cualquiera sin respaldo.
+- **Contra una fuente pública.** En los 13 equipos de club, los datos publicados se contrastan partido a partido con [Understat](https://understat.com). Los goles coinciden en 481 de 481 partidos, el xG correlaciona 0,94 y el PPDA clásico ordena a los equipos igual (Spearman 0,97). El mismo ejercicio mostró que el PPDA de la web, que cuenta las presiones, mide otra cosa; ahora está documentado en vez de oculto. [Detalle](EVALUATION.md#validación-externa-understat-481-partidos-sin-key)
+- **Contra sí mismo.** Los cambios se miden antes de quedarse. Uno que parecía una mejora costaba 20 puntos de precisión en la búsqueda y se revirtió.
+
 ## El recorrido (M1–M7)
 
 | Milestone | Qué añadió | Estado |
@@ -200,7 +208,7 @@ Python 3.11 · uv · statsbombpy · pandas / numpy / scipy · mplsoccer · pydan
 
 - [**EVALUATION.md**](EVALUATION.md) — qué afirma el sistema (y qué no), todas las limitaciones sin maquillar y los números: grounding 1.0, comparación de embeddings antes/después, generalización a la Euro 2024.
 - [`docs/blog_kit.md`](docs/blog_kit.md) — material factual en crudo para el post (los hallazgos con números y un esquema); la prosa final la escribe el autor.
-- `uv run python scripts/run_eval.py` regenera la evaluación sin key.
+- `uv run python scripts/run_eval.py` regenera la evaluación sin key, y `uv run python scripts/validacion_externa.py` el contraste con Understat.
 
 ## Créditos
 

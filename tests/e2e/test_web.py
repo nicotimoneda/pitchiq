@@ -41,6 +41,12 @@ def servidor(tmp_path_factory):
     hilo.join(timeout=5)
 
 
+@pytest.fixture(scope="session")
+def browser_context_args(browser_context_args):
+    # la web elige idioma por el navegador: los tests fijan español salvo que pidan ?lang=en
+    return {**browser_context_args, "locale": "es-ES"}
+
+
 @pytest.fixture
 def pagina(page, servidor):
     errores: list[str] = []
@@ -108,3 +114,14 @@ def test_movil_sin_scroll_horizontal(browser, servidor):
     p.locator("#buscador-btn").click()
     assert p.evaluate("document.documentElement.scrollWidth") <= 375
     ctx.close()
+
+
+def test_version_en_ingles_con_cifras_verificadas(pagina, servidor):
+    pagina.goto(servidor + "/?lang=en")
+    expect(pagina.locator("#h-informe")).to_have_text("Report")
+    assert "Figures verified" in pagina.locator("#verif-badge").inner_text()
+    assert pagina.locator("#resumen .cifra.sin").count() == 0
+    assert pagina.evaluate("document.documentElement.lang") == "en"
+    # el botón vuelve al español y lo recuerda
+    pagina.locator("#btn-lang").click()
+    expect(pagina.locator("#h-informe")).to_have_text("Informe")

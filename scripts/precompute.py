@@ -75,6 +75,22 @@ def _tabla(matches) -> "dict[str, list[int]]":
     return tabla
 
 
+_NOMBRES_RAROS = {"Wales W": "Wales", "WNT Finland": "Finland"}
+
+
+def nombre_en(nombre: str) -> str:
+    """Nombre en inglés para la web: el de StatsBomb sin el sufijo femenino."""
+    return _NOMBRES_RAROS.get(nombre, nombre.removesuffix(" Women's"))
+
+
+def _traductor(tabla: dict):
+    """Nombre para la web: la traducción, o el nombre sin el sufijo femenino de StatsBomb."""
+    def traducir(nombre: str) -> str:
+        base = nombre.removesuffix(" Women's")
+        return tabla.get(nombre) or tabla.get(base, base)
+    return traducir
+
+
 def equipos_a_publicar() -> "list[dict]":
     """Resuelve publicacion.yaml a la lista de equipos (con su competición)."""
     import yaml
@@ -82,7 +98,7 @@ def equipos_a_publicar() -> "list[dict]":
     from pitchiq.data.loader import load_competitions, load_matches
 
     conf = yaml.safe_load(PUBLICACION.read_text(encoding="utf-8"))
-    traducir = conf.get("traducciones") or {}
+    traducir = _traductor(conf.get("traducciones") or {})
     catalogo = load_competitions()
     entradas = []
     for bloque in conf["competiciones"]:
@@ -102,10 +118,10 @@ def equipos_a_publicar() -> "list[dict]":
             equipos = orden[: int(bloque["top"])]
         for equipo in equipos:
             entradas.append({
-                "equipo": equipo, "nombre": traducir.get(equipo, equipo), "traducciones": traducir,
+                "equipo": equipo, "nombre": traducir(equipo), "traducir": traducir,
                 "competition_id": cid, "season_id": sid,
                 "competicion": competicion, "temporada": temporada,
-                "slug": _slugify(f"{traducir.get(equipo, equipo)} {temporada}"),
+                "slug": _slugify(f"{traducir(equipo)} {temporada}"),
                 # el puesto solo tiene sentido si la temporada está completa
                 "posicion": orden.index(equipo) + 1 if completa else None,
                 "n_equipos": len(orden) if completa else None,
@@ -304,7 +320,8 @@ def build_team_data(entry: dict, orden: int) -> None:
         xg = shots.groupby("team")["shot_statsbomb_xg"].sum()
         per_match.append({
             "fecha": str(m["match_date"])[:10],
-            "rival": entry.get("traducciones", {}).get(rival, rival),
+            "rival": entry.get("traducir", str)(rival),
+            "rival_en": nombre_en(rival),
             "local": bool(home),
             "goles_favor": int(m["home_score"] if home else m["away_score"]),
             "goles_contra": int(m["away_score"] if home else m["home_score"]),

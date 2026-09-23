@@ -69,3 +69,17 @@ def test_catalogo_detecta_temporadas_nuevas_y_360_nuevo():
     lineas = check_catalogo.novedades(antes, ahora)
     assert lineas == ["- Ahora con 360: Liga 2024 (`1/1`)", "- Nueva: Liga 2025 (`1/2`)"]
     assert check_catalogo.novedades(ahora, ahora) == []
+
+
+def test_traductor_quita_sufijo_femenino():
+    traducir = precompute._traductor({"Spain": "España"})
+    assert traducir("Spain") == "España"
+    assert traducir("Spain Women's") == "España"
+    assert traducir("Wales Women's") == "Wales"
+    assert traducir("Barcelona") == "Barcelona"
+
+
+def test_nombre_en_limpia_sufijos_de_statsbomb():
+    assert precompute.nombre_en("Spain Women's") == "Spain"
+    assert precompute.nombre_en("Wales W") == "Wales"
+    assert precompute.nombre_en("RB Leipzig") == "RB Leipzig"

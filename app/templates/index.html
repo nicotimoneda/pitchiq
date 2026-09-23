@@ -509,6 +509,7 @@
   .icon-btn { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 999px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink-2); transition: border-color .15s ease, color .15s ease; }
   .icon-btn:hover { border-color: var(--ink-2); color: var(--ink); }
   .icon-btn .ico { width: 18px; height: 18px; }
+  .lang-btn { font: 700 13px "Source Sans 3", system-ui, sans-serif; letter-spacing: .04em; }
   .print-only { display: none; }
   @media print {
     :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
@@ -643,6 +644,7 @@
     </nav>
     <div class="tools">
       <button type="button" class="icon-btn" id="btn-pdf" aria-label="Exportar a PDF" title="Exportar a PDF"><svg class="ico" aria-hidden="true"><use href="#i-imprimir"/></svg></button>
+      <button type="button" class="icon-btn lang-btn" id="btn-lang" aria-label="Cambiar idioma" title="English">EN</button>
       <button type="button" class="icon-btn" id="btn-tema" aria-label="Cambiar tema" title="Tema"><svg class="ico" aria-hidden="true"><use id="tema-ico" href="#i-auto"/></svg></button>
     </div>
   </div>
@@ -902,9 +904,169 @@ const INITIAL = {{ initial | tojson }};
 
 const NS = "http://www.w3.org/2000/svg";
 const $ = (s) => document.querySelector(s);
-const fmt = (v, d = 1) => Number(v).toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d });
-const fmtInt = (v) => String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+/* ---------- idioma ---------- */
+let LANG = (() => {
+  try {
+    const q = new URLSearchParams(location.search).get("lang");
+    if (q === "es" || q === "en") return q;
+    const g = localStorage.getItem("pitchiq-lang");
+    if (g === "es" || g === "en") return g;
+  } catch (e) { /* sin almacenamiento */ }
+  return (navigator.language || "es").toLowerCase().startsWith("es") ? "es" : "en";
+})();
+const EN = LANG === "en";
+// en inglés, sin separador de miles: "7,270" se leería como decimal al verificar
+const fmt = (v, d = 1) => Number(v).toLocaleString(LANG === "en" ? "en-US" : "es-ES", { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: LANG !== "en" });
+const fmtInt = (v) => LANG === "en" ? String(Math.round(v)) : String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+/* ---------- traducción al inglés ---------- */
+const COMP_EN = { "Eurocopa": "Euro", "Mundial": "World Cup", "Eurocopa femenina": "Women's Euro" };
+const T_EN = {
+  "Equipo": "Team", "Informe": "Report", "Presión": "Pressing", "Defensa": "Defence", "Balón parado": "Set pieces",
+  "Partidos": "Matches", "Comparar": "Compare", "partidos": "matches", "goles": "goals", "Forma": "Form",
+  "victoria": "win", "empate": "draw", "derrota": "loss", "PPDA medio": "Average PPDA",
+  "pases rivales por acción defensiva": "opponent passes per defensive action", "Presión en campo rival": "Pressing in the opponent's half",
+  "de sus acciones defensivas": "of its defensive actions", "Altura de la defensa": "Defensive line height",
+  "yardas desde su portería": "yards from its own goal", "xG en córners": "xG from corners", "Goles por partido": "Goals per match",
+  "Claves": "Key points", "Informe del analista": "Analyst report", "Cifras verificadas": "Figures verified",
+  "Cifras sin respaldo": "Unsupported figures",
+  "Cada cifra de este informe se contrasta automáticamente con las métricas calculadas a partir de los datos de los partidos. Pasa el cursor por una cifra para ver de dónde sale.":
+    "Every figure in this report is automatically checked against the metrics computed from the match data. Hover over a figure to see where it comes from.",
+  "Evidencia": "Evidence", "Datos (JSON)": "Data (JSON)", "Pon a prueba el verificador": "Try to fool the verifier",
+  "Escribe una frase sobre": "Write a sentence about",
+  "con cifras, reales o inventadas. Cada número se contrasta con las métricas calculadas, con la misma regla que valida los informes.":
+    "with figures, real or made up. Each number is checked against the computed metrics, using the same rule that validates the reports.",
+  "Frase a verificar": "Sentence to verify", "Una cifra real": "A real figure", "Una inventada": "A made-up one", "Mezcla": "Mixed",
+  "Sin cifras": "No figures",
+  "Acciones defensivas: presiones, entradas, intercepciones y recuperaciones": "Defensive actions: pressures, tackles, interceptions and recoveries",
+  "Dónde defiende": "Where it defends", "acciones por zona": "actions per zone", "← Portería propia": "← Own goal", "menos": "fewer",
+  "más": "more", "Portería rival →": "Opponent's goal →", "Acciones defensivas": "Defensive actions", "por partido": "per match",
+  "En campo rival": "In the opponent's half", "de las acciones defensivas": "of defensive actions", "Apoyo en la presión": "Pressing support",
+  "compañeros a menos de 10 yardas": "teammates within 10 yards", "en total": "in total", "PPDA por partido": "PPDA by match",
+  "más bajo = presión más intensa": "lower = more intense pressing", "PPDA del partido": "match PPDA",
+  "Posiciones de los jugadores visibles en la retransmisión": "Positions of the players visible on the broadcast",
+  "Sin datos de posiciones para esta competición": "No player-position data for this competition",
+  "StatsBomb no publica las posiciones de los jugadores (datos 360) para": "StatsBomb does not publish player positions (360 data) for",
+  ". Las métricas de bloque y altura de la defensa no se estiman: se muestran solo donde hay datos.": ". Block and line-height metrics are not estimated: they are only shown where data exists.",
+  "Bloque defensivo": "Defensive block", "densidad de posiciones al defender": "density of positions when defending",
+  "Altura de la línea": "Line height", "media, desde su portería": "average, from its own goal", "Anchura del bloque": "Block width",
+  "yardas": "yards", "Profundidad del bloque": "Block depth", "Área del bloque": "Block area", "yardas²": "yards²",
+  "Partidos con posiciones": "Matches with positions", "datos 360 disponibles": "360 data available",
+  "Altura de la defensa por partido": "Defensive line height by match", "0 = portería propia · 120 = portería rival": "0 = own goal · 120 = opponent's goal",
+  "altura del partido": "match line height", "medio campo (60)": "halfway line (60)", "sin datos de posiciones": "no position data",
+  "Córners": "Corners", "Córners a favor": "Corners for", "destino de cada saque · portería rival arriba": "where each delivery ended · opponent's goal at the top",
+  "corto": "short", "centro": "centre", "primer palo": "near post", "segundo palo": "far post", "A favor": "For", "lanzados": "taken",
+  "Primer contacto": "First contact", "tocó primero el balón": "won the first touch", "xG generado": "xG generated",
+  "remates tras córner": "shots after a corner", "Ocupación del área": "Box occupation", "atacantes / defensores rivales": "attackers / opposing defenders",
+  "En contra": "Against", "concedidos": "conceded", "Primer contacto del rival": "Opponent's first contact", "tras sus saques": "after their deliveries",
+  "xG concedido": "xG conceded", "remates rivales tras córner": "opponent shots after a corner", "Distancia al marcador": "Distance to marker",
+  "media, aproximada · yardas": "average, approximate · yards", "Por contexto": "By context", "medias por partido": "per-match averages",
+  "Pts/partido": "Pts/match", "Goles a favor": "Goals for", "Goles en contra": "Goals against", "xG a favor": "xG for", "xG en contra": "xG against",
+  "Altura def.": "Line height", "Local": "Home", "Visitante": "Away", "1.ª mitad": "1st half", "2.ª mitad": "2nd half", "Fecha": "Date",
+  "Rival": "Opponent", "Campo": "Venue", "Resultado": "Result", "Muestras de tamaño distinto: orientativo": "Sample sizes differ: indicative only",
+  "Mapa de estilos": "Style map", "todos los equipos publicados · pulsa uno para compararlo": "all published teams · click one to compare",
+  "otras competiciones": "other competitions", "media de todos": "all-team average", "Presión alta e intensa": "High, intense pressing",
+  "Espera y repliegue": "Wait and drop off", "PPDA · más a la derecha = presiona más": "PPDA · further right = presses more",
+  "% de acciones en campo rival": "% of actions in the opponent's half", "frente a": "vs",
+  "Acciones defensivas por partido": "Defensive actions per match", "% de las acciones defensivas": "% of defensive actions",
+  "de 120 yardas": "of 120 yards", "yardas² · más bajo = más compacto": "yards² · lower = more compact",
+  "Córners a favor por partido": "Corners for per match", "Primer contacto en córners": "First contact at corners", "% ganado": "% won",
+  "Datos:": "Data:", "API": "API", "Evidencia del informe": "Report evidence", "Código": "Code", "Metodología y límites": "Methodology and limits",
+  "Cifras verificadas.": "Verified figures.",
+  "Todas las cifras de los informes salen de métricas calculadas sobre los eventos de cada partido. Un validador automático contrasta cada número del texto y marca cualquiera sin respaldo.":
+    "Every figure in the reports comes from metrics computed on each match's events. An automatic validator checks each number in the text and flags any without support.",
+  "Posiciones visibles.": "Visible positions.",
+  "Las métricas de defensa usan las posiciones de los jugadores que aparecen en la imagen de la retransmisión (datos 360). Son aproximadas, y los partidos sin esos datos se excluyen.":
+    "Defensive metrics use the positions of the players visible in the broadcast image (360 data). They are approximate, and matches without that data are excluded.",
+  "Unidades.": "Units.", "El campo mide 120 × 80 yardas; distancias en yardas y áreas en yardas².": "The pitch is 120 × 80 yards; distances in yards and areas in square yards.",
+  "PPDA.": "PPDA.", "Incluye las presiones como acción defensiva, por lo que sus valores no son comparables con los de otras fuentes.":
+    "Pressures count as defensive actions, so the values are not comparable with other sources.",
+  "Marcaje en córners.": "Marking at corners.", "La distancia al marcador más cercano es una aproximación; no clasifica sistemas de marcaje.":
+    "Distance to the nearest marker is an approximation; it does not classify marking systems.",
+  "Interpretación.": "Interpretation.", "Los informes redactados se apoyan en un glosario táctico en revisión.": "Written reports rely on a tactical glossary that is still under review.",
+  "xG": "xG", "Dónde defendió": "Where it defended", "PPDA": "PPDA", "Ningún equipo coincide": "No team matches",
+  "Cifra verificada": "Verified figure", "Sin respaldo": "Unsupported", "No coincide con ninguna métrica calculada": "Does not match any computed metric",
+  "Sin PPDA calculable": "No PPDA available", "Pulsa para comparar": "Click to compare", "PPDA: ": "PPDA: ",
+  "Altura de la defensa: ": "Line height: ", "PPDA:": "PPDA:", "Altura de la defensa:": "Line height:", "Sin datos de posiciones": "No position data", "Escribe algo con números para verificarlo.": "Type something with numbers to verify it.",
+  // atributos
+  "PitchIQ, inicio": "PitchIQ, home", "Buscar equipo o competición": "Search team or competition", "Equipos": "Teams", "Secciones": "Sections",
+  "Exportar a PDF": "Export to PDF", "Cambiar tema": "Change theme", "Tema": "Theme", "Resultados partido a partido": "Results match by match",
+  "Ejemplos": "Examples", "Acciones defensivas por zona del campo": "Defensive actions by pitch zone", "PPDA en cada partido": "PPDA in each match",
+  "Densidad de posiciones de los jugadores al defender y altura media de la defensa": "Density of player positions when defending and average line height",
+  "Altura media de la línea defensiva en cada partido": "Average defensive line height in each match", "Destino de los córners a favor": "Where corners for ended up",
+  "Equipos según intensidad de la presión y porcentaje de acciones defensivas en campo rival": "Teams by pressing intensity and share of defensive actions in the opponent's half",
+  "Equipo con el que comparar": "Team to compare with", "Partido anterior": "Previous match", "Partido siguiente": "Next match", "Cerrar": "Close",
+  "Acciones defensivas por zona en este partido": "Defensive actions by zone in this match", "Destino de los córners a favor en este partido": "Where corners for ended up in this match",
+  "Cambiar idioma": "Change language", "Frase a verificar ": "Sentence to verify",
+};
+// métricas del verificador (tooltips)
+Object.assign(T_EN, {
+  "largo del campo (120 yardas)": "pitch length (120 yards)", "partidos jugados": "matches played", "victorias": "wins", "empates": "draws",
+  "derrotas": "losses", "goles a favor": "goals for", "goles en contra": "goals against", "partidos analizados": "matches analysed",
+  "acciones defensivas totales": "total defensive actions", "acciones defensivas por partido": "defensive actions per match",
+  "% de acciones defensivas en campo rival": "% of defensive actions in the opponent's half", "área media del bloque (yardas²)": "average block area (yards²)",
+  "anchura media del bloque (yardas)": "average block width (yards)", "profundidad media del bloque (yardas)": "average block depth (yards)",
+  "altura media de la línea defensiva": "average defensive line height", "compañeros a menos de 10 yardas en cada presión": "teammates within 10 yards at each pressure",
+  "partidos con datos de posiciones": "matches with position data", "córners a favor": "corners for", "atacantes en el área al sacar": "attackers in the box at delivery",
+  "defensores rivales en el área al sacar": "opposing defenders in the box at delivery", "% de primer contacto ganado": "% of first contacts won",
+  "xG generado en córners": "xG generated from corners", "córners en contra": "corners against", "distancia media al marcador en córners": "average distance to marker at corners",
+  "% de primer contacto del rival": "% of opponent first contacts", "xG concedido en córners": "xG conceded from corners",
+  "xG generado (suma de sus remates)": "xG generated (sum of its shots)", "xG concedido (suma de los remates rivales)": "xG conceded (sum of opponent shots)",
+});
+const P_EN = [
+  [/^Resumen generado a partir de las métricas de (\d+) partidos$/, "Summary built from the metrics of $1 matches"],
+  [/^Resumen de métricas e informe redactado$/, "Metrics summary and written report"],
+  [/^media \((.+)\)$/, "average ($1)"], [/^media (.+)$/, "avg $1"], [/^línea media (.+)$/, "average line $1"],
+  [/^de (\d+)$/, "of $1"], [/^(\d+)\.º de (\d+) publicados$/, "#$1 of $2 published"],
+  [/^(.+) · (\d+) partidos$/, "$1 · $2 matches"], [/^(\d+) partidos$/, "$1 matches"],
+  [/^(\d+) partidos · pulsa una fila para ver su ficha$/, "$1 matches · click a row for its match sheet"],
+  [/^J(\d+): (\d+)-(\d+) contra (.+)$/, "MD$1: $2-$3 vs $4"], [/^(\d+) acciones defensivas$/, "$1 defensive actions"],
+  [/^(.+) \(comparado\)$/, "$1 (compared)"], [/^(\d+) saque$/, "$1 corner"], [/^(\d+) saques$/, "$1 corners"],
+  [/^J(\d+) · (.+) · local$/, "MD$1 · $2 · home"], [/^J(\d+) · (.+) · visitante$/, "MD$1 · $2 · away"],
+  [/^J(\d+) · vs (.+)$/, "MD$1 · vs $2"], [/^J(\d+) · en (.+)$/, "MD$1 · at $2"], [/^J(\d+)$/, "MD$1"],
+  [/^(.+) · (.+) \((victoria|empate|derrota)\)$/, (m, a, b, r) => a + " · " + b + " (" + T_EN[r] + ")"],
+  [/^(.+) % del total · tercio (defensivo|central|ofensivo)$/, (m, v, t) => v + " % of total · " + ({ defensivo: "defensive", central: "middle", ofensivo: "attacking" })[t] + " third"],
+  [/^PPDA (.+) · (.+) % en campo rival$/, "PPDA $1 · $2 % in the opponent's half"],
+  [/^PitchIQ · datos de StatsBomb Open Data · cada cifra contrastada con las métricas calculadas · (.+)$/, "PitchIQ · StatsBomb Open Data · every figure checked against the computed metrics · $1"],
+  [/^(.+) concedido$/, "$1 conceded"], [/^(.+) encajados$/, "$1 conceded"],
+  [/^(\d+) sin respaldo · (.+)$/, "$1 unsupported · $2"], [/^Todo verificado · (.+)$/, "All verified · $1"],
+  [/^vs (.+)$/, "vs $1"], [/^(.+) \/ (.+)$/, "$1 / $2"],
+  [/^Tema: (automático|claro|oscuro)\. Pulsa para cambiar$/, (m, t) => "Theme: " + ({ automático: "automatic", claro: "light", oscuro: "dark" })[t] + ". Click to change"],
+];
+function tr(txt) {
+  if (!EN) return txt;
+  const k = txt.trim();
+  if (!k) return txt;
+  let out = T_EN[k];
+  if (out === undefined) {
+    for (const [re, rep] of P_EN) if (re.test(k)) { out = k.replace(re, rep); break; }
+  }
+  if (out === undefined) return txt;
+  const lead = txt.match(/^\s*/)[0], trail = txt.match(/\s*$/)[0];
+  return lead + out + trail;
+}
+function traducirArbol(root) {
+  if (!EN) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: (n) => n.parentElement.closest("script, style, #resumen, #probar-out, #informe-ia-body, #probar-texto") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
+  });
+  const nodos = [];
+  while (w.nextNode()) nodos.push(w.currentNode);
+  for (const n of nodos) { const v = tr(n.nodeValue); if (v !== n.nodeValue) n.nodeValue = v; }
+  const els = root.querySelectorAll ? root.querySelectorAll("[aria-label], [placeholder], [title]") : [];
+  for (const e of els) for (const a of ["aria-label", "placeholder", "title"]) {
+    const v = e.getAttribute(a);
+    if (v) { const t = tr(v); if (t !== v) e.setAttribute(a, t); }
+  }
+}
+function localizarEquipo(t) {
+  if (!t._es) t._es = { nombre: t.nombre, competicion: t.competicion, rivales: t.partidos.map((p) => p.rival) };
+  t.nombre = EN && t.equipo ? t.equipo.replace(/ Women's$/, "") : t._es.nombre;
+  t.competicion = EN ? (COMP_EN[t._es.competicion] || t._es.competicion) : t._es.competicion;
+  t.partidos.forEach((p, i) => { p.rival = EN && p.rival_en ? p.rival_en : t._es.rivales[i]; });
+  return t;
+}
+
 function svgEl(tag, attrs, parent) {
   const e = document.createElementNS(NS, tag);
   for (const k in attrs) e.setAttribute(k, attrs[k]);
@@ -916,6 +1078,7 @@ function svgEl(tag, attrs, parent) {
 const tip = $("#tip");
 function showTip(html, x, y) {
   tip.innerHTML = html;
+  traducirArbol(tip);
   tip.hidden = false;
   const r = tip.getBoundingClientRect();
   let left = x + 14, top = y + 14;
@@ -1150,14 +1313,16 @@ function lineChart(cont, cfg) {
     zona.addEventListener("pointerleave", () => { xhair.setAttribute("visibility", "hidden"); hl.setAttribute("visibility", "hidden"); hideTip(); });
   }
   if (observadores.has(cont)) observadores.get(cont).disconnect();
-  const ro = new ResizeObserver(dibujar);
+  const pintar = () => { dibujar(); traducirArbol(cont); };
+  const ro = new ResizeObserver(pintar);
   ro.observe(cont);
   observadores.set(cont, ro);
-  dibujar();
+  pintar();
 }
 
 const fechaCorta = (s) => s.slice(8, 10) + "/" + s.slice(5, 7) + "/" + s.slice(0, 4);
 const letra = (p) => p.goles_favor > p.goles_contra ? "V" : p.goles_favor === p.goles_contra ? "E" : "D";
+const letraTxt = (l) => EN ? { V: "W", E: "D", D: "L" }[l] : l;
 function tipPartido(team, i, extra) {
   const p = team.partidos[i];
   return "<b>J" + (i + 1) + " · " + (p.local ? "vs " : "en ") + esc(p.rival) + "</b><br>" +
@@ -1200,9 +1365,9 @@ function renderCabecera(team) {
   $("#t-record").innerHTML =
     (has(team.posicion) ? '<span class="pill pos">' + icono("trofeo") + "<b>" + team.posicion + ".º</b> de " + team.n_equipos + "</span>" : "") +
     '<span class="pill"><b>' + R.partidos + "</b> partidos</span>" +
-    '<span class="pill"><b>' + R.victorias + "</b> V</span>" +
-    '<span class="pill"><b>' + R.empates + "</b> E</span>" +
-    '<span class="pill' + (R.derrotas === 0 ? " loss-zero" : "") + '"><b>' + R.derrotas + "</b> D</span>" +
+    '<span class="pill"><b>' + R.victorias + "</b> " + letraTxt("V") + "</span>" +
+    '<span class="pill"><b>' + R.empates + "</b> " + letraTxt("E") + "</span>" +
+    '<span class="pill' + (R.derrotas === 0 ? " loss-zero" : "") + '"><b>' + R.derrotas + "</b> " + letraTxt("D") + "</span>" +
     '<span class="pill"><b>' + R.goles_favor + "–" + R.goles_contra + "</b> goles</span>";
   const forma = $("#t-form");
   forma.innerHTML = "";
@@ -1239,7 +1404,19 @@ function renderInforme(team) {
   const ev = evidencia(team);
   const P = T.presion, F = T.forma_defensiva, CA = T.corners_ataque, CD = T.corners_defensa;
   const balance = R.derrotas === 0 ? " sin conocer la derrota" : "";
-  $("#resumen").innerHTML = [
+  const frases = EN ? [
+    team.nombre + " played " + R.partidos + " " + team.competicion + " " + team.temporada + " matches" + (R.derrotas === 0 ? " without losing" : "") +
+      ": " + R.victorias + " wins, " + R.empates + " draws and " + R.derrotas + " losses, scoring " + R.goles_favor + " and conceding " + R.goles_contra + ".",
+    has(R.xg_favor) ? "Its shots added up to " + fmt(R.xg_favor, 2) + " xG, against " + fmt(R.xg_contra, 2) + " for its opponents." : null,
+    "It presses with an average PPDA of " + fmt(P.ppda_medio, 2) + " and makes " + fmt(P.acciones_defensivas_por_partido) +
+      " defensive actions per match; " + fmt(P.pct_acciones_campo_rival) + " % of them in the opponent's half.",
+    has(F.altura_linea_media)
+      ? "Its defensive line sits on average " + fmt(F.altura_linea_media) + " of 120 yards from its own goal, with a block " +
+        fmt(F.anchura_media) + " yards wide and " + fmt(F.profundidad_media) + " deep."
+      : null,
+    "From set pieces it took " + CA.n_corners + " corners, won the first touch on " + fmt(CA.pct_primer_contacto_ganado) +
+      " % and generated " + fmt(CA.xg_a_favor, 2) + " xG; it conceded " + CD.n_corners + " corners and " + fmt(CD.xg_en_contra, 2) + " xG.",
+  ] : [
     team.nombre + " disputó " + R.partidos + " partidos de " + team.competicion + " " + team.temporada + balance +
       ": " + R.victorias + " victorias, " + R.empates + " empates y " + R.derrotas + " derrotas, con " +
       R.goles_favor + " goles a favor y " + R.goles_contra + " en contra.",
@@ -1254,14 +1431,15 @@ function renderInforme(team) {
       : null,
     "A balón parado lanzó " + CA.n_corners + " córners, tocó primero el balón en el " + fmt(CA.pct_primer_contacto_ganado) +
       " % y generó " + fmt(CA.xg_a_favor, 2) + " de xG; en contra concedió " + CD.n_corners + " córners y " + fmt(CD.xg_en_contra, 2) + " de xG.",
-  ].filter(Boolean).map((t) => "<p>" + esc(t) + "</p>").join("");
+  ];
+  $("#resumen").innerHTML = frases.filter(Boolean).map((t) => "<p>" + esc(t) + "</p>").join("");
   let { total, ok } = marcarCifras($("#resumen"), ev);
 
   const rep = REPORTS[team.slug];
   const ia = $("#informe-ia");
   if (rep) {
     ia.hidden = false;
-    $("#informe-ia-kicker").textContent = "Informe del analista · " + fechaCorta(rep.generated_at) + (rep.sample ? " · muestra" : "");
+    $("#informe-ia-kicker").textContent = (EN ? "Analyst report · " : "Informe del analista · ") + fechaCorta(rep.generated_at) + (rep.sample ? (EN ? " · sample" : " · muestra") : "");
     $("#informe-ia-body").innerHTML = rep.html;
     const r2 = marcarCifras($("#informe-ia-body"), ev);
     total += r2.total; ok += r2.ok;
@@ -1417,7 +1595,7 @@ function renderPartidos(team) {
   });
   $("#tabla tbody").innerHTML = filas.map((f) =>
     '<tr tabindex="0" data-i="' + (f.j - 1) + '"><td class="n">' + f.j + "</td><td>" + fechaCorta(f.fecha) + "</td><td>" + esc(f.rival) + "</td><td>" + f.campo + "</td>" +
-    '<td><span class="res"><i class="' + letra(f.p) + '">' + letra(f.p) + "</i>" + f.p.goles_favor + "–" + f.p.goles_contra + "</span></td>" +
+    '<td><span class="res"><i class="' + letra(f.p) + '">' + letraTxt(letra(f.p)) + "</i>" + f.p.goles_favor + "–" + f.p.goles_contra + "</span></td>" +
     '<td class="n">' + (f.ppda != null ? fmt(f.ppda, 2) : '<span class="na">—</span>') + "</td>" +
     '<td class="n">' + (f.linea != null ? fmt(f.linea) : '<span class="na">—</span>') + "</td></tr>"
   ).join("");
@@ -1484,7 +1662,11 @@ function renderComparar(team) {
 function ejemplosProbar(team) {
   const T = team.herramientas, R = resultados(team);
   const inventado = (v, d) => fmt(v * 1.23 + 1, d);
-  return [
+  return EN ? [
+    ["A real figure", team.nombre + " won " + R.victorias + " matches and scored " + R.goles_favor + " goals."],
+    ["A made-up one", team.nombre + " scored " + (R.goles_favor + 7) + " goals with a PPDA of " + inventado(T.presion.ppda_medio, 2) + "."],
+    ["Mixed", "It took " + T.corners_ataque.n_corners + " corners and generated " + inventado(T.corners_ataque.xg_a_favor, 2) + " xG from set pieces."],
+  ] : [
     ["Una cifra real", team.nombre + " ganó " + R.victorias + " partidos y marcó " + R.goles_favor + " goles."],
     ["Una inventada", team.nombre + " marcó " + (R.goles_favor + 7) + " goles con un PPDA de " + inventado(T.presion.ppda_medio, 2) + "."],
     ["Mezcla", "Lanzó " + T.corners_ataque.n_corners + " córners y generó " + inventado(T.corners_ataque.xg_a_favor, 2) + " de xG a balón parado."],
@@ -1582,10 +1764,11 @@ function renderEstilos(team) {
     }
   }
   if (observadores.has(cont)) observadores.get(cont).disconnect();
-  const ro = new ResizeObserver(dibujar);
+  const pintar = () => { dibujar(); traducirArbol(cont); };
+  const ro = new ResizeObserver(pintar);
   ro.observe(cont);
   observadores.set(cont, ro);
-  dibujar();
+  pintar();
 }
 
 /* ---------- partidos por contexto ---------- */
@@ -1646,6 +1829,7 @@ function abrirFicha(i) {
   $("#ficha-prev").disabled = i === 0;
   $("#ficha-next").disabled = i === P.length - 1;
   const d = $("#ficha");
+  traducirArbol(d);
   if (!d.open) d.showModal();
 }
 $("#tabla tbody").addEventListener("click", (e) => { const tr = e.target.closest("tr[data-i]"); if (tr) abrirFicha(+tr.dataset.i); });
@@ -1681,6 +1865,7 @@ function pintarBuscador() {
       esc(t.nombre) + '<span class="extra">' + extra + "</span></li>";
   });
   $("#buscador-lista").innerHTML = html || '<li class="vacio">Ningún equipo coincide</li>';
+  traducirArbol($("#buscador-lista"));
   const act = buscVisibles[buscActivo];
   $("#buscador-input").setAttribute("aria-activedescendant", act ? "opt-" + act.slug : "");
   const el = act && document.getElementById("opt-" + act.slug);
@@ -1732,6 +1917,7 @@ function aplicarTema(t) {
   $("#tema-ico").setAttribute("href", "#i-" + ({ auto: "auto", light: "sol", dark: "luna" })[t]);
   $("#btn-tema").setAttribute("aria-label", "Tema: " + ({ auto: "automático", light: "claro", dark: "oscuro" })[t] + ". Pulsa para cambiar");
   $("#btn-tema").title = $("#btn-tema").getAttribute("aria-label");
+  traducirArbol($("#btn-tema").parentElement);
   try { if (t === "auto") localStorage.removeItem("pitchiq-tema"); else localStorage.setItem("pitchiq-tema", t); } catch (e) { /* sin almacenamiento */ }
 }
 $("#btn-tema").addEventListener("click", () => {
@@ -1739,9 +1925,21 @@ $("#btn-tema").addEventListener("click", () => {
   aplicarTema(TEMAS[(TEMAS.indexOf(actualT) + 1) % TEMAS.length]);
 });
 $("#btn-pdf").addEventListener("click", () => window.print());
+$("#btn-lang").textContent = EN ? "ES" : "EN";
+$("#btn-lang").title = EN ? "Español" : "English";
+$("#btn-lang").addEventListener("click", () => {
+  const nuevo = EN ? "es" : "en";
+  try { localStorage.setItem("pitchiq-lang", nuevo); } catch (e) { /* sin almacenamiento */ }
+  const q = new URLSearchParams(location.search);
+  q.set("lang", nuevo);
+  location.search = q.toString();
+});
+document.documentElement.lang = LANG;
 
 /* ---------- navegación ---------- */
 const bySlug = Object.fromEntries(TEAMS.map((t) => [t.slug, t]));
+TEAMS.forEach(localizarEquipo);
+localizarEquipo(INICIAL_COMPLETO);
 const completos = { [INICIAL_COMPLETO.slug]: INICIAL_COMPLETO };
 let slugActual = INITIAL;
 const actual = () => completos[slugActual] || bySlug[slugActual];
@@ -1749,7 +1947,7 @@ async function cargarEquipo(slug) {
   if (completos[slug]) return completos[slug];
   const r = await fetch("/api/equipos/" + encodeURIComponent(slug));
   if (!r.ok) throw new Error("HTTP " + r.status);
-  return (completos[slug] = await r.json());
+  return (completos[slug] = localizarEquipo(await r.json()));
 }
 function render() {
   const team = actual();
@@ -1765,6 +1963,7 @@ function render() {
   renderComparar(team);
   renderEstilos(team);
   renderSplits(team);
+  traducirArbol(document.body);
 }
 $("#rival").addEventListener("change", (e) => {
   rivalSlug = e.target.value;
@@ -1781,12 +1980,13 @@ $("#equipo").addEventListener("change", async (e) => {
   } catch (err) {
     main.removeAttribute("aria-busy");
     e.target.value = slugActual;
-    aviso("No se pudo cargar " + bySlug[slug].nombre + ". Comprueba la conexión y vuelve a intentarlo.");
+    aviso(EN ? "Could not load " + bySlug[slug].nombre + ". Check your connection and try again."
+      : "No se pudo cargar " + bySlug[slug].nombre + ". Comprueba la conexión y vuelve a intentarlo.");
     return;
   }
   if (e.target.value !== slug) return;  // se eligió otro mientras cargaba
   slugActual = team.slug;
-  try { history.replaceState(null, "", "?equipo=" + encodeURIComponent(slugActual) + location.hash); } catch (err) { /* sin historial */ }
+  try { history.replaceState(null, "", "?equipo=" + encodeURIComponent(slugActual) + (new URLSearchParams(location.search).get("lang") ? "&lang=" + LANG : "") + location.hash); } catch (err) { /* sin historial */ }
   main.removeAttribute("aria-busy");
   main.classList.remove("fade"); void main.offsetWidth; main.classList.add("fade");
   render();

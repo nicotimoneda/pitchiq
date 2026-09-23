@@ -43,13 +43,16 @@ def test_index_con_selector_secciones_y_datos(client):
     # selector con todos los equipos publicados, agrupados por competición
     assert '<optgroup label="Liga de muestra 2026">' in html
     assert 'value="equipo-muestra"' in html and 'value="equipo-rival"' in html
-    for seccion in ['id="informe"', 'id="presion"', 'id="defensa"', 'id="balon-parado"',
-                    'id="partidos"', 'id="comparar"']:
+    for seccion in ['id="informe"', 'id="ataque"', 'id="presion"', 'id="defensa"',
+                    'id="balon-parado"', 'id="jugadores"', 'id="partidos"', 'id="comparar"']:
         assert seccion in html
     # los datos de todos los equipos se inyectan en la página (sin llamadas desde el cliente)
-    assert html.count('"zonas_recuperacion"') == 3  # los 2 ligeros + el inicial completo
-    # los datos pesados solo viajan del equipo inicial; el resto se pide a la API
-    assert html.count('"corners"') == 1
+    # de todos los equipos viajan solo los datos ligeros (percentiles, comparar);
+    # los pesados solo del equipo inicial, el resto se pide a la API
+    ligeros = json.loads(html.split("const TEAMS = ", 1)[1].split(";\n", 1)[0])
+    inicial = json.loads(html.split("const INICIAL_COMPLETO = ", 1)[1].split(";\n", 1)[0])
+    assert all("agregados" in t and "partidos" not in t and "corners" not in t for t in ligeros)
+    assert {"partidos", "corners", "tiros", "jugadores", "zonas_recuperacion"} <= set(inicial)
     # el informe del LLM (muestra) viaja con su recuento de cifras verificadas
     assert '"n_grounded": 3' in html
     assert "Datos de muestra" in html
@@ -129,3 +132,15 @@ def test_vista_previa_para_compartir(tmp_path):
     # sin imagen para ese equipo no se anuncia ninguna
     assert "og:image" not in client.get("/?equipo=equipo-muestra").text
     assert teams.exists()
+
+
+def test_descargas_csv(client):
+    r = client.get("/api/equipos/equipo-muestra/partidos.csv")
+    assert r.status_code == 200 and r.headers["content-type"].startswith("text/csv")
+    lineas = r.text.lstrip("\ufeff").splitlines()
+    assert lineas[0].startswith("fecha;rival;local;goles_favor")
+    assert len(lineas) == 5  # cabecera + 4 partidos
+    assert "1,4" in lineas[1]  # coma decimal para Excel en español
+    j = client.get("/api/equipos/equipo-muestra/jugadores.csv")
+    assert "Ana Muestra" in j.text
+    assert client.get("/api/equipos/no-existe/partidos.csv").status_code == 404

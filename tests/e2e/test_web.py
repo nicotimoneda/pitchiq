@@ -86,7 +86,7 @@ def test_ficha_de_partido_se_abre_y_navega(pagina):
 
 def test_ordenar_la_tabla_por_ppda(pagina):
     pagina.locator('#tabla th[data-k="ppda"] button').click()
-    valores = [float(t.replace(",", ".")) for t in pagina.locator("#tabla tbody td:nth-child(6)").all_inner_texts()
+    valores = [float(t.replace(",", ".")) for t in pagina.locator("#tabla tbody td:nth-child(8)").all_inner_texts()
                if t.strip() != "—"]
     assert valores == sorted(valores)
 
@@ -117,3 +117,38 @@ def test_version_en_ingles_con_cifras_verificadas(pagina, servidor):
     # el botón vuelve al español y lo recuerda
     pagina.locator("#btn-lang").click()
     expect(pagina.locator("#h-informe")).to_have_text("Informe")
+
+
+def test_filtro_de_partidos_reduce_la_tabla(pagina):
+    assert pagina.locator("#tabla tbody tr").count() == 4
+    pagina.locator('#filtro-seg button[data-f="local"]').click()
+    assert pagina.locator("#tabla tbody tr").count() == 2
+    assert "2 de 4" in pagina.locator("#filtro-nota").inner_text()
+
+
+def test_jugadores_por_90_y_posicion(pagina):
+    assert pagina.locator("#tabla-jug tbody tr").count() == 2
+    pagina.locator('#jug-pos button[data-p="DEF"]').click()
+    expect(pagina.locator("#tabla-jug tbody tr")).to_have_count(1)
+    assert "Bea Ejemplo" in pagina.locator("#tabla-jug tbody").inner_text()
+    pagina.locator('#jug-modo button[data-m="p90"]').click()
+    assert "con 270 minutos" in pagina.locator("#jugadores-nota").inner_text()
+
+
+def test_contexto_segun_el_marcador(pagina):
+    pagina.locator('#ctx-seg button[data-c="marcador"]').click()
+    texto = pagina.locator("#splits").inner_text()
+    assert "Ganando" in texto and "Perdiendo" in texto
+
+
+def test_percentiles_y_puntos_fuertes(pagina):
+    assert pagina.locator("#pct-ataque .pct-row").count() > 0 or pagina.locator("#pct-ataque .pct-head").count() == 1
+    assert pagina.locator("#fuertes li").count() >= 1
+
+
+def test_enlace_directo_a_una_ficha(page, servidor):
+    page.goto(servidor + "/?equipo=equipo-muestra#partido-2")
+    expect(page.locator("#ficha")).to_be_visible()
+    assert "J2" in page.locator("#ficha-meta").inner_text()
+    page.keyboard.press("Escape")
+    expect(page).not_to_have_url(re.compile("#partido"))

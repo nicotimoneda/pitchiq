@@ -17,7 +17,7 @@ from pathlib import Path
 import markdown as md
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
@@ -46,15 +46,32 @@ def _load_report(report_dir: Path) -> "tuple[str, dict, Path, bool]":
     return report_md, evidence, base, is_sample
 
 
-PESADOS = ("corners", "bloque_densidad")
+PESADOS = ("corners", "bloque_densidad", "partidos", "tiros", "jugadores", "zonas_recuperacion")
 
 
 def _ligero(team: dict) -> dict:
-    """Equipo sin los campos pesados (puntos de córner, densidades, zonas por partido)."""
+    """Lo mínimo de cada equipo para buscar, comparar y calcular percentiles en la página.
+
+    El detalle (partidos, tiros, jugadores, mapas) se pide a /api/equipos/{slug}.
+    """
     ligero = {k: v for k, v in team.items() if k not in PESADOS}
-    ligero["partidos"] = [{k: v for k, v in p.items() if k != "zonas"} for p in team["partidos"]]
+    ligero.setdefault("agregados", {"partidos": len(team.get("partidos", []))})
     ligero["ligero"] = True
     return ligero
+
+
+def _csv(filas: "list[dict]", columnas: "list[str]") -> str:
+    """CSV con separador ';' y coma decimal (lo que abre bien Excel en español)."""
+    import csv
+    import io
+
+    buf = io.StringIO()
+    w = csv.writer(buf, delimiter=";")
+    w.writerow(columnas)
+    for f in filas:
+        w.writerow([str(f.get(c, "")).replace(".", ",") if isinstance(f.get(c), float) else f.get(c, "")
+                    for c in columnas])
+    return "\ufeff" + buf.getvalue()  # BOM: Excel detecta UTF-8 (tildes)
 
 
 def create_app(report_dir: "Path | None" = None) -> FastAPI:
@@ -129,6 +146,27 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
         if slug not in by_slug:
             raise HTTPException(status_code=404, detail="equipo no publicado")
         return by_slug[slug]
+
+    @app.get("/api/equipos/{slug}/partidos.csv")
+    def api_team_csv(slug: str) -> Response:
+        """Partidos del equipo en CSV (para Excel)."""
+        if slug not in by_slug:
+            raise HTTPException(status_code=404, detail="equipo no publicado")
+        cols = ["fecha", "rival", "local", "goles_favor", "goles_contra", "xg_favor", "xg_contra",
+                "tiros", "field_tilt", "progresivos", "centros", "ppda", "ppda_clasico",
+                "acciones_defensivas", "robos_altos", "robos_altos_tiro", "altura_linea"]
+        return Response(_csv(by_slug[slug]["partidos"], cols), media_type="text/csv; charset=utf-8",
+                        headers={"Content-Disposition": f'attachment; filename="{slug}-partidos.csv"'})
+
+    @app.get("/api/equipos/{slug}/jugadores.csv")
+    def api_players_csv(slug: str) -> Response:
+        """Estadísticas de la temporada por jugador en CSV."""
+        if slug not in by_slug:
+            raise HTTPException(status_code=404, detail="equipo no publicado")
+        cols = ["nombre", "posicion", "partidos", "minutos", "goles", "asistencias", "tiros", "xg",
+                "pases_clave", "progresivos", "presiones", "acciones_defensivas", "recuperaciones"]
+        return Response(_csv(by_slug[slug].get("jugadores", []), cols), media_type="text/csv; charset=utf-8",
+                        headers={"Content-Disposition": f'attachment; filename="{slug}-jugadores.csv"'})
 
     @app.get("/api/report")
     def api_report() -> dict:

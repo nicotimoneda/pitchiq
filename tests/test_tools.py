@@ -30,11 +30,12 @@ def test_shape_tool(synthetic_season):
     out = shape_tool(ToolInput(team="A"))
     assert isinstance(out, ShapeOutput)
     assert out.partidos_con_360 == 1
-    assert math.isclose(out.hull_area_media_yd2, 1600.0)  # cuadrado 40x40
-    assert math.isclose(out.anchura_media, 40.0)
-    assert math.isclose(out.profundidad_media, 40.0)
-    # los 4 compañeros más retrasados: x = 30, 30, 70, 70 -> media 50
-    assert math.isclose(out.altura_linea_media, 50.0)
+    # cuadrado de 40x40 yardas StatsBomb, publicado en metros
+    assert math.isclose(out.hull_area_media_m2, round(1600 * 0.9144**2))
+    assert math.isclose(out.anchura_media, round(40 * 0.9144, 1))
+    assert math.isclose(out.profundidad_media, round(40 * 0.9144, 1))
+    # los 4 compañeros más retrasados: x = 30, 30, 70, 70 -> media 50 yardas
+    assert math.isclose(out.altura_linea_media, round(50 * 0.9144, 1))
 
 
 def test_corners_attack_tool(synthetic_season):
@@ -52,7 +53,7 @@ def test_corners_defense_tool(synthetic_season):
     out = corners_defense_tool(ToolInput(team="A"))
     assert isinstance(out, CornersDefenseOutput)
     assert out.n_corners == 1
-    assert math.isclose(out.indice_orientacion_hombre, 3.5)  # proxy heurístico
+    assert math.isclose(out.indice_orientacion_hombre, round(3.5 * 0.9144, 2))  # proxy, en metros
     assert math.isclose(out.pct_primer_contacto_concedido, 0.0)  # A despejó
     assert math.isclose(out.xg_en_contra, 0.1)
 

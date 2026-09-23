@@ -97,7 +97,7 @@ La web es una herramienta de análisis por equipo:
 - **Presión, Defensa y Balón parado**: mapas de campo y gráficas por partido.
 - **Partidos**: rendimiento local/visitante y por mitades de temporada, tabla ordenable y una **ficha de cada partido** (xG, PPDA, mapa de acciones defensivas y córners).
 - **Comparar**: mapa de estilos de todos los equipos (intensidad de presión frente a altura) y comparación uno a uno.
-- **Robos altos**: recuperaciones en juego abierto a 40 yardas o menos de la portería rival, y cuántas acaban en tiro.
+- **Robos altos**: recuperaciones en juego abierto a 40 m o menos de la portería rival (la definición de Opta), y cuántas acaban en tiro.
 - En **español e inglés** (según el idioma del navegador, con botón para cambiar), tema claro/oscuro, **exportar a PDF**, vista previa al compartir el enlace y carga bajo demanda de los datos de cada equipo.
 
 Qué equipos se publican lo decide [`scripts/publicacion.yaml`](scripts/publicacion.yaml): por competición de StatsBomb Open Data, una lista de equipos o los N primeros de la clasificación, con nombres en español. Donde no hay datos de posiciones (La Liga 2015/16), la sección de Defensa lo indica y esas métricas no se estiman. Una tarea semanal de GitHub Actions compara el catálogo de StatsBomb y abre una issue si publica temporadas nuevas.
@@ -128,9 +128,11 @@ El deploy en Render usa `render.yaml` (web service Docker, health check en `/hea
 |---|---|---|
 | `defensive_compactness` | Dispersión del bloque de compañeros visibles en acciones defensivas: área del convex hull + anchura (rango y) × profundidad (rango x). Menos área = más compacto. | < 3 visibles → NaN (hull indefinido) |
 | `defensive_line_height` | Media de x de los 4 compañeros visibles más retrasados (portero excluido) durante acciones defensivas. | < 4 visibles → NaN (no se estima una línea con menos jugadores de los que la definen) |
-| `pressing_support` | Compañeros visibles a ≤ radio (default 10 yardas) de la posición del evento Pressure (proxy del balón), sin contar al presionador. | Conteo mínimo: solo visibles |
+| `pressing_support` | Compañeros visibles a ≤ radio (por defecto 10 m) de la posición del evento Pressure (proxy del balón), sin contar al presionador. | Conteo mínimo: solo visibles |
 
 > ⚠️ **Caveat crítico de los datos 360**: los freeze-frames solo capturan a los jugadores dentro del **área visible de la retransmisión**, no siempre los 22. Todas las métricas espaciales se computan sobre los jugadores **visibles** y son una **aproximación**: nunca se asumen 11 por frame, y cuando no hay suficientes visibles para definir una métrica, el valor es NaN — no se inventa. Además, 360 es freeze-frame (foto en el instante de cada evento), no tracking continuo.
+
+> 📏 **Unidades: todo en metros.** StatsBomb da las coordenadas en yardas sobre un campo normalizado de 120 × 80. Todo lo publicado (salidas de herramientas que lee el LLM, web y verificador) se convierte a metros (109,7 × 73,2 m) y las áreas a m²; los umbrales se definen en metros (apoyo en la presión a 10 m, robo alto a 40 m).
 
 ### Córners (M3)
 

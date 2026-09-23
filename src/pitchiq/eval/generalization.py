@@ -8,6 +8,7 @@ se hardcodean. Solo métricas: sin LLM, sin RAG, sin key.
 
 import numpy as np
 
+from pitchiq import config
 from pitchiq.data.loader import load_events, load_frames
 from pitchiq.metrics.pressing import ppda, recovery_zones
 from pitchiq.metrics.set_pieces import corner_xg_against, corner_xg_for, find_corners
@@ -85,8 +86,8 @@ def evaluate_team(team: "str | None" = None) -> dict:
         "partidos_con_360": con_360,
         "acciones_defensivas_por_partido": _mean(actions),
         "ppda_medio": _mean(ppdas),
-        "hull_area_media_yd2": _mean(hulls),
-        "altura_linea_media": _mean(lines),
+        "hull_area_media_m2": _mean([h * config.YARDA_M**2 for h in hulls if h is not None]),
+        "altura_linea_media": _mean([config.a_metros(x) for x in lines if x is not None]),
         "corners_a_favor": corners_for,
         "corners_en_contra": corners_against,
         "xg_corner_a_favor": round(xg_for, 2),

@@ -106,7 +106,7 @@ def test_equipo_sin_datos_360_llega_como_null(tmp_path):
     teams = _copiar_equipos_como_reales(base)
     path = teams / "equipo-rival.json"
     datos = json.loads(path.read_text(encoding="utf-8"))
-    for campo in ("altura_linea_media", "anchura_media", "hull_area_media_yd2"):
+    for campo in ("altura_linea_media", "anchura_media", "hull_area_media_m2"):
         datos["herramientas"]["forma_defensiva"][campo] = None
     path.write_text(json.dumps(datos), encoding="utf-8")
 

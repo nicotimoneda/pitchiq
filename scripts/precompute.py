@@ -196,8 +196,8 @@ def _sample_team(slug: str, nombre: str, orden: int, desplaz: float) -> dict:
                 "ppda_medio": 2.48, "pct_acciones_campo_rival": 50.0,
             },
             "forma_defensiva": {
-                "team": nombre, "hull_area_media_yd2": 500.0 + desplaz,
-                "anchura_media": 35.0, "profundidad_media": 24.0,
+                "team": nombre, "hull_area_media_m2": 420.0 + desplaz,
+                "anchura_media": 32.0, "profundidad_media": 22.0,
                 "altura_linea_media": 52.9, "soporte_presion_medio": 1.3,
                 "partidos_con_360": 3,
             },
@@ -211,7 +211,7 @@ def _sample_team(slug: str, nombre: str, orden: int, desplaz: float) -> dict:
             },
             "corners_defensa": {
                 "team": nombre, "n_corners": 5,
-                "indice_orientacion_hombre": 3.0,
+                "indice_orientacion_hombre": 2.74,
                 "pct_primer_contacto_concedido": 40.0, "xg_en_contra": 0.5,
             },
         },
@@ -326,7 +326,7 @@ def build_team_data(entry: dict, orden: int) -> None:
             "local": bool(home),
             "goles_favor": int(m["home_score"] if home else m["away_score"]),
             "goles_contra": int(m["away_score"] if home else m["home_score"]),
-            "altura_linea": None if np.isnan(line) else round(float(line), 1),
+            "altura_linea": None if np.isnan(line) else round(config.a_metros(float(line)), 1),
             "ppda": round(float(match_ppda), 2) if np.isfinite(match_ppda) else None,
             "xg_favor": round(float(xg.get(team, 0.0)), 2),
             "xg_contra": round(float(xg.drop(team, errors="ignore").sum()), 2),
@@ -429,7 +429,7 @@ def build_og_image(payload: dict, out_dir=OG_DIR) -> None:
     kpis = [("PPDA medio", _es(T["presion"]["ppda_medio"], 2)),
             ("En campo rival", _es(T["presion"]["pct_acciones_campo_rival"], 1) + " %")]
     altura = T["forma_defensiva"].get("altura_linea_media")
-    kpis.append(("Altura defensa", _es(altura, 1)) if altura is not None
+    kpis.append(("Altura defensa", _es(altura, 1) + " m") if altura is not None
                 else ("Goles/partido", _es(R["gf"] / max(1, R["pj"]), 2)))
     kpis.append(("xG en córners", _es(T["corners_ataque"]["xg_a_favor"], 2)))
     for i, (lab, val) in enumerate(kpis):

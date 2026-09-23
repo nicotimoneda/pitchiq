@@ -101,7 +101,7 @@ The first run downloads from StatsBomb; later runs read from `data/cache/`.
 
 | Area | Metrics |
 |---|---|
-| Pressing | defensive actions by zone, PPDA, share in the opponent's half, high turnovers (open-play regains within 40 yards of goal) and how many end in a shot |
+| Pressing | defensive actions by zone, PPDA, share in the opponent's half, high turnovers (open-play regains within 40 m of goal, as Opta defines them) and how many end in a shot |
 | Defensive shape (360) | line height, block width/depth, convex-hull area, pressing support |
 | Corners | delivery zone, box load, first contact, xG for/against, man-orientation index (a heuristic proxy) |
 | Matches | result, xG, PPDA, defensive actions and line height per match |
@@ -109,7 +109,7 @@ The first run downloads from StatsBomb; later runs read from `data/cache/`.
 The caveats are part of the product:
 - **360 freeze-frames only include players visible in the broadcast.** Spatial metrics are approximations over visible players, never assume 11, and are left empty rather than estimated when too few players are visible.
 - **The PPDA here counts pressures as defensive actions,** so it is lower than Opta-style PPDA. It is consistent across teams, but not comparable with other sources.
-- **Distances are in yards.** StatsBomb's pitch is 120 × 80 yards.
+- **Everything is in metres.** StatsBomb's coordinates are yards on a normalised 120 × 80 pitch; every published figure is converted to metres (109.7 × 73.2 m), so the LLM, the web app and the verifier all work in metres.
 
 ## Stack
 

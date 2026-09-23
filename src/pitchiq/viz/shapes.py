@@ -42,7 +42,7 @@ def plot_defensive_block(
     if line_height is not None and not np.isnan(line_height):
         ax.axvline(line_height, color="#005ec4", linestyle="--", linewidth=2, zorder=3)
         ax.text(
-            line_height + 1, 2, f"línea media: {line_height:.1f}",
+            line_height + 1, 2, f"línea media: {config.a_metros(line_height):.1f} m",
             color="#005ec4", fontsize=9, va="bottom",
         )
 
@@ -66,23 +66,23 @@ def plot_line_height_by_match(
 ) -> plt.Figure:
     """Grafica la altura media de la línea defensiva partido a partido.
 
-    ``line_heights`` puede contener NaN (partidos sin 360 suficientes): se
-    muestran como huecos, no se interpolan.
+    ``line_heights`` va en yardas StatsBomb y se dibuja en metros. Puede contener
+    NaN (partidos sin 360 suficientes): se muestran como huecos, no se interpolan.
     """
     fig, ax = plt.subplots(figsize=(12, 5))
     x = np.arange(len(line_heights))
-    y = np.asarray(line_heights, dtype=float)
+    y = np.asarray(line_heights, dtype=float) * config.YARDA_M
 
     ax.plot(x, y, marker="o", color="#d62828", linewidth=1.5)
     if np.isfinite(y).any():
         mean = float(np.nanmean(y))
         ax.axhline(mean, color="#4a4a4a", linestyle="--", linewidth=1)
-        ax.text(len(y) - 0.5, mean, f" media {mean:.1f}", va="center", fontsize=9)
+        ax.text(len(y) - 0.5, mean, f" media {mean:.1f} m", va="center", fontsize=9)
 
     ax.set_xticks(x)
     ax.set_xticklabels(labels, rotation=90, fontsize=7)
-    ax.set_ylabel("altura de línea defensiva (x, 0-120)")
-    ax.set_ylim(0, config.PITCH_LENGTH)
+    ax.set_ylabel("altura de línea defensiva (m desde su portería)")
+    ax.set_ylim(0, config.PITCH_LENGTH_M)
     ax.set_title(title or f"Altura de línea defensiva por partido — {team}", fontsize=13)
     ax.grid(axis="y", alpha=0.3)
     fig.text(

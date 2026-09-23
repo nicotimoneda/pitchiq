@@ -129,7 +129,7 @@ def pressing_tool(params: ToolInput) -> PressingOutput:
 class ShapeOutput(ToolOutput):
     """Compacidad, altura de línea y soporte de presión (solo jugadores visibles)."""
 
-    hull_area_media_yd2: float
+    hull_area_media_m2: float
     anchura_media: float
     profundidad_media: float
     altura_linea_media: float
@@ -153,10 +153,10 @@ def shape_tool(params: ToolInput) -> ShapeOutput:
         supports.append(pressing_support(frames, events, params.team).mean("support"))
     return ShapeOutput(
         team=params.team,
-        hull_area_media_yd2=round(float(np.nanmean(hulls)), 0),
-        anchura_media=round(float(np.nanmean(widths)), 1),
-        profundidad_media=round(float(np.nanmean(depths)), 1),
-        altura_linea_media=round(float(np.nanmean(lines)), 1),
+        hull_area_media_m2=round(float(np.nanmean(hulls)) * config.YARDA_M**2, 0),
+        anchura_media=round(config.a_metros(float(np.nanmean(widths))), 1),
+        profundidad_media=round(config.a_metros(float(np.nanmean(depths))), 1),
+        altura_linea_media=round(config.a_metros(float(np.nanmean(lines))), 1),
         soporte_presion_medio=round(float(np.nanmean(supports)), 2),
         partidos_con_360=n_con_360,
     )
@@ -237,7 +237,7 @@ def corners_defense_tool(params: ToolInput) -> CornersDefenseOutput:
     return CornersDefenseOutput(
         team=params.team,
         n_corners=n,
-        indice_orientacion_hombre=round(float(np.mean(mois)), 2),
+        indice_orientacion_hombre=round(config.a_metros(float(np.mean(mois))), 2),
         pct_primer_contacto_concedido=round(100 * float(np.mean(conceded)), 1),
         xg_en_contra=round(xg, 2),
     )
@@ -255,10 +255,11 @@ TOOLS: "dict[str, tuple[str, object]]" = {
         pressing_tool,
     ),
     "forma_defensiva": (
-        "Forma defensiva 360: área media del bloque (convex hull, en yardas²: "
-        "el campo StatsBomb mide 120×80 yardas), anchura y profundidad, altura "
-        "media de la línea defensiva (x, 0-120 yardas) y compañeros de media a "
-        "≤10 yardas de cada presión. Solo jugadores visibles (aproximación).",
+        "Forma defensiva 360, en metros: área media del bloque (convex hull, en m²), "
+        "anchura y profundidad del bloque, altura media de la línea defensiva "
+        "(metros desde su portería; el campo StatsBomb mide 109,7×73,2 m) y "
+        "compañeros de media a ≤10 m de cada presión. Solo jugadores visibles "
+        "(aproximación).",
         shape_tool,
     ),
     "corners_ataque": (
@@ -269,7 +270,7 @@ TOOLS: "dict[str, tuple[str, object]]" = {
     ),
     "corners_defensa": (
         "Córners en contra: total, índice de orientación al hombre (PROXY "
-        "heurístico continuo: distancia media en yardas al marcador más cercano, "
+        "heurístico continuo: distancia media en metros al marcador más cercano, "
         "menor = más al hombre), % de primer contacto concedido y xG encajado.",
         corners_defense_tool,
     ),

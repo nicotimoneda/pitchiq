@@ -92,9 +92,10 @@ def ppda(events: pd.DataFrame, team: str) -> float:
     return n_passes / n_def
 
 
-# Robo alto: posesión propia que empieza en juego abierto a <= 40 yardas de la
-# portería rival (x >= 80 en coordenadas StatsBomb, donde cada equipo ataca hacia x=120)
-HIGH_TURNOVER_MIN_X = config.PITCH_LENGTH - 40
+# Robo alto: posesión propia que empieza en juego abierto a <= 40 m de la portería
+# rival (como Opta). En coordenadas StatsBomb (yardas, cada equipo ataca hacia x=120)
+# eso es x >= 120 - 43,7
+HIGH_TURNOVER_MIN_X = config.PITCH_LENGTH - config.a_yardas(40.0)
 OPEN_PLAY_PATTERNS = ("Regular Play", "From Counter")
 
 
@@ -106,8 +107,7 @@ def high_turnovers(
     Una posesión cuenta si es del equipo, su patrón es de juego abierto (no saques
     de banda, de puerta, faltas ni córners) y el primer evento del equipo con
     localización está a x >= min_x. "Con tiro" = la misma posesión incluye un
-    disparo del equipo. Es la idea de los "high turnovers" de Opta, con el umbral
-    en yardas de StatsBomb.
+    disparo del equipo. Es la definición de "high turnovers" de Opta (40 m).
     """
     need = {"possession", "possession_team", "play_pattern", "team", "type", "location"}
     if events.empty or not need <= set(events.columns):

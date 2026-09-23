@@ -12,6 +12,7 @@ import pandas as pd
 from pydantic import BaseModel, ConfigDict
 from scipy.spatial import ConvexHull, QhullError
 
+from pitchiq import config
 from pitchiq.metrics.frames import merge_frames_events, visible_teammates
 from pitchiq.metrics.pressing import defensive_actions
 
@@ -108,10 +109,13 @@ def defensive_line_height(
 
 
 def pressing_support(
-    frames: pd.DataFrame, events: pd.DataFrame, team: str, radius: float = 10.0
+    frames: pd.DataFrame, events: pd.DataFrame, team: str,
+    radius: float = config.a_yardas(10.0),
 ) -> SpatialResult:
     """Soporte de presión: compañeros visibles a <= radius de la posición del
     evento Pressure (proxy de la posición del balón), sin contar al presionador.
+
+    ``radius`` va en yardas StatsBomb; por defecto equivale a 10 m.
 
     El conteo es un mínimo (solo visibles): la distribución real puede ser mayor.
     """

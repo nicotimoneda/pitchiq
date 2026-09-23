@@ -41,16 +41,16 @@
 ### 4. La identidad táctica del Leverkusen que emerge de los datos
 - PPDA medio 2.48 (con Pressure incluido; no comparable con Opta) y 53.1 % de
   las acciones defensivas en campo rival → presión adelantada sistemática.
-- Línea defensiva media en 52.9 (mitad de campo) y bloque de 514 yardas² de hull
-  medio (35.6 de ancho × 23.9 de profundidad).
+- Línea defensiva media a 48.4 m de su portería (el campo StatsBomb mide 109,7 m)
+  y bloque de 430 m² de hull medio (32.6 m de ancho × 21.9 m de profundidad).
 - Balón parado dominante: 236 córners a favor vs 112 en contra; 68.2 % de
   primer contacto ganado atacando; 10.84 xG generado vs 4.95 concedido.
 - Reparto de saques: 74 cortos / 67 al centro / 62 al primer palo / 33 al
   segundo — el córner corto como seña (31 % de los saques).
-- MOI defensivo medio 3.37 yardas (proxy: tendencia mixta, ni hombre puro ni zona).
+- MOI defensivo medio 3.08 m (proxy: tendencia mixta, ni hombre puro ni zona).
 
 ### 5. El motor generaliza (Euro 2024, cero cambios de código)
-- España campeona: 7 partidos, PPDA 2.15, línea 53.8, hull 529 yardas², 45 córners
+- España campeona: 7 partidos, PPDA 2.15, línea a 49.2 m, hull 443 m², 45 córners
   a favor. Ids del torneo resueltos del catálogo (55/282), no hardcodeados.
 - Cobertura 360: 7/7 en la Euro vs 31/34 en Bundesliga — toda métrica espacial
   hereda esa variabilidad y hay que decirlo.

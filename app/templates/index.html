@@ -766,7 +766,7 @@
       <div class="panel"><dl class="stats" id="stats-defensa"></dl></div>
     </div>
     <div class="panel" style="margin-top:16px">
-      <p class="panel-title">Altura de la defensa por partido <span>0 = portería propia · 120 = portería rival</span></p>
+      <p class="panel-title">Altura de la defensa por partido <span>metros desde su portería · el campo mide 109,7 m</span></p>
       <div class="key" id="key-linea"></div>
       <div class="chart" id="chart-linea" role="img" aria-label="Altura media de la línea defensiva en cada partido"></div>
     </div>
@@ -860,7 +860,7 @@
       <ul>
         <li><b>Cifras verificadas.</b> Todas las cifras de los informes salen de métricas calculadas sobre los eventos de cada partido. Un validador automático contrasta cada número del texto y marca cualquiera sin respaldo.</li>
         <li><b>Posiciones visibles.</b> Las métricas de defensa usan las posiciones de los jugadores que aparecen en la imagen de la retransmisión (datos 360). Son aproximadas, y los partidos sin esos datos se excluyen.</li>
-        <li><b>Unidades.</b> El campo mide 120 × 80 yardas; distancias en yardas y áreas en yardas².</li>
+        <li><b>Unidades.</b> StatsBomb normaliza el campo a 120 × 80 yardas; aquí todo se convierte a metros (109,7 × 73,2 m): distancias en metros y áreas en m².</li>
         <li><b>PPDA.</b> Incluye las presiones como acción defensiva, por lo que sus valores no son comparables con los de otras fuentes.</li>
         <li><b>Marcaje en córners.</b> La distancia al marcador más cercano es una aproximación; no clasifica sistemas de marcaje.</li>
         <li><b>Interpretación.</b> Los informes redactados se apoyan en un glosario táctico en revisión.</li>
@@ -919,6 +919,8 @@ let LANG = (() => {
   return (navigator.language || "es").toLowerCase().startsWith("es") ? "es" : "en";
 })();
 const EN = LANG === "en";
+// StatsBomb mide en yardas (120 × 80); los datos publicados ya vienen en metros
+const YARDA_M = 0.9144, LARGO_M = 120 * YARDA_M;  // 109,7 m
 // en inglés, sin separador de miles: "7,270" se leería como decimal al verificar
 const fmt = (v, d = 1) => Number(v).toLocaleString(LANG === "en" ? "en-US" : "es-ES", { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: LANG !== "en" });
 const fmtInt = (v) => LANG === "en" ? String(Math.round(v)) : String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -931,7 +933,7 @@ const T_EN = {
   "victoria": "win", "empate": "draw", "derrota": "loss", "PPDA medio": "Average PPDA",
   "pases rivales por acción defensiva": "opponent passes per defensive action", "Presión en campo rival": "Pressing in the opponent's half",
   "de sus acciones defensivas": "of its defensive actions", "Altura de la defensa": "Defensive line height",
-  "yardas desde su portería": "yards from its own goal", "xG en córners": "xG from corners", "Goles por partido": "Goals per match",
+  "desde su portería": "from its own goal", "xG en córners": "xG from corners", "Goles por partido": "Goals per match",
   "Claves": "Key points", "Informe del analista": "Analyst report", "Cifras verificadas": "Figures verified",
   "Cifras sin respaldo": "Unsupported figures",
   "Cada cifra de este informe se contrasta automáticamente con las métricas calculadas a partir de los datos de los partidos. Pasa el cursor por una cifra para ver de dónde sale.":
@@ -946,7 +948,7 @@ const T_EN = {
   "Dónde defiende": "Where it defends", "acciones por zona": "actions per zone", "← Portería propia": "← Own goal", "menos": "fewer",
   "más": "more", "Portería rival →": "Opponent's goal →", "Acciones defensivas": "Defensive actions", "por partido": "per match",
   "En campo rival": "In the opponent's half", "de las acciones defensivas": "of defensive actions", "Apoyo en la presión": "Pressing support",
-  "compañeros a menos de 10 yardas": "teammates within 10 yards", "en total": "in total", "PPDA por partido": "PPDA by match",
+  "compañeros a menos de 10 m": "teammates within 10 m", "en total": "in total", "PPDA por partido": "PPDA by match",
   "más bajo = presión más intensa": "lower = more intense pressing", "PPDA del partido": "match PPDA",
   "Posiciones de los jugadores visibles en la retransmisión": "Positions of the players visible on the broadcast",
   "Sin datos de posiciones para esta competición": "No player-position data for this competition",
@@ -954,17 +956,17 @@ const T_EN = {
   ". Las métricas de bloque y altura de la defensa no se estiman: se muestran solo donde hay datos.": ". Block and line-height metrics are not estimated: they are only shown where data exists.",
   "Bloque defensivo": "Defensive block", "densidad de posiciones al defender": "density of positions when defending",
   "Altura de la línea": "Line height", "media, desde su portería": "average, from its own goal", "Anchura del bloque": "Block width",
-  "yardas": "yards", "Profundidad del bloque": "Block depth", "Área del bloque": "Block area", "yardas²": "yards²",
+  "media": "average", "Profundidad del bloque": "Block depth", "Área del bloque": "Block area",
   "Partidos con posiciones": "Matches with positions", "datos 360 disponibles": "360 data available",
   "Altura de la defensa por partido": "Defensive line height by match", "0 = portería propia · 120 = portería rival": "0 = own goal · 120 = opponent's goal",
-  "altura del partido": "match line height", "medio campo (60)": "halfway line (60)", "sin datos de posiciones": "no position data",
+  "altura del partido": "match line height", "sin datos de posiciones": "no position data",
   "Córners": "Corners", "Córners a favor": "Corners for", "destino de cada saque · portería rival arriba": "where each delivery ended · opponent's goal at the top",
   "corto": "short", "centro": "centre", "primer palo": "near post", "segundo palo": "far post", "A favor": "For", "lanzados": "taken",
   "Primer contacto": "First contact", "tocó primero el balón": "won the first touch", "xG generado": "xG generated",
   "remates tras córner": "shots after a corner", "Ocupación del área": "Box occupation", "atacantes / defensores rivales": "attackers / opposing defenders",
   "En contra": "Against", "concedidos": "conceded", "Primer contacto del rival": "Opponent's first contact", "tras sus saques": "after their deliveries",
   "xG concedido": "xG conceded", "remates rivales tras córner": "opponent shots after a corner", "Distancia al marcador": "Distance to marker",
-  "media, aproximada · yardas": "average, approximate · yards", "Por contexto": "By context", "medias por partido": "per-match averages",
+  "media, aproximada": "average, approximate", "Por contexto": "By context", "medias por partido": "per-match averages",
   "Pts/partido": "Pts/match", "Goles a favor": "Goals for", "Goles en contra": "Goals against", "xG a favor": "xG for", "xG en contra": "xG against",
   "Altura def.": "Line height", "Local": "Home", "Visitante": "Away", "1.ª mitad": "1st half", "2.ª mitad": "2nd half", "Fecha": "Date",
   "Rival": "Opponent", "Campo": "Venue", "Resultado": "Result", "Muestras de tamaño distinto: orientativo": "Sample sizes differ: indicative only",
@@ -973,7 +975,8 @@ const T_EN = {
   "Espera y repliegue": "Wait and drop off", "PPDA · más a la derecha = presiona más": "PPDA · further right = presses more",
   "% de acciones en campo rival": "% of actions in the opponent's half", "frente a": "vs",
   "Acciones defensivas por partido": "Defensive actions per match", "% de las acciones defensivas": "% of defensive actions",
-  "de 120 yardas": "of 120 yards", "yardas² · más bajo = más compacto": "yards² · lower = more compact",
+  "metros desde su portería": "metres from its own goal", "m² · más bajo = más compacto": "m² · lower = more compact",
+  "metros desde su portería · el campo mide 109,7 m": "metres from its own goal · the pitch is 109.7 m long",
   "Córners a favor por partido": "Corners for per match", "Primer contacto en córners": "First contact at corners", "% ganado": "% won",
   "Datos:": "Data:", "API": "API", "Evidencia del informe": "Report evidence", "Código": "Code", "Metodología y límites": "Methodology and limits",
   "Cifras verificadas.": "Verified figures.",
@@ -982,7 +985,9 @@ const T_EN = {
   "Posiciones visibles.": "Visible positions.",
   "Las métricas de defensa usan las posiciones de los jugadores que aparecen en la imagen de la retransmisión (datos 360). Son aproximadas, y los partidos sin esos datos se excluyen.":
     "Defensive metrics use the positions of the players visible in the broadcast image (360 data). They are approximate, and matches without that data are excluded.",
-  "Unidades.": "Units.", "El campo mide 120 × 80 yardas; distancias en yardas y áreas en yardas².": "The pitch is 120 × 80 yards; distances in yards and areas in square yards.",
+  "Unidades.": "Units.",
+  "StatsBomb normaliza el campo a 120 × 80 yardas; aquí todo se convierte a metros (109,7 × 73,2 m): distancias en metros y áreas en m².":
+    "StatsBomb normalises the pitch to 120 × 80 yards; everything here is converted to metres (109.7 × 73.2 m): distances in metres and areas in m².",
   "PPDA.": "PPDA.", "Incluye las presiones como acción defensiva, por lo que sus valores no son comparables con los de otras fuentes.":
     "Pressures count as defensive actions, so the values are not comparable with other sources.",
   "Marcaje en córners.": "Marking at corners.", "La distancia al marcador más cercano es una aproximación; no clasifica sistemas de marcaje.":
@@ -1005,21 +1010,22 @@ const T_EN = {
 };
 // métricas del verificador (tooltips)
 Object.assign(T_EN, {
-  "largo del campo (120 yardas)": "pitch length (120 yards)", "partidos jugados": "matches played", "victorias": "wins", "empates": "draws",
+  "largo del campo (109,7 m)": "pitch length (109.7 m)", "partidos jugados": "matches played", "victorias": "wins", "empates": "draws",
   "derrotas": "losses", "goles a favor": "goals for", "goles en contra": "goals against", "partidos analizados": "matches analysed",
   "acciones defensivas totales": "total defensive actions", "acciones defensivas por partido": "defensive actions per match",
-  "% de acciones defensivas en campo rival": "% of defensive actions in the opponent's half", "área media del bloque (yardas²)": "average block area (yards²)",
-  "anchura media del bloque (yardas)": "average block width (yards)", "profundidad media del bloque (yardas)": "average block depth (yards)",
-  "altura media de la línea defensiva": "average defensive line height", "compañeros a menos de 10 yardas en cada presión": "teammates within 10 yards at each pressure",
+  "% de acciones defensivas en campo rival": "% of defensive actions in the opponent's half", "área media del bloque (m²)": "average block area (m²)",
+  "anchura media del bloque (m)": "average block width (m)", "profundidad media del bloque (m)": "average block depth (m)",
+  "altura media de la línea defensiva (m desde su portería)": "average defensive line height (m from its own goal)", "compañeros a menos de 10 m en cada presión": "teammates within 10 m at each pressure",
   "partidos con datos de posiciones": "matches with position data", "córners a favor": "corners for", "atacantes en el área al sacar": "attackers in the box at delivery",
   "defensores rivales en el área al sacar": "opposing defenders in the box at delivery", "% de primer contacto ganado": "% of first contacts won",
   "xG generado en córners": "xG generated from corners", "córners en contra": "corners against", "distancia media al marcador en córners": "average distance to marker at corners",
   "% de primer contacto del rival": "% of opponent first contacts", "xG concedido en córners": "xG conceded from corners",
   "xG generado (suma de sus remates)": "xG generated (sum of its shots)",
-  "robos altos (a 40 yardas o menos de la portería rival)": "high turnovers (within 40 yards of the opponent's goal)",
+  "robos altos (a 40 m o menos de la portería rival)": "high turnovers (within 40 m of the opponent's goal)",
   "robos altos que acaban en tiro": "high turnovers ending in a shot",
-  "distancia máxima de un robo alto a la portería rival (40 yardas)": "maximum distance of a high turnover from the opponent's goal (40 yards)",
-  "Robos altos": "High turnovers", "Acaban en tiro": "Ending in a shot", "de los robos altos": "of high turnovers", "a 40 yardas o menos de la portería rival": "within 40 yards of the opponent's goal", "xG concedido (suma de los remates rivales)": "xG conceded (sum of opponent shots)",
+  "distancia máxima de un robo alto a la portería rival (40 m)": "maximum distance of a high turnover from the opponent's goal (40 m)",
+  "distancia media al marcador en córners (m)": "average distance to marker at corners (m)",
+  "Robos altos": "High turnovers", "Acaban en tiro": "Ending in a shot", "de los robos altos": "of high turnovers", "a 40 m o menos de la portería rival": "within 40 m of the opponent's goal", "xG concedido (suma de los remates rivales)": "xG conceded (sum of opponent shots)",
 });
 const P_EN = [
   [/^Resumen generado a partir de las métricas de (\d+) partidos$/, "Summary built from the metrics of $1 matches"],
@@ -1133,7 +1139,7 @@ function resultados(team) {
 
 /* ---------- verificación de cifras (misma regla que el validador) ---------- */
 const NOMBRES = {
-  "campo.largo": "largo del campo (120 yardas)",
+  "campo.largo": "largo del campo (109,7 m)",
   "resultados.partidos": "partidos jugados",
   "resultados.victorias": "victorias",
   "resultados.empates": "empates",
@@ -1141,20 +1147,20 @@ const NOMBRES = {
   "resultados.goles_favor": "goles a favor",
   "resultados.goles_contra": "goles en contra",
   "resultados.xg_favor": "xG generado (suma de sus remates)",
-  "resultados.robos_altos": "robos altos (a 40 yardas o menos de la portería rival)",
+  "resultados.robos_altos": "robos altos (a 40 m o menos de la portería rival)",
   "resultados.robos_altos_tiro": "robos altos que acaban en tiro",
-  "campo.distancia_robo_alto": "distancia máxima de un robo alto a la portería rival (40 yardas)",
+  "campo.distancia_robo_alto": "distancia máxima de un robo alto a la portería rival (40 m)",
   "resultados.xg_contra": "xG concedido (suma de los remates rivales)",
   "presion.n_partidos": "partidos analizados",
   "presion.acciones_defensivas_totales": "acciones defensivas totales",
   "presion.acciones_defensivas_por_partido": "acciones defensivas por partido",
   "presion.ppda_medio": "PPDA medio",
   "presion.pct_acciones_campo_rival": "% de acciones defensivas en campo rival",
-  "forma_defensiva.hull_area_media_yd2": "área media del bloque (yardas²)",
-  "forma_defensiva.anchura_media": "anchura media del bloque (yardas)",
-  "forma_defensiva.profundidad_media": "profundidad media del bloque (yardas)",
-  "forma_defensiva.altura_linea_media": "altura media de la línea defensiva",
-  "forma_defensiva.soporte_presion_medio": "compañeros a menos de 10 yardas en cada presión",
+  "forma_defensiva.hull_area_media_m2": "área media del bloque (m²)",
+  "forma_defensiva.anchura_media": "anchura media del bloque (m)",
+  "forma_defensiva.profundidad_media": "profundidad media del bloque (m)",
+  "forma_defensiva.altura_linea_media": "altura media de la línea defensiva (m desde su portería)",
+  "forma_defensiva.soporte_presion_medio": "compañeros a menos de 10 m en cada presión",
   "forma_defensiva.partidos_con_360": "partidos con datos de posiciones",
   "corners_ataque.n_corners": "córners a favor",
   "corners_ataque.box_load_atacantes_medio": "atacantes en el área al sacar",
@@ -1162,7 +1168,7 @@ const NOMBRES = {
   "corners_ataque.pct_primer_contacto_ganado": "% de primer contacto ganado",
   "corners_ataque.xg_a_favor": "xG generado en córners",
   "corners_defensa.n_corners": "córners en contra",
-  "corners_defensa.indice_orientacion_hombre": "distancia media al marcador en córners",
+  "corners_defensa.indice_orientacion_hombre": "distancia media al marcador en córners (m)",
   "corners_defensa.pct_primer_contacto_concedido": "% de primer contacto del rival",
   "corners_defensa.xg_en_contra": "xG concedido en córners",
 };
@@ -1180,8 +1186,8 @@ function evidencia(team) {
   }
   const R = resultados(team);
   for (const k in R) ev.push(["resultados." + k, R[k]]);
-  ev.push(["campo.largo", 120]);
-  ev.push(["campo.distancia_robo_alto", 40]);  // umbral fijo de la métrica de robos altos  // medida fija del campo StatsBomb (120 × 80 yardas)
+  ev.push(["campo.largo", LARGO_M]);
+  ev.push(["campo.distancia_robo_alto", 40]);  // umbral fijo de la métrica de robos altos (m)
   return ev;
 }
 function nombreMetrica(key) {
@@ -1200,7 +1206,14 @@ function respaldo(raw, ev) {
   }
   return null;
 }
-function marcarCifras(root, ev) {
+// dígitos dentro de nombres propios ("Ligue 1", "Mainz 05") no son cifras: misma lista que el validador
+const NOMBRES_CON_CIFRAS = ["1. Bundesliga", "2. Bundesliga", "Ligue 1", "Ligue 2"];
+function nombresDe(team) {
+  const n = [team.nombre, team.competicion, team.equipo, ...(team._es ? [team._es.nombre, team._es.competicion] : [])];
+  return [...NOMBRES_CON_CIFRAS, ...n.filter((x) => x && /\d/.test(x))];
+}
+function marcarCifras(root, ev, ignorar = NOMBRES_CON_CIFRAS) {
+  const tapar = [...new Set(ignorar)].sort((a, b) => b.length - a.length);
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode: (n) => n.parentElement.closest("code, pre, .cifra") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
   });
@@ -1209,7 +1222,9 @@ function marcarCifras(root, ev) {
   let total = 0, ok = 0;
   for (const node of nodos) {
     const text = node.nodeValue;
-    const limpio = text.replace(/\b(?:19|20)\d{2}[\/-]\d{2}\b/g, (m) => " ".repeat(m.length));
+    let limpio = text;
+    for (const nombre of tapar) limpio = limpio.split(nombre).join(" ".repeat(nombre.length));
+    limpio = limpio.replace(/\b(?:19|20)\d{2}[\/-]\d{2}\b/g, (m) => " ".repeat(m.length));
     const re = /\d+(?:[.,]\d+)?/g;
     let m, pos = 0, frag = null;
     while ((m = re.exec(limpio))) {
@@ -1404,7 +1419,7 @@ function renderCabecera(team) {
     ["adelante", "Presión en campo rival", fmt(T.presion.pct_acciones_campo_rival), "%", "de sus acciones defensivas",
       "", puesto(team, (t) => t.herramientas.presion.pct_acciones_campo_rival, false)],
     has(altura)
-      ? ["altura", "Altura de la defensa", fmt(altura), "/120", "yardas desde su portería",
+      ? ["altura", "Altura de la defensa", fmt(altura), "m", "desde su portería",
         sparkline(team.partidos.map((p) => p.altura_linea)), puesto(team, (t) => t.herramientas.forma_defensiva.altura_linea_media, false)]
       : ["balon", "Goles por partido", fmt(gpp(team), 2), "", fmt(R.goles_contra / Math.max(1, R.partidos), 2) + " encajados",
         sparkline(team.partidos.map((p) => p.goles_favor)), puesto(team, gpp, false)],
@@ -1425,12 +1440,12 @@ function renderInforme(team) {
     team.nombre + " played " + R.partidos + " " + team.competicion + " " + team.temporada + " matches" + (R.derrotas === 0 ? " without losing" : "") +
       ": " + R.victorias + " wins, " + R.empates + " draws and " + R.derrotas + " losses, scoring " + R.goles_favor + " and conceding " + R.goles_contra + ".",
     has(R.xg_favor) ? "Its shots added up to " + fmt(R.xg_favor, 2) + " xG, against " + fmt(R.xg_contra, 2) + " for its opponents." : null,
-    has(R.robos_altos) ? "It won the ball back " + R.robos_altos + " times within 40 yards of the opponent's goal, and " + R.robos_altos_tiro + " of those possessions ended in a shot." : null,
+    has(R.robos_altos) ? "It won the ball back " + R.robos_altos + " times within 40 m of the opponent's goal, and " + R.robos_altos_tiro + " of those possessions ended in a shot." : null,
     "It presses with an average PPDA of " + fmt(P.ppda_medio, 2) + " and makes " + fmt(P.acciones_defensivas_por_partido) +
       " defensive actions per match; " + fmt(P.pct_acciones_campo_rival) + " % of them in the opponent's half.",
     has(F.altura_linea_media)
-      ? "Its defensive line sits on average " + fmt(F.altura_linea_media) + " of 120 yards from its own goal, with a block " +
-        fmt(F.anchura_media) + " yards wide and " + fmt(F.profundidad_media) + " deep."
+      ? "Its defensive line sits on average " + fmt(F.altura_linea_media) + " m from its own goal (on a " + fmt(LARGO_M) + " m pitch), with a block " +
+        fmt(F.anchura_media) + " m wide and " + fmt(F.profundidad_media) + " m deep."
       : null,
     "From set pieces it took " + CA.n_corners + " corners, won the first touch on " + fmt(CA.pct_primer_contacto_ganado) +
       " % and generated " + fmt(CA.xg_a_favor, 2) + " xG; it conceded " + CD.n_corners + " corners and " + fmt(CD.xg_en_contra, 2) + " xG.",
@@ -1441,18 +1456,18 @@ function renderInforme(team) {
     has(R.xg_favor)
       ? "Sus remates sumaron " + fmt(R.xg_favor, 2) + " de xG y los del rival " + fmt(R.xg_contra, 2) + "."
       : null,
-    has(R.robos_altos) ? "Recuperó el balón " + R.robos_altos + " veces a 40 yardas o menos de la portería rival, y " + R.robos_altos_tiro + " de esas posesiones acabaron en tiro." : null,
+    has(R.robos_altos) ? "Recuperó el balón " + R.robos_altos + " veces a 40 m o menos de la portería rival, y " + R.robos_altos_tiro + " de esas posesiones acabaron en tiro." : null,
     "Presiona con un PPDA medio de " + fmt(P.ppda_medio, 2) + " y firma " + fmt(P.acciones_defensivas_por_partido) +
       " acciones defensivas por partido; el " + fmt(P.pct_acciones_campo_rival) + " % ocurre en campo rival.",
     has(F.altura_linea_media)
-      ? "Su línea defensiva se sitúa de media a " + fmt(F.altura_linea_media) + " de 120 yardas desde su portería, con un bloque de " +
-        fmt(F.anchura_media) + " yardas de ancho por " + fmt(F.profundidad_media) + " de profundidad."
+      ? "Su línea defensiva se sitúa de media a " + fmt(F.altura_linea_media) + " m de su portería (en un campo de " + fmt(LARGO_M) + " m), con un bloque de " +
+        fmt(F.anchura_media) + " m de ancho por " + fmt(F.profundidad_media) + " m de profundidad."
       : null,
     "A balón parado lanzó " + CA.n_corners + " córners, tocó primero el balón en el " + fmt(CA.pct_primer_contacto_ganado) +
       " % y generó " + fmt(CA.xg_a_favor, 2) + " de xG; en contra concedió " + CD.n_corners + " córners y " + fmt(CD.xg_en_contra, 2) + " de xG.",
   ];
   $("#resumen").innerHTML = frases.filter(Boolean).map((t) => "<p>" + esc(t) + "</p>").join("");
-  let { total, ok } = marcarCifras($("#resumen"), ev);
+  let { total, ok } = marcarCifras($("#resumen"), ev, nombresDe(team));
 
   const rep = REPORTS[team.slug];
   const ia = $("#informe-ia");
@@ -1460,7 +1475,7 @@ function renderInforme(team) {
     ia.hidden = false;
     $("#informe-ia-kicker").textContent = (EN ? "Analyst report · " : "Informe del analista · ") + fechaCorta(rep.generated_at) + (rep.sample ? (EN ? " · sample" : " · muestra") : "");
     $("#informe-ia-body").innerHTML = rep.html;
-    const r2 = marcarCifras($("#informe-ia-body"), ev);
+    const r2 = marcarCifras($("#informe-ia-body"), ev, nombresDe(team));
     total += r2.total; ok += r2.ok;
     $("#informe-nota").textContent = "Resumen de métricas e informe redactado";
   } else {
@@ -1505,11 +1520,11 @@ function renderPresion(team) {
     ["Acciones defensivas", "por partido", fmt(T.presion.acciones_defensivas_por_partido)],
     ["En campo rival", "de las acciones defensivas", fmt(T.presion.pct_acciones_campo_rival), "%"],
     has(T.forma_defensiva.soporte_presion_medio)
-      ? ["Apoyo en la presión", "compañeros a menos de 10 yardas", fmt(T.forma_defensiva.soporte_presion_medio, 2)]
+      ? ["Apoyo en la presión", "compañeros a menos de 10 m", fmt(T.forma_defensiva.soporte_presion_medio, 2)]
       : null,
     ["Acciones defensivas", "en total", fmtInt(T.presion.acciones_defensivas_totales)],
     has(resultados(team).robos_altos)
-      ? ["Robos altos", "a 40 yardas o menos de la portería rival", fmtInt(resultados(team).robos_altos)]
+      ? ["Robos altos", "a 40 m o menos de la portería rival", fmtInt(resultados(team).robos_altos)]
       : null,
     has(resultados(team).robos_altos)
       ? ["Acaban en tiro", "de los robos altos", fmt((100 * resultados(team).robos_altos_tiro) / Math.max(1, resultados(team).robos_altos)), "%"]
@@ -1545,28 +1560,29 @@ function renderDefensa(team) {
     svgEl("rect", { x: ix * 5, y: iy * 5, width: 5, height: 5, style: "fill: var(--accent); fill-opacity: " + Math.min(0.92, Math.pow(v, 0.85)).toFixed(3) }, datos);
   }));
   const lh = T.forma_defensiva.altura_linea_media;
-  svgEl("line", { x1: lh, y1: -1, x2: lh, y2: 81, class: "annline" }, encima);
-  svgEl("text", { x: lh - 1.2, y: 4.6, "text-anchor": "end", "font-size": 3.6, class: "ann" }, encima).textContent = "línea media " + fmt(lh);
+  const lhYd = lh / YARDA_M;  // el dibujo del campo usa coordenadas StatsBomb
+  svgEl("line", { x1: lhYd, y1: -1, x2: lhYd, y2: 81, class: "annline" }, encima);
+  svgEl("text", { x: lhYd - 1.2, y: 4.6, "text-anchor": "end", "font-size": 3.6, class: "ann" }, encima).textContent = "línea media " + fmt(lh) + " m";
 
   const R = resultados(team);
   $("#stats-defensa").innerHTML = statsHtml([
-    ["Altura de la línea", "media, desde su portería", fmt(lh), "/120"],
-    ["Anchura del bloque", "yardas", fmt(T.forma_defensiva.anchura_media)],
-    ["Profundidad del bloque", "yardas", fmt(T.forma_defensiva.profundidad_media)],
-    ["Área del bloque", "yardas²", fmtInt(T.forma_defensiva.hull_area_media_yd2)],
+    ["Altura de la línea", "media, desde su portería", fmt(lh), "m"],
+    ["Anchura del bloque", "media", fmt(T.forma_defensiva.anchura_media), "m"],
+    ["Profundidad del bloque", "media", fmt(T.forma_defensiva.profundidad_media), "m"],
+    ["Área del bloque", "media", fmtInt(T.forma_defensiva.hull_area_media_m2), "m²"],
     ["Partidos con posiciones", "datos 360 disponibles", T.forma_defensiva.partidos_con_360 + "<small>/" + R.partidos + "</small>"],
   ]);
 
   const vals = team.partidos.map((p) => p.altura_linea);
   $("#key-linea").innerHTML =
-    '<span><i class="k-series"></i>altura del partido</span><span><i class="k-ref"></i>medio campo (60)</span>' +
+    '<span><i class="k-series"></i>altura del partido</span><span><i class="k-ref"></i>medio campo (' + fmt(LARGO_M / 2) + ')</span>' +
     '<span><i class="k-mean"></i>media (' + fmt(lh) + ')</span>' +
     (vals.some((v) => v == null) ? '<span><i class="k-null"></i>sin datos de posiciones</span>' : "");
   lineChart($("#chart-linea"), {
-    values: vals, domain: [30, 75], ticks: [40, 50, 60, 70],
-    refs: [{ value: 60, cls: "refline" }, { value: lh, cls: "meanline" }],
+    values: vals, domain: [27, 69], ticks: [30, 40, 50, 60],
+    refs: [{ value: LARGO_M / 2, cls: "refline" }, { value: lh, cls: "meanline" }],
     labelFmt: (i) => fmt(vals[i]) + " · " + team.partidos[i].rival,
-    tooltip: (i) => tipPartido(team, i, vals[i] != null ? "Altura de la defensa: <b>" + fmt(vals[i]) + "</b>" : "Sin datos de posiciones"),
+    tooltip: (i) => tipPartido(team, i, vals[i] != null ? "Altura de la defensa: <b>" + fmt(vals[i]) + " m</b>" : "Sin datos de posiciones"),
   });
 }
 
@@ -1599,7 +1615,7 @@ function renderBalonParado(team) {
     ["Primer contacto del rival", "tras sus saques", fmt(T.corners_defensa.pct_primer_contacto_concedido), "%"],
     ["xG concedido", "remates rivales tras córner", fmt(T.corners_defensa.xg_en_contra, 2)],
     has(T.corners_defensa.indice_orientacion_hombre)
-      ? ["Distancia al marcador", "media, aproximada · yardas", fmt(T.corners_defensa.indice_orientacion_hombre, 2)]
+      ? ["Distancia al marcador", "media, aproximada", fmt(T.corners_defensa.indice_orientacion_hombre, 2), "m"]
       : null,
   ]);
 }
@@ -1666,8 +1682,8 @@ function renderComparar(team) {
     ["PPDA medio", "más bajo = presión más intensa", (t) => t.herramientas.presion.ppda_medio, 2],
     ["Acciones defensivas por partido", "", (t) => t.herramientas.presion.acciones_defensivas_por_partido, 1],
     ["Presión en campo rival", "% de las acciones defensivas", (t) => t.herramientas.presion.pct_acciones_campo_rival, 1],
-    ["Altura de la defensa", "de 120 yardas", (t) => t.herramientas.forma_defensiva.altura_linea_media, 1],
-    ["Área del bloque", "yardas² · más bajo = más compacto", (t) => t.herramientas.forma_defensiva.hull_area_media_yd2, 0],
+    ["Altura de la defensa", "metros desde su portería", (t) => t.herramientas.forma_defensiva.altura_linea_media, 1],
+    ["Área del bloque", "m² · más bajo = más compacto", (t) => t.herramientas.forma_defensiva.hull_area_media_m2, 0],
     ["Goles por partido", "", (t) => pp(t, resultados(t).goles_favor), 2],
     ["Córners a favor por partido", "", (t) => pp(t, t.herramientas.corners_ataque.n_corners), 1],
     ["Primer contacto en córners", "% ganado", (t) => t.herramientas.corners_ataque.pct_primer_contacto_ganado, 1],
@@ -1702,7 +1718,7 @@ function verificarProbar() {
   const out = $("#probar-out");
   const texto = $("#probar-texto").value.trim();
   out.innerHTML = texto ? "<p>" + esc(texto) + "</p>" : "";
-  const { total, ok } = marcarCifras(out, evidencia(team));
+  const { total, ok } = marcarCifras(out, evidencia(team), nombresDe(team));
   const sc = $("#probar-score");
   if (!total) { sc.className = "probar-score"; sc.textContent = "Sin cifras"; return; }
   const todo = ok === total;
@@ -1840,7 +1856,7 @@ function abrirFicha(i) {
     has(p.ppda) ? ["PPDA", fmt(p.ppda, 2) + "<small>media " + fmt(team.herramientas.presion.ppda_medio, 2) + "</small>"] : null,
     has(p.acciones_defensivas) ? ["Acciones defensivas", fmtInt(p.acciones_defensivas)] : null,
     has(p.robos_altos) ? ["Robos altos", p.robos_altos + "<small>" + p.robos_altos_tiro + " con tiro</small>"] : null,
-    has(p.altura_linea) ? ["Altura de la defensa", fmt(p.altura_linea) + "<small>/120</small>"] : null,
+    has(p.altura_linea) ? ["Altura de la defensa", fmt(p.altura_linea) + "<small>m</small>"] : null,
   ].filter(Boolean);
   $("#ficha-kpis").innerHTML = kp.map(([t, v]) => "<div><dt>" + t + "</dt><dd>" + v + "</dd></div>").join("");
   $("#ficha-zonas-box").hidden = !p.zonas;

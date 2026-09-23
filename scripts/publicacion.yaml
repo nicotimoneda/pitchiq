@@ -6,6 +6,7 @@
 # (3 puntos por victoria; desempate por diferencia de goles y goles a favor).
 # `top` solo tiene sentido en temporadas completas: las parciales (p. ej. la
 # Bundesliga 2023/24, que solo trae los partidos del Leverkusen) usan `equipos`.
+# `nombre` (opcional) sustituye el nombre de la competición en la web.
 #
 # Regenerar tras cambiar este archivo (sin API key):
 #   uv run python scripts/precompute.py --demo-data
@@ -15,6 +16,72 @@ competiciones:
     season_id: 281
     equipos: ["Bayer Leverkusen"]
 
+  - competition_id: 11    # La Liga 2020/21: solo los partidos del Barcelona, con 360
+    season_id: 90
+    equipos: ["Barcelona"]
+
+  - competition_id: 7     # Ligue 1 2022/23: solo los partidos del PSG, con 360
+    season_id: 235
+    equipos: ["Paris Saint-Germain"]
+
   - competition_id: 11    # La Liga 2015/16 (temporada completa, sin 360)
     season_id: 27
     top: 10
+
+  - competition_id: 55    # Eurocopa 2024 (todos los partidos con 360): semifinalistas
+    season_id: 282
+    nombre: Eurocopa
+    equipos: ["Spain", "England", "France", "Netherlands"]
+
+  - competition_id: 43    # Mundial 2022 (todos los partidos con 360): semifinalistas
+    season_id: 106
+    nombre: Mundial
+    equipos: ["Argentina", "France", "Croatia", "Morocco"]
+
+# Nombres en español para la web (equipos publicados y rivales). StatsBomb los
+# da en inglés; los que no aparecen aquí se muestran tal cual.
+traducciones:
+  Paris Saint-Germain: PSG
+  Albania: Albania
+  Australia: Australia
+  Austria: Austria
+  Belgium: Bélgica
+  Brazil: Brasil
+  Cameroon: Camerún
+  Canada: Canadá
+  Costa Rica: Costa Rica
+  Croatia: Croacia
+  Czech Republic: Chequia
+  Denmark: Dinamarca
+  Ecuador: Ecuador
+  England: Inglaterra
+  France: Francia
+  Georgia: Georgia
+  Germany: Alemania
+  Ghana: Ghana
+  Hungary: Hungría
+  Iran: Irán
+  Italy: Italia
+  Japan: Japón
+  Mexico: México
+  Morocco: Marruecos
+  Netherlands: Países Bajos
+  Poland: Polonia
+  Portugal: Portugal
+  Qatar: Catar
+  Romania: Rumanía
+  Saudi Arabia: Arabia Saudí
+  Scotland: Escocia
+  Senegal: Senegal
+  Serbia: Serbia
+  Slovakia: Eslovaquia
+  Slovenia: Eslovenia
+  South Korea: Corea del Sur
+  Spain: España
+  Switzerland: Suiza
+  Tunisia: Túnez
+  Turkey: Turquía
+  Ukraine: Ucrania
+  United States: Estados Unidos
+  Uruguay: Uruguay
+  Wales: Gales

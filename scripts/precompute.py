@@ -29,6 +29,7 @@ from pitchiq import config
 
 REPORT_DIR = config.ROOT_DIR / "app" / "static" / "report"
 TEAMS_DIR = REPORT_DIR / "teams"
+OG_DIR = REPORT_DIR / "og"  # imágenes de vista previa al compartir (1200×630)
 
 
 PUBLICACION = config.ROOT_DIR / "scripts" / "publicacion.yaml"
@@ -81,6 +82,7 @@ def equipos_a_publicar() -> "list[dict]":
     from pitchiq.data.loader import load_competitions, load_matches
 
     conf = yaml.safe_load(PUBLICACION.read_text(encoding="utf-8"))
+    traducir = conf.get("traducciones") or {}
     catalogo = load_competitions()
     entradas = []
     for bloque in conf["competiciones"]:
@@ -88,7 +90,8 @@ def equipos_a_publicar() -> "list[dict]":
         fila = catalogo[(catalogo["competition_id"] == cid) & (catalogo["season_id"] == sid)]
         if fila.empty:
             raise SystemExit(f"competición {cid}/{sid} no está en StatsBomb Open Data")
-        competicion = str(fila.iloc[0]["competition_name"]).replace("1. Bundesliga", "Bundesliga")
+        competicion = bloque.get("nombre") or str(fila.iloc[0]["competition_name"]).replace(
+            "1. Bundesliga", "Bundesliga")
         temporada = _temporada_corta(fila.iloc[0]["season_name"])
         matches = load_matches(competition_id=cid, season_id=sid)
         orden = clasificacion(matches)
@@ -99,9 +102,10 @@ def equipos_a_publicar() -> "list[dict]":
             equipos = orden[: int(bloque["top"])]
         for equipo in equipos:
             entradas.append({
-                "equipo": equipo, "competition_id": cid, "season_id": sid,
+                "equipo": equipo, "nombre": traducir.get(equipo, equipo), "traducciones": traducir,
+                "competition_id": cid, "season_id": sid,
                 "competicion": competicion, "temporada": temporada,
-                "slug": _slugify(f"{equipo} {temporada}"),
+                "slug": _slugify(f"{traducir.get(equipo, equipo)} {temporada}"),
                 # el puesto solo tiene sentido si la temporada está completa
                 "posicion": orden.index(equipo) + 1 if completa else None,
                 "n_equipos": len(orden) if completa else None,
@@ -271,7 +275,7 @@ def build_team_data(entry: dict, orden: int) -> None:
     block = np.zeros((16, 24))  # densidad de posiciones visibles al defender
     per_match, corner_ends = [], []
 
-    for _, m in matches.iterrows():
+    for i_match, (_, m) in enumerate(matches.iterrows()):
         match_id = int(m["match_id"])
         events = load_events(match_id)
         frames = load_frames(match_id) if has_360(m) else None
@@ -295,14 +299,21 @@ def build_team_data(entry: dict, orden: int) -> None:
         line = (defensive_line_height(frames, events, team).mean("line_height")
                 if frames is not None else float("nan"))
         match_ppda = ppda(events, team)
+        rival = m["away_team"] if home else m["home_team"]
+        shots = events[(events["type"] == "Shot") & (events["period"] < 5)]
+        xg = shots.groupby("team")["shot_statsbomb_xg"].sum()
         per_match.append({
             "fecha": str(m["match_date"])[:10],
-            "rival": m["away_team"] if home else m["home_team"],
+            "rival": entry.get("traducciones", {}).get(rival, rival),
             "local": bool(home),
             "goles_favor": int(m["home_score"] if home else m["away_score"]),
             "goles_contra": int(m["away_score"] if home else m["home_score"]),
             "altura_linea": None if np.isnan(line) else round(float(line), 1),
             "ppda": round(float(match_ppda), 2) if np.isfinite(match_ppda) else None,
+            "xg_favor": round(float(xg.get(team, 0.0)), 2),
+            "xg_contra": round(float(xg.drop(team, errors="ignore").sum()), 2),
+            "acciones_defensivas": int(len(actions)),
+            "zonas": grid.T.astype(int).tolist(),
         })
 
         attacking, _ = find_corners(events, team)
@@ -313,6 +324,7 @@ def build_team_data(entry: dict, orden: int) -> None:
                     "x": round(float(end[0]), 1), "y": round(float(end[1]), 1),
                     "desde_arriba": float(c["location"][1]) > 40,
                     "zona": delivery_zone(c),
+                    "p": i_match,
                 })
 
     tools = agent_tools.run_all_tools(team, competition_id=competition_id, season_id=season_id)
@@ -320,7 +332,7 @@ def build_team_data(entry: dict, orden: int) -> None:
     payload = {
         "slug": entry["slug"],
         "equipo": team,
-        "nombre": team,
+        "nombre": entry.get("nombre", team),
         "con_360": bool(tools["forma_defensiva"].partidos_con_360),
         "posicion": entry.get("posicion"),
         "n_equipos": entry.get("n_equipos"),
@@ -336,7 +348,87 @@ def build_team_data(entry: dict, orden: int) -> None:
     TEAMS_DIR.mkdir(parents=True, exist_ok=True)
     out = TEAMS_DIR / f"{entry['slug']}.json"
     out.write_text(json.dumps(_sin_nan(payload), ensure_ascii=False), encoding="utf-8")
+    build_og_image(_sin_nan(payload))
     print(f"{team} ({entry['competicion']} {entry['temporada']}): {len(per_match)} partidos", flush=True)
+
+
+def _resultados(partidos: list) -> dict:
+    gf = sum(p["goles_favor"] for p in partidos)
+    gc = sum(p["goles_contra"] for p in partidos)
+    v = sum(p["goles_favor"] > p["goles_contra"] for p in partidos)
+    e = sum(p["goles_favor"] == p["goles_contra"] for p in partidos)
+    return {"pj": len(partidos), "v": v, "e": e, "d": len(partidos) - v - e, "gf": gf, "gc": gc}
+
+
+def _es(v: float, d: int) -> str:
+    return f"{v:.{d}f}".replace(".", ",")
+
+
+def build_og_image(payload: dict, out_dir=OG_DIR) -> None:
+    """Tarjeta 1200×630 para la vista previa del enlace (LinkedIn, WhatsApp...).
+
+    Solo muestra cifras ya exportadas en el JSON del equipo: nada nuevo que verificar.
+    """
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib import font_manager
+    from matplotlib.patches import Circle, Rectangle
+
+    disponibles = {f.name for f in font_manager.fontManager.ttflist}
+    cond = next((f for f in ("Barlow Condensed", "Avenir Next Condensed", "DIN Condensed")
+                 if f in disponibles), "DejaVu Sans")
+    bg, ink, ink2, muted, rule, accent = "#0e1310", "#edf2ee", "#b6c0b9", "#8b958f", "#29322c", "#ef4355"
+
+    T, R = payload["herramientas"], _resultados(payload["partidos"])
+    fig = plt.figure(figsize=(12, 6.3), dpi=100, facecolor=bg)
+    ax = fig.add_axes((0, 0, 1, 1))
+    ax.set_xlim(0, 1200)
+    ax.set_ylim(630, 0)
+    ax.axis("off")
+    # líneas de campo de fondo, a la derecha
+    for artist in (Rectangle((800, 40), 460, 550), Circle((800, 315), 90),
+                   Rectangle((1090, 170), 170, 290), Rectangle((1200, 250), 60, 130)):
+        artist.set(fill=False, edgecolor="#1b261e", linewidth=2)
+        ax.add_patch(artist)
+
+    ax.text(70, 78, "Pitch", color=ink, fontsize=30, fontweight="bold", family=cond, va="center")
+    ax.text(70 + 88, 78, "IQ", color=accent, fontsize=30, fontweight="bold", family=cond, va="center")
+    comp = f"{payload['competicion']} · {payload['temporada']}".upper()
+    if payload.get("posicion"):
+        comp += f"  ·  {payload['posicion']}.º DE {payload['n_equipos']}"
+    ax.text(70, 160, comp, color=accent, fontsize=17, fontweight="bold", va="center")
+    nombre = payload["nombre"]
+    ax.text(66, 232, nombre, color=ink, fontsize=74 if len(nombre) < 16 else 56,
+            fontweight="bold", family=cond, va="center")
+    balance = (f"{R['pj']} partidos · {R['v']}V {R['e']}E {R['d']}D · "
+               f"{R['gf']}–{R['gc']} goles")
+    ax.text(70, 305, balance, color=ink2, fontsize=21, va="center")
+
+    kpis = [("PPDA medio", _es(T["presion"]["ppda_medio"], 2)),
+            ("En campo rival", _es(T["presion"]["pct_acciones_campo_rival"], 1) + " %")]
+    altura = T["forma_defensiva"].get("altura_linea_media")
+    kpis.append(("Altura defensa", _es(altura, 1)) if altura is not None
+                else ("Goles/partido", _es(R["gf"] / max(1, R["pj"]), 2)))
+    kpis.append(("xG en córners", _es(T["corners_ataque"]["xg_a_favor"], 2)))
+    for i, (lab, val) in enumerate(kpis):
+        x = 70 + i * 272
+        ax.add_patch(Rectangle((x, 380), 252, 150, facecolor="#151b17", edgecolor=rule, linewidth=1.5))
+        ax.text(x + 22, 418, lab, color=ink2, fontsize=17, va="center")
+        ax.text(x + 20, 482, val, color=ink, fontsize=50, fontweight="bold", family=cond, va="center")
+    ax.text(70, 585, "Cada cifra, contrastada con las métricas calculadas · StatsBomb Open Data",
+            color=muted, fontsize=15, va="center")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out_dir / f"{payload['slug']}.png", facecolor=bg)
+    plt.close(fig)
+
+
+def build_og_all() -> None:
+    """Regenera las imágenes de vista previa desde los JSON ya exportados."""
+    for f in sorted(TEAMS_DIR.glob("*.json")):
+        build_og_image(json.loads(f.read_text(encoding="utf-8")))
+        print(f"og: {f.stem}", flush=True)
 
 
 def build_demo_data() -> None:
@@ -344,9 +436,9 @@ def build_demo_data() -> None:
     entradas = equipos_a_publicar()
     print(f"publicando {len(entradas)} equipos", flush=True)
     TEAMS_DIR.mkdir(parents=True, exist_ok=True)
-    vigentes = {f"{e['slug']}.json" for e in entradas}
-    for viejo in TEAMS_DIR.glob("*.json"):
-        if viejo.name not in vigentes:
+    vigentes = {e["slug"] for e in entradas}
+    for viejo in [*TEAMS_DIR.glob("*.json"), *OG_DIR.glob("*.png")]:
+        if viejo.stem not in vigentes:
             viejo.unlink()
     for orden, entry in enumerate(entradas):
         build_team_data(entry, orden)
@@ -422,12 +514,16 @@ def main() -> None:
                         help="genera solo las fixtures sintéticas (sin key)")
     parser.add_argument("--demo-data", action="store_true",
                         help="exporta solo las métricas de los equipos (sin key)")
+    parser.add_argument("--og", action="store_true",
+                        help="regenera solo las imágenes de vista previa (sin key)")
     args = parser.parse_args()
 
     if args.sample:
         build_sample()
     elif args.demo_data:
         build_demo_data()
+    elif args.og:
+        build_og_all()
     else:
         build_real(args.team)
 

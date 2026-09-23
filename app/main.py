@@ -71,12 +71,18 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
     figures_dir = report_base / "figures"
     if figures_dir.exists():
         app.mount("/figures", StaticFiles(directory=figures_dir), name="figures")
+    og_dir = base / "og"
+    if og_dir.exists():
+        app.mount("/og", StaticFiles(directory=og_dir), name="og")
     templates = Jinja2Templates(directory=APP_DIR / "templates")
 
     @app.get("/", response_class=HTMLResponse)
     def index(request: Request, equipo: "str | None" = None) -> HTMLResponse:
         """Página de análisis del equipo pedido (por defecto, el primero publicado)."""
         initial = equipo if equipo in by_slug else teams[0]["slug"]
+        base_url = str(request.base_url).rstrip("/")
+        og_image = (f"{base_url}/og/{initial}.png" if (og_dir / f"{initial}.png").exists()
+                    else None)
         return templates.TemplateResponse(
             request,
             "index.html",
@@ -86,6 +92,8 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
                 "initial": initial,
                 "initial_team": by_slug[initial],
                 "is_sample_data": is_sample_data,
+                "og_image": og_image,
+                "page_url": f"{base_url}/?equipo={initial}",
             },
         )
 

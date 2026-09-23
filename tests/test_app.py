@@ -110,3 +110,20 @@ def test_equipo_sin_datos_360_llega_como_null(tmp_path):
 
     detalle = TestClient(create_app(report_dir=base)).get("/api/equipos/equipo-rival").json()
     assert detalle["herramientas"]["forma_defensiva"]["altura_linea_media"] is None
+
+
+def test_vista_previa_para_compartir(tmp_path):
+    """Con imagen de vista previa exportada, la página lleva las etiquetas Open Graph."""
+    base = _base_con_sample(tmp_path)
+    teams = _copiar_equipos_como_reales(base)
+    (base / "og").mkdir()
+    (base / "og" / "equipo-rival.png").write_bytes(b"\x89PNG\r\n\x1a\n")
+    client = TestClient(create_app(report_dir=base))
+
+    html = client.get("/?equipo=equipo-rival").text
+    assert '<meta property="og:image" content="http://testserver/og/equipo-rival.png">' in html
+    assert 'content="http://testserver/?equipo=equipo-rival"' in html
+    assert client.get("/og/equipo-rival.png").status_code == 200
+    # sin imagen para ese equipo no se anuncia ninguna
+    assert "og:image" not in client.get("/?equipo=equipo-muestra").text
+    assert teams.exists()

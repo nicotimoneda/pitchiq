@@ -1,0 +1,4984 @@
+{
+ "fuente": "https://understat.com",
+ "acceso": "2026-09-23",
+ "equipos": {
+  "athletic-club-2015-16": {
+   "understat": "https://understat.com/league/La_liga/2015",
+   "nombre_understat": "Athletic Club",
+   "partidos": [
+    {
+     "fecha": "2015-08-23",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.395,
+     "xg_contra": 1.761,
+     "ppda_att": 446,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2015-08-30",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 0.317,
+     "xg_contra": 1.348,
+     "ppda_att": 182,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2015-09-13",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 1.912,
+     "xg_contra": 0.931,
+     "ppda_att": 195,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2015-09-20",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 3,
+     "xg_favor": 1.264,
+     "xg_contra": 1.615,
+     "ppda_att": 146,
+     "ppda_def": 17
+    },
+    {
+     "fecha": "2015-09-23",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.176,
+     "xg_contra": 2.938,
+     "ppda_att": 345,
+     "ppda_def": 37
+    },
+    {
+     "fecha": "2015-09-27",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.612,
+     "xg_contra": 1.087,
+     "ppda_att": 163,
+     "ppda_def": 34
+    },
+    {
+     "fecha": "2015-10-04",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 2.694,
+     "xg_contra": 0.618,
+     "ppda_att": 266,
+     "ppda_def": 34
+    },
+    {
+     "fecha": "2015-10-18",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 0.677,
+     "xg_contra": 1.248,
+     "ppda_att": 257,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2015-10-26",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 2.815,
+     "xg_contra": 0.159,
+     "ppda_att": 254,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2015-11-01",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 4.022,
+     "xg_contra": 1.24,
+     "ppda_att": 193,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2015-11-08",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 0.78,
+     "xg_contra": 0.629,
+     "ppda_att": 209,
+     "ppda_def": 44
+    },
+    {
+     "fecha": "2015-11-22",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 1.354,
+     "xg_contra": 0.806,
+     "ppda_att": 103,
+     "ppda_def": 35
+    },
+    {
+     "fecha": "2015-11-29",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 2.247,
+     "xg_contra": 1.457,
+     "ppda_att": 308,
+     "ppda_def": 40
+    },
+    {
+     "fecha": "2015-12-06",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.305,
+     "xg_contra": 0.699,
+     "ppda_att": 217,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2015-12-13",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.621,
+     "xg_contra": 0.336,
+     "ppda_att": 225,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2015-12-20",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 2.748,
+     "xg_contra": 0.515,
+     "ppda_att": 219,
+     "ppda_def": 41
+    },
+    {
+     "fecha": "2015-12-30",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.096,
+     "xg_contra": 0.414,
+     "ppda_att": 352,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2016-01-03",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 1.711,
+     "xg_contra": 0.518,
+     "ppda_att": 315,
+     "ppda_def": 58
+    },
+    {
+     "fecha": "2016-01-09",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 1.25,
+     "xg_contra": 1.701,
+     "ppda_att": 251,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2016-01-17",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 6,
+     "xg_favor": 0.885,
+     "xg_contra": 4.444,
+     "ppda_att": 334,
+     "ppda_def": 17
+    },
+    {
+     "fecha": "2016-01-24",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 2,
+     "xg_favor": 1.217,
+     "xg_contra": 1.671,
+     "ppda_att": 176,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-01-30",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.599,
+     "xg_contra": 1.332,
+     "ppda_att": 241,
+     "ppda_def": 42
+    },
+    {
+     "fecha": "2016-02-06",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.568,
+     "xg_contra": 0.629,
+     "ppda_att": 152,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2016-02-13",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 4,
+     "xg_favor": 1.501,
+     "xg_contra": 2.09,
+     "ppda_att": 407,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2016-02-21",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.513,
+     "xg_contra": 0.9,
+     "ppda_att": 120,
+     "ppda_def": 40
+    },
+    {
+     "fecha": "2016-02-28",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 1.69,
+     "xg_contra": 1.492,
+     "ppda_att": 310,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2016-03-02",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 1,
+     "xg_favor": 2.786,
+     "xg_contra": 0.876,
+     "ppda_att": 241,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2016-03-06",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.344,
+     "xg_contra": 0.657,
+     "ppda_att": 225,
+     "ppda_def": 37
+    },
+    {
+     "fecha": "2016-03-13",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 2.145,
+     "xg_contra": 1.098,
+     "ppda_att": 308,
+     "ppda_def": 45
+    },
+    {
+     "fecha": "2016-03-20",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.806,
+     "xg_contra": 2.191,
+     "ppda_att": 163,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-04-03",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.375,
+     "xg_contra": 0.619,
+     "ppda_att": 233,
+     "ppda_def": 38
+    },
+    {
+     "fecha": "2016-04-10",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.625,
+     "xg_contra": 2.081,
+     "ppda_att": 307,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2016-04-17",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.087,
+     "xg_contra": 1.914,
+     "ppda_att": 184,
+     "ppda_def": 39
+    },
+    {
+     "fecha": "2016-04-20",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.498,
+     "xg_contra": 0.92,
+     "ppda_att": 143,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-04-24",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 1.612,
+     "xg_contra": 0.759,
+     "ppda_att": 126,
+     "ppda_def": 14
+    },
+    {
+     "fecha": "2016-05-01",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.647,
+     "xg_contra": 0.47,
+     "ppda_att": 159,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2016-05-08",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.298,
+     "xg_contra": 0.133,
+     "ppda_att": 458,
+     "ppda_def": 40
+    },
+    {
+     "fecha": "2016-05-14",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 1.704,
+     "xg_contra": 1.028,
+     "ppda_att": 249,
+     "ppda_def": 33
+    }
+   ]
+  },
+  "atletico-madrid-2015-16": {
+   "understat": "https://understat.com/league/La_liga/2015",
+   "nombre_understat": "Atletico Madrid",
+   "partidos": [
+    {
+     "fecha": "2015-08-22",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.92,
+     "xg_contra": 0.523,
+     "ppda_att": 230,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2015-08-30",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 1.245,
+     "xg_contra": 1.738,
+     "ppda_att": 265,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2015-09-12",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 0.834,
+     "xg_contra": 2.33,
+     "ppda_att": 378,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2015-09-19",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.721,
+     "xg_contra": 0.286,
+     "ppda_att": 227,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2015-09-22",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.481,
+     "xg_contra": 0.48,
+     "ppda_att": 244,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2015-09-26",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.466,
+     "xg_contra": 0.871,
+     "ppda_att": 314,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2015-10-04",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 2.387,
+     "xg_contra": 0.792,
+     "ppda_att": 326,
+     "ppda_def": 35
+    },
+    {
+     "fecha": "2015-10-18",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.579,
+     "xg_contra": 0.486,
+     "ppda_att": 253,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-10-25",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 2.076,
+     "xg_contra": 0.886,
+     "ppda_att": 289,
+     "ppda_def": 53
+    },
+    {
+     "fecha": "2015-10-30",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.436,
+     "xg_contra": 0.917,
+     "ppda_att": 239,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-11-08",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.218,
+     "xg_contra": 0.396,
+     "ppda_att": 104,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2015-11-22",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 2.265,
+     "xg_contra": 0.129,
+     "ppda_att": 221,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2015-11-28",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.732,
+     "xg_contra": 0.143,
+     "ppda_att": 247,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2015-12-05",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.934,
+     "xg_contra": 0.602,
+     "ppda_att": 275,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2015-12-13",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 0.336,
+     "xg_contra": 1.621,
+     "ppda_att": 291,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2015-12-20",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.378,
+     "xg_contra": 1.024,
+     "ppda_att": 247,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2015-12-30",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 2.202,
+     "xg_contra": 0.372,
+     "ppda_att": 235,
+     "ppda_def": 39
+    },
+    {
+     "fecha": "2016-01-02",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.066,
+     "xg_contra": 0.46,
+     "ppda_att": 219,
+     "ppda_def": 37
+    },
+    {
+     "fecha": "2016-01-10",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.077,
+     "xg_contra": 0.214,
+     "ppda_att": 309,
+     "ppda_def": 38
+    },
+    {
+     "fecha": "2016-01-17",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 1.735,
+     "xg_contra": 0.606,
+     "ppda_att": 402,
+     "ppda_def": 59
+    },
+    {
+     "fecha": "2016-01-24",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 1.576,
+     "xg_contra": 0.272,
+     "ppda_att": 104,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2016-01-30",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.019,
+     "xg_contra": 1.191,
+     "ppda_att": 378,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2016-02-06",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 2.57,
+     "xg_contra": 0.3,
+     "ppda_att": 153,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2016-02-14",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.712,
+     "xg_contra": 0.313,
+     "ppda_att": 353,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2016-02-21",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.77,
+     "xg_contra": 0.664,
+     "ppda_att": 212,
+     "ppda_def": 34
+    },
+    {
+     "fecha": "2016-02-27",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.695,
+     "xg_contra": 0.984,
+     "ppda_att": 383,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2016-03-02",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 1.928,
+     "xg_contra": 1.006,
+     "ppda_att": 299,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2016-03-06",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 1.586,
+     "xg_contra": 1.164,
+     "ppda_att": 221,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2016-03-12",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 1.307,
+     "xg_contra": 0.292,
+     "ppda_att": 283,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2016-03-19",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 0.259,
+     "xg_contra": 1.898,
+     "ppda_att": 307,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2016-04-02",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 1,
+     "xg_favor": 4.549,
+     "xg_contra": 0.687,
+     "ppda_att": 277,
+     "ppda_def": 39
+    },
+    {
+     "fecha": "2016-04-09",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 2.121,
+     "xg_contra": 0.64,
+     "ppda_att": 242,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2016-04-17",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 1.614,
+     "xg_contra": 0.474,
+     "ppda_att": 239,
+     "ppda_def": 48
+    },
+    {
+     "fecha": "2016-04-20",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.92,
+     "xg_contra": 0.498,
+     "ppda_att": 392,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2016-04-23",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.192,
+     "xg_contra": 0.167,
+     "ppda_att": 235,
+     "ppda_def": 38
+    },
+    {
+     "fecha": "2016-04-30",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.074,
+     "xg_contra": 0.598,
+     "ppda_att": 279,
+     "ppda_def": 39
+    },
+    {
+     "fecha": "2016-05-08",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.7,
+     "xg_contra": 1.269,
+     "ppda_att": 335,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2016-05-14",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.249,
+     "xg_contra": 0.505,
+     "ppda_att": 321,
+     "ppda_def": 37
+    }
+   ]
+  },
+  "barcelona-2015-16": {
+   "understat": "https://understat.com/league/La_liga/2015",
+   "nombre_understat": "Barcelona",
+   "partidos": [
+    {
+     "fecha": "2015-08-23",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.761,
+     "xg_contra": 0.395,
+     "ppda_att": 126,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2015-08-29",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.922,
+     "xg_contra": 0.223,
+     "ppda_att": 90,
+     "ppda_def": 18
+    },
+    {
+     "fecha": "2015-09-12",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 2.33,
+     "xg_contra": 0.834,
+     "ppda_att": 162,
+     "ppda_def": 16
+    },
+    {
+     "fecha": "2015-09-20",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 1,
+     "xg_favor": 4.012,
+     "xg_contra": 0.866,
+     "ppda_att": 154,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2015-09-23",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 4,
+     "xg_favor": 2.515,
+     "xg_contra": 2.226,
+     "ppda_att": 187,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-09-26",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 3.48,
+     "xg_contra": 0.586,
+     "ppda_att": 140,
+     "ppda_def": 34
+    },
+    {
+     "fecha": "2015-10-03",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 3.87,
+     "xg_contra": 1.577,
+     "ppda_att": 136,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-10-17",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 2,
+     "xg_favor": 4.615,
+     "xg_contra": 2.836,
+     "ppda_att": 292,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2015-10-25",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 1.647,
+     "xg_contra": 1.301,
+     "ppda_att": 95,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2015-10-31",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 2.079,
+     "xg_contra": 0.19,
+     "ppda_att": 168,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2015-11-08",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 3.077,
+     "xg_contra": 0.279,
+     "ppda_att": 181,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2015-11-21",
+     "local": false,
+     "goles_favor": 4,
+     "goles_contra": 0,
+     "xg_favor": 3.277,
+     "xg_contra": 1.258,
+     "ppda_att": 216,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2015-11-28",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 0,
+     "xg_favor": 2.953,
+     "xg_contra": 0.618,
+     "ppda_att": 239,
+     "ppda_def": 15
+    },
+    {
+     "fecha": "2015-12-05",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 2.082,
+     "xg_contra": 0.848,
+     "ppda_att": 153,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2015-12-12",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 0.873,
+     "xg_contra": 1.221,
+     "ppda_att": 129,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-12-30",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 0,
+     "xg_favor": 4.35,
+     "xg_contra": 0.457,
+     "ppda_att": 165,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2016-01-02",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 1.004,
+     "xg_contra": 0.138,
+     "ppda_att": 84,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2016-01-09",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 0,
+     "xg_favor": 4.729,
+     "xg_contra": 0.325,
+     "ppda_att": 164,
+     "ppda_def": 34
+    },
+    {
+     "fecha": "2016-01-17",
+     "local": true,
+     "goles_favor": 6,
+     "goles_contra": 0,
+     "xg_favor": 4.444,
+     "xg_contra": 0.885,
+     "ppda_att": 107,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2016-01-23",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 2.55,
+     "xg_contra": 1.121,
+     "ppda_att": 123,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2016-01-30",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.191,
+     "xg_contra": 1.019,
+     "ppda_att": 115,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2016-02-07",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.405,
+     "xg_contra": 0.802,
+     "ppda_att": 102,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2016-02-14",
+     "local": true,
+     "goles_favor": 6,
+     "goles_contra": 1,
+     "xg_favor": 5.542,
+     "xg_contra": 1.492,
+     "ppda_att": 161,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2016-02-17",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 2.412,
+     "xg_contra": 0.874,
+     "ppda_att": 96,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2016-02-20",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 3.297,
+     "xg_contra": 1.089,
+     "ppda_att": 277,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2016-02-28",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 2.337,
+     "xg_contra": 1.297,
+     "ppda_att": 141,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2016-03-04",
+     "local": false,
+     "goles_favor": 5,
+     "goles_contra": 1,
+     "xg_favor": 4.53,
+     "xg_contra": 1.18,
+     "ppda_att": 173,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-03-06",
+     "local": false,
+     "goles_favor": 4,
+     "goles_contra": 0,
+     "xg_favor": 2.455,
+     "xg_contra": 0.358,
+     "ppda_att": 139,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2016-03-12",
+     "local": true,
+     "goles_favor": 6,
+     "goles_contra": 0,
+     "xg_favor": 4.607,
+     "xg_contra": 0.282,
+     "ppda_att": 160,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2016-03-20",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 2.145,
+     "xg_contra": 0.98,
+     "ppda_att": 162,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2016-04-02",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 0.882,
+     "xg_contra": 1.565,
+     "ppda_att": 185,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2016-04-09",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 1.372,
+     "xg_contra": 0.295,
+     "ppda_att": 95,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2016-04-17",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 4.057,
+     "xg_contra": 1.121,
+     "ppda_att": 121,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2016-04-20",
+     "local": false,
+     "goles_favor": 8,
+     "goles_contra": 0,
+     "xg_favor": 5.761,
+     "xg_contra": 2.197,
+     "ppda_att": 168,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2016-04-23",
+     "local": true,
+     "goles_favor": 6,
+     "goles_contra": 0,
+     "xg_favor": 6.127,
+     "xg_contra": 0.624,
+     "ppda_att": 133,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2016-04-30",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 2.079,
+     "xg_contra": 0.083,
+     "ppda_att": 156,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2016-05-08",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 0,
+     "xg_favor": 2.594,
+     "xg_contra": 0.202,
+     "ppda_att": 158,
+     "ppda_def": 39
+    },
+    {
+     "fecha": "2016-05-14",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 3.234,
+     "xg_contra": 0.384,
+     "ppda_att": 173,
+     "ppda_def": 22
+    }
+   ]
+  },
+  "barcelona-2020-21": {
+   "understat": "https://understat.com/league/La_liga/2020",
+   "nombre_understat": "Barcelona",
+   "partidos": [
+    {
+     "fecha": "2020-09-27",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 0,
+     "xg_favor": 3.507,
+     "xg_contra": 0.245,
+     "ppda_att": 314,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2020-10-01",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 0.932,
+     "xg_contra": 0.568,
+     "ppda_att": 203,
+     "ppda_def": 18
+    },
+    {
+     "fecha": "2020-10-04",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.057,
+     "xg_contra": 1.255,
+     "ppda_att": 380,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2020-10-17",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.625,
+     "xg_contra": 1.71,
+     "ppda_att": 76,
+     "ppda_def": 15
+    },
+    {
+     "fecha": "2020-10-24",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 3,
+     "xg_favor": 1.574,
+     "xg_contra": 3.208,
+     "ppda_att": 329,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2020-10-31",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 2.077,
+     "xg_contra": 1.113,
+     "ppda_att": 100,
+     "ppda_def": 17
+    },
+    {
+     "fecha": "2020-11-07",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 2,
+     "xg_favor": 4.445,
+     "xg_contra": 0.87,
+     "ppda_att": 274,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2020-11-21",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 1.3,
+     "xg_contra": 0.812,
+     "ppda_att": 280,
+     "ppda_def": 15
+    },
+    {
+     "fecha": "2020-11-29",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 0,
+     "xg_favor": 3.914,
+     "xg_contra": 1.561,
+     "ppda_att": 168,
+     "ppda_def": 13
+    },
+    {
+     "fecha": "2020-12-05",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.71,
+     "xg_contra": 2.611,
+     "ppda_att": 64,
+     "ppda_def": 18
+    },
+    {
+     "fecha": "2020-12-13",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 2.621,
+     "xg_contra": 0.979,
+     "ppda_att": 238,
+     "ppda_def": 15
+    },
+    {
+     "fecha": "2020-12-16",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 2.581,
+     "xg_contra": 1.825,
+     "ppda_att": 234,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2020-12-19",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 3.285,
+     "xg_contra": 1.972,
+     "ppda_att": 141,
+     "ppda_def": 17
+    },
+    {
+     "fecha": "2020-12-22",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 3.239,
+     "xg_contra": 0.499,
+     "ppda_att": 272,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2020-12-29",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 2.057,
+     "xg_contra": 0.592,
+     "ppda_att": 75,
+     "ppda_def": 6
+    },
+    {
+     "fecha": "2021-01-03",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 3.212,
+     "xg_contra": 0.259,
+     "ppda_att": 200,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2021-01-06",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 2,
+     "xg_favor": 1.399,
+     "xg_contra": 0.638,
+     "ppda_att": 290,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2021-01-09",
+     "local": false,
+     "goles_favor": 4,
+     "goles_contra": 0,
+     "xg_favor": 1.646,
+     "xg_contra": 0.49,
+     "ppda_att": 164,
+     "ppda_def": 10
+    },
+    {
+     "fecha": "2021-01-24",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 3.121,
+     "xg_contra": 0.477,
+     "ppda_att": 260,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2021-01-31",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 2.531,
+     "xg_contra": 0.275,
+     "ppda_att": 238,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2021-02-07",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 2,
+     "xg_favor": 1.333,
+     "xg_contra": 1.875,
+     "ppda_att": 249,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2021-02-13",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 1,
+     "xg_favor": 2.86,
+     "xg_contra": 0.711,
+     "ppda_att": 165,
+     "ppda_def": 15
+    },
+    {
+     "fecha": "2021-02-21",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 2.39,
+     "xg_contra": 1.329,
+     "ppda_att": 69,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2021-02-24",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 2.661,
+     "xg_contra": 0.351,
+     "ppda_att": 288,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2021-02-27",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.587,
+     "xg_contra": 0.117,
+     "ppda_att": 297,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2021-03-06",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.308,
+     "xg_contra": 0.757,
+     "ppda_att": 245,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2021-03-15",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 1,
+     "xg_favor": 1.524,
+     "xg_contra": 2.198,
+     "ppda_att": 232,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2021-03-21",
+     "local": false,
+     "goles_favor": 6,
+     "goles_contra": 1,
+     "xg_favor": 3.334,
+     "xg_contra": 0.917,
+     "ppda_att": 209,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2021-04-05",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.688,
+     "xg_contra": 0.436,
+     "ppda_att": 160,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2021-04-10",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.156,
+     "xg_contra": 1.65,
+     "ppda_att": 169,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2021-04-22",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 2,
+     "xg_favor": 2.155,
+     "xg_contra": 1.395,
+     "ppda_att": 84,
+     "ppda_def": 15
+    },
+    {
+     "fecha": "2021-04-25",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 3.381,
+     "xg_contra": 0.965,
+     "ppda_att": 256,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2021-04-29",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.437,
+     "xg_contra": 0.811,
+     "ppda_att": 75,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2021-05-02",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 2,
+     "xg_favor": 3.985,
+     "xg_contra": 1.414,
+     "ppda_att": 220,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2021-05-08",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.854,
+     "xg_contra": 0.685,
+     "ppda_att": 238,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2021-05-11",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 3,
+     "xg_favor": 3.08,
+     "xg_contra": 1.277,
+     "ppda_att": 227,
+     "ppda_def": 17
+    },
+    {
+     "fecha": "2021-05-16",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 2.11,
+     "xg_contra": 0.631,
+     "ppda_att": 270,
+     "ppda_def": 18
+    },
+    {
+     "fecha": "2021-05-22",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.285,
+     "xg_contra": 1.45,
+     "ppda_att": 143,
+     "ppda_def": 21
+    }
+   ]
+  },
+  "bayer-leverkusen-2023-24": {
+   "understat": "https://understat.com/league/Bundesliga/2023",
+   "nombre_understat": "Bayer Leverkusen",
+   "partidos": [
+    {
+     "fecha": "2023-08-19",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 2,
+     "xg_favor": 1.733,
+     "xg_contra": 1.604,
+     "ppda_att": 387,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2023-08-26",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 3.653,
+     "xg_contra": 1.764,
+     "ppda_att": 252,
+     "ppda_def": 17
+    },
+    {
+     "fecha": "2023-09-02",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 1,
+     "xg_favor": 3.426,
+     "xg_contra": 0.682,
+     "ppda_att": 172,
+     "ppda_def": 13
+    },
+    {
+     "fecha": "2023-09-15",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 2.458,
+     "xg_contra": 2.744,
+     "ppda_att": 379,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2023-09-24",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 1,
+     "xg_favor": 3.974,
+     "xg_contra": 0.66,
+     "ppda_att": 195,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2023-09-30",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 0.812,
+     "xg_contra": 0.389,
+     "ppda_att": 270,
+     "ppda_def": 18
+    },
+    {
+     "fecha": "2023-10-08",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 3.725,
+     "xg_contra": 1.419,
+     "ppda_att": 265,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2023-10-21",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 2.277,
+     "xg_contra": 1.332,
+     "ppda_att": 254,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2023-10-29",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.608,
+     "xg_contra": 1.023,
+     "ppda_att": 167,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2023-11-04",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 2,
+     "xg_favor": 1.05,
+     "xg_contra": 1.272,
+     "ppda_att": 306,
+     "ppda_def": 14
+    },
+    {
+     "fecha": "2023-11-12",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 0,
+     "xg_favor": 3.042,
+     "xg_contra": 0.028,
+     "ppda_att": 218,
+     "ppda_def": 15
+    },
+    {
+     "fecha": "2023-11-25",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 1.753,
+     "xg_contra": 0.307,
+     "ppda_att": 312,
+     "ppda_def": 11
+    },
+    {
+     "fecha": "2023-12-03",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.964,
+     "xg_contra": 1.261,
+     "ppda_att": 160,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2023-12-10",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.474,
+     "xg_contra": 2.611,
+     "ppda_att": 338,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2023-12-17",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 2.492,
+     "xg_contra": 0.205,
+     "ppda_att": 294,
+     "ppda_def": 11
+    },
+    {
+     "fecha": "2023-12-20",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 0,
+     "xg_favor": 3.324,
+     "xg_contra": 0.325,
+     "ppda_att": 176,
+     "ppda_def": 14
+    },
+    {
+     "fecha": "2024-01-13",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 2.318,
+     "xg_contra": 0.445,
+     "ppda_att": 146,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2024-01-20",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 2,
+     "xg_favor": 2.172,
+     "xg_contra": 1.595,
+     "ppda_att": 253,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2024-01-27",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 3.328,
+     "xg_contra": 0.279,
+     "ppda_att": 203,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2024-02-03",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 2.182,
+     "xg_contra": 0.433,
+     "ppda_att": 196,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2024-02-10",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 1.23,
+     "xg_contra": 0.71,
+     "ppda_att": 398,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2024-02-17",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.88,
+     "xg_contra": 0.699,
+     "ppda_att": 170,
+     "ppda_def": 17
+    },
+    {
+     "fecha": "2024-02-23",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.472,
+     "xg_contra": 0.471,
+     "ppda_att": 209,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2024-03-03",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.638,
+     "xg_contra": 1.294,
+     "ppda_att": 137,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2024-03-10",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 2.1,
+     "xg_contra": 0.355,
+     "ppda_att": 150,
+     "ppda_def": 16
+    },
+    {
+     "fecha": "2024-03-17",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 2,
+     "xg_favor": 2.503,
+     "xg_contra": 0.917,
+     "ppda_att": 196,
+     "ppda_def": 12
+    },
+    {
+     "fecha": "2024-03-30",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 3.037,
+     "xg_contra": 0.658,
+     "ppda_att": 191,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2024-04-06",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 2.762,
+     "xg_contra": 0.27,
+     "ppda_att": 194,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2024-04-14",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 0,
+     "xg_favor": 3.336,
+     "xg_contra": 0.885,
+     "ppda_att": 347,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2024-04-21",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.513,
+     "xg_contra": 0.774,
+     "ppda_att": 321,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2024-04-27",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 1.666,
+     "xg_contra": 2.02,
+     "ppda_att": 324,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2024-05-05",
+     "local": false,
+     "goles_favor": 5,
+     "goles_contra": 1,
+     "xg_favor": 3.113,
+     "xg_contra": 1.576,
+     "ppda_att": 333,
+     "ppda_def": 5
+    },
+    {
+     "fecha": "2024-05-12",
+     "local": false,
+     "goles_favor": 5,
+     "goles_contra": 0,
+     "xg_favor": 4.595,
+     "xg_contra": 0.222,
+     "ppda_att": 145,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2024-05-18",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 2.402,
+     "xg_contra": 1.199,
+     "ppda_att": 230,
+     "ppda_def": 16
+    }
+   ]
+  },
+  "celta-vigo-2015-16": {
+   "understat": "https://understat.com/league/La_liga/2015",
+   "nombre_understat": "Celta Vigo",
+   "partidos": [
+    {
+     "fecha": "2015-08-24",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.806,
+     "xg_contra": 0.486,
+     "ppda_att": 117,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2015-08-30",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 1.702,
+     "xg_contra": 0.082,
+     "ppda_att": 199,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2015-09-13",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 3,
+     "xg_favor": 3.527,
+     "xg_contra": 1.299,
+     "ppda_att": 180,
+     "ppda_def": 45
+    },
+    {
+     "fecha": "2015-09-20",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 0.846,
+     "xg_contra": 1.526,
+     "ppda_att": 186,
+     "ppda_def": 34
+    },
+    {
+     "fecha": "2015-09-23",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 1,
+     "xg_favor": 2.226,
+     "xg_contra": 2.515,
+     "ppda_att": 257,
+     "ppda_def": 35
+    },
+    {
+     "fecha": "2015-09-27",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.082,
+     "xg_contra": 1.209,
+     "ppda_att": 105,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2015-10-02",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 1.489,
+     "xg_contra": 1.321,
+     "ppda_att": 114,
+     "ppda_def": 35
+    },
+    {
+     "fecha": "2015-10-18",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.624,
+     "xg_contra": 0.995,
+     "ppda_att": 129,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2015-10-24",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 3,
+     "xg_favor": 1.576,
+     "xg_contra": 1.962,
+     "ppda_att": 258,
+     "ppda_def": 38
+    },
+    {
+     "fecha": "2015-11-01",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 2,
+     "xg_favor": 1.439,
+     "xg_contra": 1.135,
+     "ppda_att": 124,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2015-11-07",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 5,
+     "xg_favor": 1.632,
+     "xg_contra": 1.482,
+     "ppda_att": 129,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-11-22",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 0.886,
+     "xg_contra": 1.028,
+     "ppda_att": 142,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2015-11-29",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.144,
+     "xg_contra": 0.665,
+     "ppda_att": 168,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2015-12-06",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 0.536,
+     "xg_contra": 2.418,
+     "ppda_att": 201,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-12-12",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.232,
+     "xg_contra": 0.167,
+     "ppda_att": 195,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2015-12-20",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 2.251,
+     "xg_contra": 0.34,
+     "ppda_att": 203,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2015-12-30",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.414,
+     "xg_contra": 1.096,
+     "ppda_att": 142,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2016-01-03",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 1.057,
+     "xg_contra": 3.039,
+     "ppda_att": 171,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2016-01-10",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 0.214,
+     "xg_contra": 1.077,
+     "ppda_att": 165,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2016-01-16",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 3,
+     "xg_favor": 2.157,
+     "xg_contra": 1.429,
+     "ppda_att": 186,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2016-01-24",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 3,
+     "xg_favor": 0.134,
+     "xg_contra": 3.202,
+     "ppda_att": 171,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2016-01-31",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 0.377,
+     "xg_contra": 2.122,
+     "ppda_att": 275,
+     "ppda_def": 34
+    },
+    {
+     "fecha": "2016-02-07",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 2.37,
+     "xg_contra": 0.923,
+     "ppda_att": 90,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-02-14",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 6,
+     "xg_favor": 1.492,
+     "xg_contra": 5.542,
+     "ppda_att": 317,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2016-02-21",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 2,
+     "xg_favor": 2.583,
+     "xg_contra": 1.42,
+     "ppda_att": 143,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2016-02-27",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.602,
+     "xg_contra": 0.864,
+     "ppda_att": 188,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2016-03-02",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.846,
+     "xg_contra": 0.328,
+     "ppda_att": 151,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2016-03-05",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 7,
+     "xg_favor": 1.527,
+     "xg_contra": 2.391,
+     "ppda_att": 342,
+     "ppda_def": 18
+    },
+    {
+     "fecha": "2016-03-12",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.378,
+     "xg_contra": 0.56,
+     "ppda_att": 249,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2016-03-20",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 2.199,
+     "xg_contra": 0.646,
+     "ppda_att": 216,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2016-04-03",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 0.36,
+     "xg_contra": 0.864,
+     "ppda_att": 122,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-04-10",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.04,
+     "xg_contra": 0.815,
+     "ppda_att": 150,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2016-04-17",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.75,
+     "xg_contra": 1.542,
+     "ppda_att": 138,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2016-04-19",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 0.502,
+     "xg_contra": 0.873,
+     "ppda_att": 176,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2016-04-25",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.969,
+     "xg_contra": 0.74,
+     "ppda_att": 151,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2016-05-01",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 0.47,
+     "xg_contra": 1.647,
+     "ppda_att": 208,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2016-05-08",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.259,
+     "xg_contra": 0.981,
+     "ppda_att": 196,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-05-14",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 0.505,
+     "xg_contra": 1.249,
+     "ppda_att": 200,
+     "ppda_def": 26
+    }
+   ]
+  },
+  "malaga-2015-16": {
+   "understat": "https://understat.com/league/La_liga/2015",
+   "nombre_understat": "Malaga",
+   "partidos": [
+    {
+     "fecha": "2015-08-21",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.983,
+     "xg_contra": 0.857,
+     "ppda_att": 146,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2015-08-29",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.223,
+     "xg_contra": 1.922,
+     "ppda_att": 274,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2015-09-13",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 1.036,
+     "xg_contra": 0.886,
+     "ppda_att": 148,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2015-09-18",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.691,
+     "xg_contra": 1.187,
+     "ppda_att": 130,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-09-24",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.878,
+     "xg_contra": 0.934,
+     "ppda_att": 167,
+     "ppda_def": 39
+    },
+    {
+     "fecha": "2015-09-26",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.638,
+     "xg_contra": 3.188,
+     "ppda_att": 268,
+     "ppda_def": 11
+    },
+    {
+     "fecha": "2015-10-04",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 1.897,
+     "xg_contra": 1.042,
+     "ppda_att": 289,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2015-10-18",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 3,
+     "xg_favor": 1.537,
+     "xg_contra": 1.595,
+     "ppda_att": 224,
+     "ppda_def": 42
+    },
+    {
+     "fecha": "2015-10-25",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.06,
+     "xg_contra": 0.767,
+     "ppda_att": 242,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2015-11-01",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.482,
+     "xg_contra": 1.511,
+     "ppda_att": 146,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2015-11-08",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.891,
+     "xg_contra": 0.877,
+     "ppda_att": 150,
+     "ppda_def": 40
+    },
+    {
+     "fecha": "2015-11-21",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 0.754,
+     "xg_contra": 1.155,
+     "ppda_att": 151,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2015-11-28",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 1.405,
+     "xg_contra": 0.558,
+     "ppda_att": 199,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2015-12-06",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.699,
+     "xg_contra": 0.305,
+     "ppda_att": 158,
+     "ppda_def": 35
+    },
+    {
+     "fecha": "2015-12-13",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.432,
+     "xg_contra": 1.121,
+     "ppda_att": 176,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2015-12-20",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.024,
+     "xg_contra": 0.378,
+     "ppda_att": 166,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2015-12-30",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.043,
+     "xg_contra": 0.167,
+     "ppda_att": 144,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2016-01-03",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 3.039,
+     "xg_contra": 1.057,
+     "ppda_att": 227,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2016-01-10",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 2.184,
+     "xg_contra": 0.392,
+     "ppda_att": 331,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2016-01-16",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.001,
+     "xg_contra": 1.397,
+     "ppda_att": 252,
+     "ppda_def": 41
+    },
+    {
+     "fecha": "2016-01-23",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.121,
+     "xg_contra": 2.55,
+     "ppda_att": 336,
+     "ppda_def": 35
+    },
+    {
+     "fecha": "2016-01-30",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.32,
+     "xg_contra": 0.856,
+     "ppda_att": 180,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2016-02-05",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 2.073,
+     "xg_contra": 0.525,
+     "ppda_att": 281,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2016-02-13",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.671,
+     "xg_contra": 0.761,
+     "ppda_att": 244,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2016-02-21",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.686,
+     "xg_contra": 1.763,
+     "ppda_att": 291,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2016-02-28",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.223,
+     "xg_contra": 0.871,
+     "ppda_att": 190,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2016-03-02",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 0.433,
+     "xg_contra": 1.388,
+     "ppda_att": 202,
+     "ppda_def": 40
+    },
+    {
+     "fecha": "2016-03-06",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 3,
+     "xg_favor": 0.991,
+     "xg_contra": 3.5,
+     "ppda_att": 233,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2016-03-11",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.46,
+     "xg_contra": 0.957,
+     "ppda_att": 249,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2016-03-20",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.335,
+     "xg_contra": 1.654,
+     "ppda_att": 199,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2016-04-03",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.501,
+     "xg_contra": 0.261,
+     "ppda_att": 136,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2016-04-08",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 1.058,
+     "xg_contra": 0.614,
+     "ppda_att": 223,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-04-17",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 1.914,
+     "xg_contra": 1.087,
+     "ppda_att": 205,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2016-04-20",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.142,
+     "xg_contra": 1.054,
+     "ppda_att": 208,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2016-04-23",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.167,
+     "xg_contra": 1.192,
+     "ppda_att": 166,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2016-05-02",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 2.532,
+     "xg_contra": 1.885,
+     "ppda_att": 150,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2016-05-08",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.981,
+     "xg_contra": 1.259,
+     "ppda_att": 314,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-05-15",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 1,
+     "xg_favor": 2.245,
+     "xg_contra": 1.784,
+     "ppda_att": 344,
+     "ppda_def": 31
+    }
+   ]
+  },
+  "psg-2022-23": {
+   "understat": "https://understat.com/league/Ligue_1/2022",
+   "nombre_understat": "Paris Saint Germain",
+   "partidos": [
+    {
+     "fecha": "2022-08-06",
+     "local": false,
+     "goles_favor": 5,
+     "goles_contra": 0,
+     "xg_favor": 4.119,
+     "xg_contra": 0.195,
+     "ppda_att": 268,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2022-08-13",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 2,
+     "xg_favor": 3.339,
+     "xg_contra": 0.778,
+     "ppda_att": 291,
+     "ppda_def": 39
+    },
+    {
+     "fecha": "2022-08-21",
+     "local": false,
+     "goles_favor": 7,
+     "goles_contra": 1,
+     "xg_favor": 4.37,
+     "xg_contra": 1.503,
+     "ppda_att": 352,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2022-08-28",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 2.716,
+     "xg_contra": 0.238,
+     "ppda_att": 204,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2022-08-31",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 3.936,
+     "xg_contra": 0.583,
+     "ppda_att": 211,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2022-09-03",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 3.499,
+     "xg_contra": 0.414,
+     "ppda_att": 304,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2022-09-10",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 2.013,
+     "xg_contra": 1.344,
+     "ppda_att": 259,
+     "ppda_def": 16
+    },
+    {
+     "fecha": "2022-09-18",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.526,
+     "xg_contra": 0.893,
+     "ppda_att": 212,
+     "ppda_def": 10
+    },
+    {
+     "fecha": "2022-10-01",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 0.753,
+     "xg_contra": 0.685,
+     "ppda_att": 314,
+     "ppda_def": 34
+    },
+    {
+     "fecha": "2022-10-08",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 1.066,
+     "xg_contra": 1.918,
+     "ppda_att": 194,
+     "ppda_def": 18
+    },
+    {
+     "fecha": "2022-10-16",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 2.999,
+     "xg_contra": 0.785,
+     "ppda_att": 264,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2022-10-21",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 2.907,
+     "xg_contra": 0.302,
+     "ppda_att": 179,
+     "ppda_def": 17
+    },
+    {
+     "fecha": "2022-10-29",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 3,
+     "xg_favor": 2.68,
+     "xg_contra": 1.602,
+     "ppda_att": 228,
+     "ppda_def": 37
+    },
+    {
+     "fecha": "2022-11-06",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 2.357,
+     "xg_contra": 0.812,
+     "ppda_att": 210,
+     "ppda_def": 14
+    },
+    {
+     "fecha": "2022-11-13",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 0,
+     "xg_favor": 2.223,
+     "xg_contra": 0.603,
+     "ppda_att": 267,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2022-12-28",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 2.118,
+     "xg_contra": 1.135,
+     "ppda_att": 157,
+     "ppda_def": 17
+    },
+    {
+     "fecha": "2023-01-01",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 3,
+     "xg_favor": 1.978,
+     "xg_contra": 1.798,
+     "ppda_att": 247,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2023-01-11",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.663,
+     "xg_contra": 0.341,
+     "ppda_att": 254,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2023-01-15",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.603,
+     "xg_contra": 1.063,
+     "ppda_att": 215,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2023-01-29",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.995,
+     "xg_contra": 1.633,
+     "ppda_att": 271,
+     "ppda_def": 15
+    },
+    {
+     "fecha": "2023-02-01",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 4.001,
+     "xg_contra": 0.27,
+     "ppda_att": 205,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2023-02-04",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.804,
+     "xg_contra": 0.729,
+     "ppda_att": 257,
+     "ppda_def": 13
+    },
+    {
+     "fecha": "2023-02-11",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 3,
+     "xg_favor": 0.933,
+     "xg_contra": 3.804,
+     "ppda_att": 264,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2023-02-19",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 3,
+     "xg_favor": 2.096,
+     "xg_contra": 3.208,
+     "ppda_att": 287,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2023-02-26",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 3.734,
+     "xg_contra": 2.29,
+     "ppda_att": 234,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2023-03-04",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 2,
+     "xg_favor": 1.109,
+     "xg_contra": 0.239,
+     "ppda_att": 230,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2023-03-11",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 2.661,
+     "xg_contra": 0.751,
+     "ppda_att": 205,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2023-03-19",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 1.71,
+     "xg_contra": 1.9,
+     "ppda_att": 274,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2023-04-02",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 1.224,
+     "xg_contra": 2.149,
+     "ppda_att": 263,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2023-04-08",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.249,
+     "xg_contra": 1.223,
+     "ppda_att": 267,
+     "ppda_def": 13
+    },
+    {
+     "fecha": "2023-04-15",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 1.394,
+     "xg_contra": 1.435,
+     "ppda_att": 242,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2023-04-21",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.751,
+     "xg_contra": 1.284,
+     "ppda_att": 220,
+     "ppda_def": 15
+    },
+    {
+     "fecha": "2023-04-30",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 3,
+     "xg_favor": 1.763,
+     "xg_contra": 3.267,
+     "ppda_att": 346,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2023-05-07",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 4.305,
+     "xg_contra": 0.615,
+     "ppda_att": 299,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2023-05-13",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 0,
+     "xg_favor": 2.316,
+     "xg_contra": 0.314,
+     "ppda_att": 173,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2023-05-21",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.847,
+     "xg_contra": 0.696,
+     "ppda_att": 215,
+     "ppda_def": 16
+    },
+    {
+     "fecha": "2023-05-27",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.161,
+     "xg_contra": 1.336,
+     "ppda_att": 235,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2023-06-03",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 3,
+     "xg_favor": 2.235,
+     "xg_contra": 2.979,
+     "ppda_att": 272,
+     "ppda_def": 18
+    }
+   ]
+  },
+  "real-betis-2015-16": {
+   "understat": "https://understat.com/league/La_liga/2015",
+   "nombre_understat": "Real Betis",
+   "partidos": [
+    {
+     "fecha": "2015-08-24",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.495,
+     "xg_contra": 1.631,
+     "ppda_att": 74,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2015-08-30",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 5,
+     "xg_favor": 0.941,
+     "xg_contra": 3.145,
+     "ppda_att": 335,
+     "ppda_def": 13
+    },
+    {
+     "fecha": "2015-09-13",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.752,
+     "xg_contra": 0.664,
+     "ppda_att": 205,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2015-09-19",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.191,
+     "xg_contra": 1.811,
+     "ppda_att": 245,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2015-09-25",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.119,
+     "xg_contra": 0.264,
+     "ppda_att": 142,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2015-09-27",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.653,
+     "xg_contra": 1.758,
+     "ppda_att": 293,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2015-10-04",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.688,
+     "xg_contra": 1.288,
+     "ppda_att": 254,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-10-18",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 3,
+     "xg_favor": 1.866,
+     "xg_contra": 1.853,
+     "ppda_att": 160,
+     "ppda_def": 40
+    },
+    {
+     "fecha": "2015-10-24",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.111,
+     "xg_contra": 1.066,
+     "ppda_att": 137,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2015-11-01",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 3,
+     "xg_favor": 1.24,
+     "xg_contra": 4.022,
+     "ppda_att": 186,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2015-11-08",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.877,
+     "xg_contra": 0.891,
+     "ppda_att": 191,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2015-11-22",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.129,
+     "xg_contra": 2.265,
+     "ppda_att": 294,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2015-11-27",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.943,
+     "xg_contra": 1.108,
+     "ppda_att": 220,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2015-12-06",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 2.418,
+     "xg_contra": 0.536,
+     "ppda_att": 165,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2015-12-13",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.368,
+     "xg_contra": 2.118,
+     "ppda_att": 314,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2015-12-19",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.377,
+     "xg_contra": 1.02,
+     "ppda_att": 182,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2015-12-30",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 4,
+     "xg_favor": 0.457,
+     "xg_contra": 4.35,
+     "ppda_att": 335,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2016-01-03",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 4,
+     "xg_favor": 1.532,
+     "xg_contra": 1.495,
+     "ppda_att": 177,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2016-01-09",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.602,
+     "xg_contra": 1.286,
+     "ppda_att": 176,
+     "ppda_def": 34
+    },
+    {
+     "fecha": "2016-01-16",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.839,
+     "xg_contra": 0.806,
+     "ppda_att": 279,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2016-01-24",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 0.211,
+     "xg_contra": 3.346,
+     "ppda_att": 336,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2016-01-31",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 0.774,
+     "xg_contra": 1.083,
+     "ppda_att": 227,
+     "ppda_def": 10
+    },
+    {
+     "fecha": "2016-02-07",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.009,
+     "xg_contra": 1.131,
+     "ppda_att": 200,
+     "ppda_def": 39
+    },
+    {
+     "fecha": "2016-02-14",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 0.599,
+     "xg_contra": 3.229,
+     "ppda_att": 166,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2016-02-20",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 0.953,
+     "xg_contra": 0.408,
+     "ppda_att": 169,
+     "ppda_def": 41
+    },
+    {
+     "fecha": "2016-02-27",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 2.464,
+     "xg_contra": 1.424,
+     "ppda_att": 263,
+     "ppda_def": 39
+    },
+    {
+     "fecha": "2016-03-03",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 1.922,
+     "xg_contra": 0.781,
+     "ppda_att": 188,
+     "ppda_def": 18
+    },
+    {
+     "fecha": "2016-03-06",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 0.844,
+     "xg_contra": 0.364,
+     "ppda_att": 247,
+     "ppda_def": 16
+    },
+    {
+     "fecha": "2016-03-13",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 3,
+     "xg_favor": 1.098,
+     "xg_contra": 2.145,
+     "ppda_att": 261,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2016-03-20",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 1.654,
+     "xg_contra": 1.335,
+     "ppda_att": 198,
+     "ppda_def": 34
+    },
+    {
+     "fecha": "2016-04-02",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 5,
+     "xg_favor": 0.687,
+     "xg_contra": 4.549,
+     "ppda_att": 202,
+     "ppda_def": 18
+    },
+    {
+     "fecha": "2016-04-10",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.623,
+     "xg_contra": 1.179,
+     "ppda_att": 247,
+     "ppda_def": 34
+    },
+    {
+     "fecha": "2016-04-17",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.542,
+     "xg_contra": 1.75,
+     "ppda_att": 315,
+     "ppda_def": 14
+    },
+    {
+     "fecha": "2016-04-19",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.923,
+     "xg_contra": 0.217,
+     "ppda_att": 306,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2016-04-24",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 0.395,
+     "xg_contra": 2.032,
+     "ppda_att": 223,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2016-04-30",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 0.083,
+     "xg_contra": 2.079,
+     "ppda_att": 324,
+     "ppda_def": 9
+    },
+    {
+     "fecha": "2016-05-08",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.138,
+     "xg_contra": 2.676,
+     "ppda_att": 265,
+     "ppda_def": 10
+    },
+    {
+     "fecha": "2016-05-15",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.594,
+     "xg_contra": 1.289,
+     "ppda_att": 169,
+     "ppda_def": 21
+    }
+   ]
+  },
+  "real-madrid-2015-16": {
+   "understat": "https://understat.com/league/La_liga/2015",
+   "nombre_understat": "Real Madrid",
+   "partidos": [
+    {
+     "fecha": "2015-08-23",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 1.543,
+     "xg_contra": 0.333,
+     "ppda_att": 157,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2015-08-30",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 0,
+     "xg_favor": 3.145,
+     "xg_contra": 0.941,
+     "ppda_att": 126,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2015-09-12",
+     "local": false,
+     "goles_favor": 6,
+     "goles_contra": 0,
+     "xg_favor": 4.388,
+     "xg_contra": 1.479,
+     "ppda_att": 263,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2015-09-19",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 3.038,
+     "xg_contra": 1.766,
+     "ppda_att": 152,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2015-09-23",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 2.938,
+     "xg_contra": 1.176,
+     "ppda_att": 224,
+     "ppda_def": 18
+    },
+    {
+     "fecha": "2015-09-26",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 3.188,
+     "xg_contra": 0.638,
+     "ppda_att": 148,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2015-10-04",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 0.792,
+     "xg_contra": 2.387,
+     "ppda_att": 252,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2015-10-17",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 1.603,
+     "xg_contra": 1.551,
+     "ppda_att": 229,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2015-10-24",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 1.962,
+     "xg_contra": 1.576,
+     "ppda_att": 290,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-10-31",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 2.803,
+     "xg_contra": 0.563,
+     "ppda_att": 339,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2015-11-08",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 3,
+     "xg_favor": 1.258,
+     "xg_contra": 2.395,
+     "ppda_att": 284,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2015-11-21",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 4,
+     "xg_favor": 1.258,
+     "xg_contra": 3.277,
+     "ppda_att": 389,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2015-11-29",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 2.29,
+     "xg_contra": 0.281,
+     "ppda_att": 145,
+     "ppda_def": 13
+    },
+    {
+     "fecha": "2015-12-05",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 1,
+     "xg_favor": 1.87,
+     "xg_contra": 0.245,
+     "ppda_att": 241,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-12-13",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 1.455,
+     "xg_contra": 0.94,
+     "ppda_att": 166,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2015-12-20",
+     "local": true,
+     "goles_favor": 10,
+     "goles_contra": 2,
+     "xg_favor": 5.718,
+     "xg_contra": 0.935,
+     "ppda_att": 302,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2015-12-30",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 3.423,
+     "xg_contra": 0.581,
+     "ppda_att": 259,
+     "ppda_def": 17
+    },
+    {
+     "fecha": "2016-01-03",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 1.202,
+     "xg_contra": 2.456,
+     "ppda_att": 277,
+     "ppda_def": 40
+    },
+    {
+     "fecha": "2016-01-09",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 0,
+     "xg_favor": 3.529,
+     "xg_contra": 0.989,
+     "ppda_att": 267,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2016-01-17",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 1,
+     "xg_favor": 3.154,
+     "xg_contra": 0.692,
+     "ppda_att": 208,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2016-01-24",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 3.346,
+     "xg_contra": 0.211,
+     "ppda_att": 214,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2016-01-31",
+     "local": true,
+     "goles_favor": 6,
+     "goles_contra": 0,
+     "xg_favor": 2.766,
+     "xg_contra": 1.466,
+     "ppda_att": 166,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2016-02-07",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.676,
+     "xg_contra": 0.751,
+     "ppda_att": 160,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2016-02-13",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 2,
+     "xg_favor": 2.09,
+     "xg_contra": 1.501,
+     "ppda_att": 191,
+     "ppda_def": 15
+    },
+    {
+     "fecha": "2016-02-21",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.763,
+     "xg_contra": 1.686,
+     "ppda_att": 139,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2016-02-27",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.984,
+     "xg_contra": 0.695,
+     "ppda_att": 133,
+     "ppda_def": 46
+    },
+    {
+     "fecha": "2016-03-03",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 2.041,
+     "xg_contra": 1.076,
+     "ppda_att": 261,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2016-03-05",
+     "local": true,
+     "goles_favor": 7,
+     "goles_contra": 1,
+     "xg_favor": 2.391,
+     "xg_contra": 1.527,
+     "ppda_att": 259,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-03-13",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 0.86,
+     "xg_contra": 1.298,
+     "ppda_att": 287,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2016-03-20",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 0,
+     "xg_favor": 4.081,
+     "xg_contra": 1.038,
+     "ppda_att": 166,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2016-04-02",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.565,
+     "xg_contra": 0.882,
+     "ppda_att": 413,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-04-09",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 0,
+     "xg_favor": 2.839,
+     "xg_contra": 1.605,
+     "ppda_att": 153,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2016-04-16",
+     "local": false,
+     "goles_favor": 5,
+     "goles_contra": 1,
+     "xg_favor": 3.07,
+     "xg_contra": 1.037,
+     "ppda_att": 174,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2016-04-21",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 1.759,
+     "xg_contra": 0.226,
+     "ppda_att": 242,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2016-04-23",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 2,
+     "xg_favor": 2.643,
+     "xg_contra": 1.562,
+     "ppda_att": 211,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2016-04-30",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.589,
+     "xg_contra": 0.497,
+     "ppda_att": 208,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2016-05-08",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 2,
+     "xg_favor": 2.523,
+     "xg_contra": 2.322,
+     "ppda_att": 339,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2016-05-14",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.91,
+     "xg_contra": 0.651,
+     "ppda_att": 232,
+     "ppda_def": 24
+    }
+   ]
+  },
+  "real-sociedad-2015-16": {
+   "understat": "https://understat.com/league/La_liga/2015",
+   "nombre_understat": "Real Sociedad",
+   "partidos": [
+    {
+     "fecha": "2015-08-22",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.945,
+     "xg_contra": 0.575,
+     "ppda_att": 271,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2015-08-29",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.888,
+     "xg_contra": 0.257,
+     "ppda_att": 170,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2015-09-13",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.664,
+     "xg_contra": 0.752,
+     "ppda_att": 133,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-09-20",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 3,
+     "xg_favor": 1.353,
+     "xg_contra": 1.895,
+     "ppda_att": 229,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-09-23",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 2.654,
+     "xg_contra": 0.393,
+     "ppda_att": 175,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-09-27",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 1.087,
+     "xg_contra": 0.612,
+     "ppda_att": 196,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2015-10-04",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 3,
+     "xg_favor": 1.042,
+     "xg_contra": 1.897,
+     "ppda_att": 150,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-10-18",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 0.486,
+     "xg_contra": 1.579,
+     "ppda_att": 192,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2015-10-25",
+     "local": false,
+     "goles_favor": 4,
+     "goles_contra": 0,
+     "xg_favor": 3.287,
+     "xg_contra": 1.079,
+     "ppda_att": 172,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2015-11-01",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 3,
+     "xg_favor": 1.135,
+     "xg_contra": 1.439,
+     "ppda_att": 254,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-11-06",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 0.5,
+     "xg_contra": 0.803,
+     "ppda_att": 227,
+     "ppda_def": 37
+    },
+    {
+     "fecha": "2015-11-21",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.39,
+     "xg_contra": 1.126,
+     "ppda_att": 151,
+     "ppda_def": 18
+    },
+    {
+     "fecha": "2015-11-28",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 4,
+     "xg_favor": 0.618,
+     "xg_contra": 2.953,
+     "ppda_att": 335,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2015-12-06",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 2.371,
+     "xg_contra": 0.286,
+     "ppda_att": 123,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2015-12-11",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.828,
+     "xg_contra": 0.762,
+     "ppda_att": 152,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2015-12-20",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 1.024,
+     "xg_contra": 0.798,
+     "ppda_att": 172,
+     "ppda_def": 12
+    },
+    {
+     "fecha": "2015-12-30",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 3,
+     "xg_favor": 0.581,
+     "xg_contra": 3.423,
+     "ppda_att": 290,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2016-01-03",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 1.319,
+     "xg_contra": 0.924,
+     "ppda_att": 116,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2016-01-10",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 2.824,
+     "xg_contra": 0.839,
+     "ppda_att": 276,
+     "ppda_def": 46
+    },
+    {
+     "fecha": "2016-01-17",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 2.759,
+     "xg_contra": 1.067,
+     "ppda_att": 176,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2016-01-22",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 5,
+     "xg_favor": 0.833,
+     "xg_contra": 4.137,
+     "ppda_att": 164,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2016-01-31",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.083,
+     "xg_contra": 0.774,
+     "ppda_att": 271,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2016-02-08",
+     "local": false,
+     "goles_favor": 5,
+     "goles_contra": 0,
+     "xg_favor": 2.029,
+     "xg_contra": 0.208,
+     "ppda_att": 297,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2016-02-14",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 2.553,
+     "xg_contra": 1.478,
+     "ppda_att": 197,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2016-02-21",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.9,
+     "xg_contra": 0.513,
+     "ppda_att": 214,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2016-02-28",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 0.871,
+     "xg_contra": 1.223,
+     "ppda_att": 151,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2016-03-02",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 3,
+     "xg_favor": 1.006,
+     "xg_contra": 1.928,
+     "ppda_att": 304,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2016-03-06",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 2.234,
+     "xg_contra": 0.326,
+     "ppda_att": 197,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2016-03-12",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.56,
+     "xg_contra": 0.378,
+     "ppda_att": 194,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2016-03-19",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.59,
+     "xg_contra": 2.231,
+     "ppda_att": 176,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2016-04-03",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 0.393,
+     "xg_contra": 1.83,
+     "ppda_att": 240,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2016-04-09",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.295,
+     "xg_contra": 1.372,
+     "ppda_att": 280,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2016-04-16",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 0.865,
+     "xg_contra": 1.244,
+     "ppda_att": 164,
+     "ppda_def": 34
+    },
+    {
+     "fecha": "2016-04-21",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.228,
+     "xg_contra": 1.588,
+     "ppda_att": 190,
+     "ppda_def": 36
+    },
+    {
+     "fecha": "2016-04-24",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.641,
+     "xg_contra": 0.66,
+     "ppda_att": 180,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2016-04-30",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.497,
+     "xg_contra": 1.589,
+     "ppda_att": 289,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2016-05-08",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.665,
+     "xg_contra": 2.182,
+     "ppda_att": 284,
+     "ppda_def": 17
+    },
+    {
+     "fecha": "2016-05-13",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.951,
+     "xg_contra": 0.918,
+     "ppda_att": 224,
+     "ppda_def": 42
+    }
+   ]
+  },
+  "sevilla-2015-16": {
+   "understat": "https://understat.com/league/La_liga/2015",
+   "nombre_understat": "Sevilla",
+   "partidos": [
+    {
+     "fecha": "2015-08-21",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.857,
+     "xg_contra": 0.983,
+     "ppda_att": 179,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2015-08-30",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 3,
+     "xg_favor": 1.738,
+     "xg_contra": 1.245,
+     "ppda_att": 134,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2015-09-11",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 0.887,
+     "xg_contra": 1.092,
+     "ppda_att": 197,
+     "ppda_def": 13
+    },
+    {
+     "fecha": "2015-09-20",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.526,
+     "xg_contra": 0.846,
+     "ppda_att": 276,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2015-09-24",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 1.535,
+     "xg_contra": 1.024,
+     "ppda_att": 142,
+     "ppda_def": 39
+    },
+    {
+     "fecha": "2015-09-26",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 2,
+     "xg_favor": 2.764,
+     "xg_contra": 0.92,
+     "ppda_att": 222,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2015-10-03",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.577,
+     "xg_contra": 3.87,
+     "ppda_att": 252,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2015-10-17",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.687,
+     "xg_contra": 0.781,
+     "ppda_att": 151,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2015-10-24",
+     "local": true,
+     "goles_favor": 5,
+     "goles_contra": 0,
+     "xg_favor": 5.154,
+     "xg_contra": 0.228,
+     "ppda_att": 193,
+     "ppda_def": 24
+    },
+    {
+     "fecha": "2015-10-31",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 0.881,
+     "xg_contra": 1.033,
+     "ppda_att": 197,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2015-11-08",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 2,
+     "xg_favor": 2.395,
+     "xg_contra": 1.258,
+     "ppda_att": 291,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2015-11-21",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 1.126,
+     "xg_contra": 1.39,
+     "ppda_att": 231,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2015-11-29",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.633,
+     "xg_contra": 0.0,
+     "ppda_att": 184,
+     "ppda_def": 41
+    },
+    {
+     "fecha": "2015-12-06",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.093,
+     "xg_contra": 0.643,
+     "ppda_att": 164,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2015-12-12",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 2.151,
+     "xg_contra": 0.066,
+     "ppda_att": 120,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2015-12-19",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 1.02,
+     "xg_contra": 0.377,
+     "ppda_att": 99,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2015-12-30",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 2.876,
+     "xg_contra": 0.634,
+     "ppda_att": 271,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2016-01-03",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 2.32,
+     "xg_contra": 0.767,
+     "ppda_att": 123,
+     "ppda_def": 18
+    },
+    {
+     "fecha": "2016-01-09",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.701,
+     "xg_contra": 1.25,
+     "ppda_att": 225,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2016-01-16",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.397,
+     "xg_contra": 1.001,
+     "ppda_att": 152,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2016-01-24",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.272,
+     "xg_contra": 1.576,
+     "ppda_att": 238,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2016-01-31",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 2.563,
+     "xg_contra": 0.687,
+     "ppda_att": 248,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2016-02-07",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 0.923,
+     "xg_contra": 2.37,
+     "ppda_att": 343,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2016-02-14",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.121,
+     "xg_contra": 0.431,
+     "ppda_att": 248,
+     "ppda_def": 40
+    },
+    {
+     "fecha": "2016-02-21",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 3.373,
+     "xg_contra": 1.662,
+     "ppda_att": 241,
+     "ppda_def": 39
+    },
+    {
+     "fecha": "2016-02-28",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.297,
+     "xg_contra": 2.337,
+     "ppda_att": 323,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-03-02",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.573,
+     "xg_contra": 0.553,
+     "ppda_att": 222,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2016-03-05",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 0.468,
+     "xg_contra": 1.131,
+     "ppda_att": 183,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2016-03-13",
+     "local": true,
+     "goles_favor": 4,
+     "goles_contra": 2,
+     "xg_favor": 3.138,
+     "xg_contra": 1.707,
+     "ppda_att": 177,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2016-03-20",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 4,
+     "xg_favor": 1.038,
+     "xg_contra": 4.081,
+     "ppda_att": 276,
+     "ppda_def": 13
+    },
+    {
+     "fecha": "2016-04-03",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.83,
+     "xg_contra": 0.393,
+     "ppda_att": 122,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2016-04-10",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.004,
+     "xg_contra": 1.907,
+     "ppda_att": 158,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-04-17",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 2.001,
+     "xg_contra": 0.7,
+     "ppda_att": 204,
+     "ppda_def": 20
+    },
+    {
+     "fecha": "2016-04-20",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 1.765,
+     "xg_contra": 1.222,
+     "ppda_att": 188,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2016-04-24",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 2.032,
+     "xg_contra": 0.395,
+     "ppda_att": 129,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2016-05-01",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.329,
+     "xg_contra": 1.666,
+     "ppda_att": 123,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2016-05-08",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 4,
+     "xg_favor": 0.899,
+     "xg_contra": 2.161,
+     "ppda_att": 154,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2016-05-14",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 3,
+     "xg_favor": 1.028,
+     "xg_contra": 1.704,
+     "ppda_att": 307,
+     "ppda_def": 16
+    }
+   ]
+  },
+  "villarreal-2015-16": {
+   "understat": "https://understat.com/league/La_liga/2015",
+   "nombre_understat": "Villarreal",
+   "partidos": [
+    {
+     "fecha": "2015-08-24",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.631,
+     "xg_contra": 1.495,
+     "ppda_att": 157,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2015-08-28",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 1.594,
+     "xg_contra": 0.721,
+     "ppda_att": 198,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2015-09-13",
+     "local": false,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 1.487,
+     "xg_contra": 0.818,
+     "ppda_att": 183,
+     "ppda_def": 37
+    },
+    {
+     "fecha": "2015-09-20",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 1,
+     "xg_favor": 1.615,
+     "xg_contra": 1.264,
+     "ppda_att": 221,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2015-09-24",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.934,
+     "xg_contra": 0.878,
+     "ppda_att": 234,
+     "ppda_def": 30
+    },
+    {
+     "fecha": "2015-09-26",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.871,
+     "xg_contra": 0.466,
+     "ppda_att": 256,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2015-10-04",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 0.115,
+     "xg_contra": 1.061,
+     "ppda_att": 160,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2015-10-18",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 0.995,
+     "xg_contra": 1.624,
+     "ppda_att": 341,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2015-10-25",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.205,
+     "xg_contra": 0.189,
+     "ppda_att": 333,
+     "ppda_def": 39
+    },
+    {
+     "fecha": "2015-10-31",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.033,
+     "xg_contra": 0.881,
+     "ppda_att": 207,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2015-11-08",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 3,
+     "xg_favor": 0.279,
+     "xg_contra": 3.077,
+     "ppda_att": 309,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2015-11-22",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 1,
+     "xg_favor": 1.782,
+     "xg_contra": 2.613,
+     "ppda_att": 123,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2015-11-29",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 0.789,
+     "xg_contra": 1.673,
+     "ppda_att": 140,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2015-12-06",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.602,
+     "xg_contra": 0.326,
+     "ppda_att": 223,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2015-12-13",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.94,
+     "xg_contra": 1.455,
+     "ppda_att": 299,
+     "ppda_def": 16
+    },
+    {
+     "fecha": "2015-12-20",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 0.798,
+     "xg_contra": 1.024,
+     "ppda_att": 334,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2015-12-31",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.421,
+     "xg_contra": 0.339,
+     "ppda_att": 205,
+     "ppda_def": 32
+    },
+    {
+     "fecha": "2016-01-03",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 1.552,
+     "xg_contra": 1.158,
+     "ppda_att": 258,
+     "ppda_def": 19
+    },
+    {
+     "fecha": "2016-01-10",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.53,
+     "xg_contra": 0.961,
+     "ppda_att": 236,
+     "ppda_def": 23
+    },
+    {
+     "fecha": "2016-01-16",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.806,
+     "xg_contra": 0.839,
+     "ppda_att": 301,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2016-01-23",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 1.505,
+     "xg_contra": 1.361,
+     "ppda_att": 236,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-01-30",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 1.952,
+     "xg_contra": 0.913,
+     "ppda_att": 209,
+     "ppda_def": 31
+    },
+    {
+     "fecha": "2016-02-06",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.629,
+     "xg_contra": 0.568,
+     "ppda_att": 287,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2016-02-13",
+     "local": true,
+     "goles_favor": 1,
+     "goles_contra": 0,
+     "xg_favor": 0.761,
+     "xg_contra": 0.671,
+     "ppda_att": 228,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2016-02-21",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.664,
+     "xg_contra": 0.77,
+     "ppda_att": 220,
+     "ppda_def": 28
+    },
+    {
+     "fecha": "2016-02-28",
+     "local": true,
+     "goles_favor": 3,
+     "goles_contra": 0,
+     "xg_favor": 1.696,
+     "xg_contra": 0.665,
+     "ppda_att": 294,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2016-03-02",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.328,
+     "xg_contra": 0.846,
+     "ppda_att": 350,
+     "ppda_def": 17
+    },
+    {
+     "fecha": "2016-03-05",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 1,
+     "xg_favor": 1.151,
+     "xg_contra": 0.52,
+     "ppda_att": 315,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2016-03-13",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 4,
+     "xg_favor": 1.707,
+     "xg_contra": 3.138,
+     "ppda_att": 257,
+     "ppda_def": 18
+    },
+    {
+     "fecha": "2016-03-20",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 2,
+     "xg_favor": 0.98,
+     "xg_contra": 2.145,
+     "ppda_att": 389,
+     "ppda_def": 25
+    },
+    {
+     "fecha": "2016-04-03",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 1,
+     "xg_favor": 2.083,
+     "xg_contra": 0.804,
+     "ppda_att": 210,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-04-10",
+     "local": true,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 2.057,
+     "xg_contra": 0.718,
+     "ppda_att": 194,
+     "ppda_def": 29
+    },
+    {
+     "fecha": "2016-04-17",
+     "local": false,
+     "goles_favor": 1,
+     "goles_contra": 2,
+     "xg_favor": 0.631,
+     "xg_contra": 1.085,
+     "ppda_att": 374,
+     "ppda_def": 26
+    },
+    {
+     "fecha": "2016-04-21",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 3,
+     "xg_favor": 0.226,
+     "xg_contra": 1.759,
+     "ppda_att": 344,
+     "ppda_def": 22
+    },
+    {
+     "fecha": "2016-04-24",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 0,
+     "xg_favor": 0.66,
+     "xg_contra": 0.641,
+     "ppda_att": 316,
+     "ppda_def": 33
+    },
+    {
+     "fecha": "2016-05-01",
+     "local": false,
+     "goles_favor": 2,
+     "goles_contra": 0,
+     "xg_favor": 1.058,
+     "xg_contra": 0.259,
+     "ppda_att": 271,
+     "ppda_def": 27
+    },
+    {
+     "fecha": "2016-05-08",
+     "local": true,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 0.701,
+     "xg_contra": 0.389,
+     "ppda_att": 171,
+     "ppda_def": 21
+    },
+    {
+     "fecha": "2016-05-15",
+     "local": false,
+     "goles_favor": 0,
+     "goles_contra": 2,
+     "xg_favor": 0.721,
+     "xg_contra": 1.516,
+     "ppda_att": 328,
+     "ppda_def": 24
+    }
+   ]
+  }
+ }
+}

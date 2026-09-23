@@ -92,6 +92,28 @@ def ppda(events: pd.DataFrame, team: str) -> float:
     return n_passes / n_def
 
 
+# PPDA clásico (Trainor / Opta / Understat): sin presiones. Entradas, intercepciones,
+# faltas cometidas y regates recibidos (duelos perdidos) como acción defensiva.
+CLASSIC_DEF_TYPES = ("Interception", "Foul Committed", "Dribbled Past")
+
+
+def ppda_classic(events: pd.DataFrame, team: str) -> float:
+    """PPDA con la definición clásica, para comparar con fuentes públicas.
+
+    Misma zona y mismos pases rivales que ``ppda``; solo cambia qué cuenta como
+    acción defensiva: aquí no entran las presiones ni las recuperaciones.
+    """
+    is_team = events["team"] == team
+    is_def = events["type"].isin(CLASSIC_DEF_TYPES)
+    if "duel_type" in events.columns:
+        is_def |= (events["type"] == "Duel") & (events["duel_type"] == "Tackle")
+    acts = events.loc[is_team & is_def & events["location"].notna()]
+    n_def = int(sum(float(loc[0]) >= PPDA_DEF_MIN_X for loc in acts["location"]))
+    opp = events[(events["type"] == "Pass") & (events["team"] != team) & events["location"].notna()]
+    n_passes = int(sum(float(loc[0]) <= PPDA_OPP_MAX_X for loc in opp["location"]))
+    return n_passes / n_def if n_def else float("inf")
+
+
 # Robo alto: posesión propia que empieza en juego abierto a <= 40 m de la portería
 # rival (como Opta). En coordenadas StatsBomb (yardas, cada equipo ataca hacia x=120)
 # eso es x >= 120 - 43,7

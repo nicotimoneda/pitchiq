@@ -276,7 +276,7 @@ def build_team_data(entry: dict, orden: int) -> None:
     from pitchiq.agent import tools as agent_tools
     from pitchiq.data.loader import has_360, load_events, load_frames, load_matches
     from pitchiq.metrics.frames import merge_frames_events, visible_teammates
-    from pitchiq.metrics.pressing import defensive_actions, high_turnovers, ppda
+    from pitchiq.metrics.pressing import defensive_actions, high_turnovers, ppda, ppda_classic
     from pitchiq.metrics.set_pieces import delivery_zone, find_corners
     from pitchiq.metrics.spatial import defensive_line_height
 
@@ -315,6 +315,7 @@ def build_team_data(entry: dict, orden: int) -> None:
         line = (defensive_line_height(frames, events, team).mean("line_height")
                 if frames is not None else float("nan"))
         match_ppda = ppda(events, team)
+        clasico = ppda_classic(events, team)
         rival = m["away_team"] if home else m["home_team"]
         shots = events[(events["type"] == "Shot") & (events["period"] < 5)]
         xg = shots.groupby("team")["shot_statsbomb_xg"].sum()
@@ -328,6 +329,8 @@ def build_team_data(entry: dict, orden: int) -> None:
             "goles_contra": int(m["away_score"] if home else m["home_score"]),
             "altura_linea": None if np.isnan(line) else round(config.a_metros(float(line)), 1),
             "ppda": round(float(match_ppda), 2) if np.isfinite(match_ppda) else None,
+            # definición clásica (sin presiones), solo para la validación externa
+            "ppda_clasico": round(float(clasico), 2) if np.isfinite(clasico) else None,
             "xg_favor": round(float(xg.get(team, 0.0)), 2),
             "xg_contra": round(float(xg.drop(team, errors="ignore").sum()), 2),
             "acciones_defensivas": int(len(actions)),

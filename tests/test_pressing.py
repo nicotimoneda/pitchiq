@@ -90,3 +90,20 @@ def test_robos_altos_cuenta_posesiones_de_juego_abierto_cerca_del_area():
     assert high_turnovers(events, "A") == {"n": 2, "con_tiro": 1}
     assert high_turnovers(events, "B") == {"n": 1, "con_tiro": 0}
     assert high_turnovers(pd.DataFrame(), "A") == {"n": 0, "con_tiro": 0}
+
+
+def test_ppda_clasico_no_cuenta_presiones():
+    from pitchiq.metrics.pressing import ppda, ppda_classic
+
+    events = _events(
+        [
+            {"type": "Pressure", "team": "A", "location": [70, 40]},
+            {"type": "Pressure", "team": "A", "location": [70, 40]},
+            {"type": "Interception", "team": "A", "location": [60, 40]},
+            {"type": "Duel", "team": "A", "duel_type": "Tackle", "location": [80, 40]},
+            {"type": "Interception", "team": "A", "location": [20, 40]},  # zona propia
+            *[{"type": "Pass", "team": "B", "location": [30, 40]} for _ in range(8)],
+        ]
+    )
+    assert ppda(events, "A") == 8 / 4
+    assert ppda_classic(events, "A") == 8 / 2

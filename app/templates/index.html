@@ -518,7 +518,11 @@
     .sec-grid { display: block !important; }
     .grid-2 { display: grid !important; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) !important; gap: 10px; }
     .sec-grid > .panel { margin-top: 10px !important; }
-    .pct-row { padding: 4px 0; }
+    .pct-row { padding: 3px 0 !important; grid-template-columns: minmax(0, 1fr) 62px 64px 24px !important; gap: 8px !important; }
+    .pct-lab small { display: none !important; }
+    .pct-val { font-size: 18px !important; }
+    .grid-2 { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) !important; }
+    .sec-grid[hidden], [hidden] { display: none !important; }
     .corners-panel { display: block; }
     main.fade { animation: none; }
   }

@@ -15,7 +15,7 @@
 ---
 
 <div align="center">
-<img src="assets/demo.gif" width="90%" alt="Walkthrough: team search, the verified report, the defence section, a match sheet and the style map"/>
+<img src="assets/demo.gif" width="90%" alt="Walkthrough: strengths and weaknesses, team search, shot map, player table, game-state splits, a match sheet and the style map"/>
 </div>
 
 ## What it is

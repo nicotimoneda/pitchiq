@@ -15,7 +15,7 @@
 ---
 
 <div align="center">
-<img src="assets/demo.gif" width="90%" alt="Recorrido por la web: buscador de equipos, informe con cifras verificadas, defensa, ficha de partido y mapa de estilos"/>
+<img src="assets/demo.gif" width="90%" alt="Recorrido por la web: puntos fuertes y débiles, buscador, mapa de tiros, jugadores, contexto según el marcador, ficha de partido y mapa de estilos"/>
 </div>
 
 ## Qué es

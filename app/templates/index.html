@@ -15,6 +15,10 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="{{ og_image }}">{% endif %}
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23c8102e'/%3E%3Crect x='5' y='8' width='22' height='16' rx='2' fill='none' stroke='white' stroke-width='2'/%3E%3Cline x1='16' y1='8' x2='16' y2='24' stroke='white' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#0e1310" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f3f5f2" media="(prefers-color-scheme: light)">
+<script>try { const t = localStorage.getItem("pitchiq-tema"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
@@ -501,6 +505,39 @@
   .buscador-lista [role="option"][aria-selected="true"] { font-weight: 700; }
   .buscador-lista [role="option"][aria-selected="true"] .mini-crest { background: var(--accent-soft); }
   .buscador-lista .vacio { padding: 14px 10px; color: var(--muted); }
+  .tools { display: flex; gap: 6px; flex: none; }
+  .icon-btn { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 999px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink-2); transition: border-color .15s ease, color .15s ease; }
+  .icon-btn:hover { border-color: var(--ink-2); color: var(--ink); }
+  .icon-btn .ico { width: 18px; height: 18px; }
+  .print-only { display: none; }
+  @media print {
+    :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+      --bg: #ffffff; --surface: #ffffff; --surface-2: #f1f3f1; --ink: #111; --ink-2: #333; --muted: #555; --rule: #d0d5d1; --rule-strong: #b0b7b2;
+      --pitch: #eef2ed; --pitch-line: #a9b8a9; --ok: #146c2e; --ok-bg: #e2f2e6; --warn: #9a3b04; --warn-bg: #fde8d6;
+      --seq-lo: #fbe8e9; --seq-hi: #8e0b1f; --on-hi: #fff; --accent: #c8102e; --accent-soft: rgba(200,16,46,.08); --shadow: none; --hero-bg: #fff; --zebra: transparent;
+    }
+    @page { size: A4; margin: 12mm; }
+    body { font-size: 12px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .topbar, .banner, .probar, #comparar, #ficha, #tip, footer, .dl-links, .hero-pitch, .splits-panel, #partidos { display: none !important; }
+    .print-only { display: block; }
+    .wrap { max-width: none; padding: 0; }
+    .team-head { margin: 0; padding: 16px; box-shadow: none; }
+    section.block { margin-top: 10px; padding-block: 10px 0; }
+    .sec-head { break-after: avoid; }
+    .panel, .kpi, figure { break-inside: avoid; box-shadow: none; }
+    .kpis { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 8px; }
+    .kpi { padding: 10px 12px; }
+    .kpi .num { font-size: 30px; }
+    .report { grid-template-columns: minmax(0, 1fr) 200px !important; }
+    .report-body { font-size: 13px; }
+    .sec-grid { display: block !important; }
+    .grid-2 { display: grid !important; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) !important; gap: 10px; }
+    .sec-grid > .panel { margin-top: 10px !important; }
+    .stats div { padding: 6px 0; }
+    .stats dd { font-size: 20px; }
+    .corners-panel { display: block; }
+    main.fade { animation: none; }
+  }
   main.fade { animation: fadein .28s ease; }
   @keyframes fadein { from { opacity: .35; } to { opacity: 1; } }
 
@@ -551,6 +588,10 @@
   <symbol id="i-datos" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></symbol>
   <symbol id="i-codigo" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></symbol>
   <symbol id="i-github" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></symbol>
+  <symbol id="i-sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+  <symbol id="i-luna" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18Z" fill="currentColor"/></symbol>
+  <symbol id="i-imprimir" viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol>
   <symbol id="i-buscar" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
   <symbol id="i-izq" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
   <symbol id="i-der" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
@@ -598,6 +639,10 @@
       <a href="#partidos">Partidos</a>
       <a href="#comparar" id="nav-comparar">Comparar</a>
     </nav>
+    <div class="tools">
+      <button type="button" class="icon-btn" id="btn-pdf" aria-label="Exportar a PDF" title="Exportar a PDF"><svg class="ico" aria-hidden="true"><use href="#i-imprimir"/></svg></button>
+      <button type="button" class="icon-btn" id="btn-tema" aria-label="Cambiar tema" title="Tema"><svg class="ico" aria-hidden="true"><use id="tema-ico" href="#i-auto"/></svg></button>
+    </div>
   </div>
 </header>
 {% if is_sample_data %}<div class="banner">Datos de muestra: los datos reales se publican con <code>scripts/precompute.py --demo-data</code>.</div>{% endif %}
@@ -792,6 +837,7 @@
     </div>
   </section>
 
+  <p class="print-only" style="color:var(--muted);margin-top:16px">PitchIQ · datos de StatsBomb Open Data · cada cifra contrastada con las métricas calculadas · {{ page_url }}</p>
   <footer>
     <div class="foot-grid">
       <div>Datos: <a href="https://github.com/statsbomb/open-data">StatsBomb Open Data</a></div>
@@ -1663,6 +1709,22 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "/" && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) { e.preventDefault(); abrirBuscador(); }
 });
 
+
+/* ---------- tema y PDF ---------- */
+const TEMAS = ["auto", "light", "dark"];
+function aplicarTema(t) {
+  if (t === "auto") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = t;
+  $("#tema-ico").setAttribute("href", "#i-" + ({ auto: "auto", light: "sol", dark: "luna" })[t]);
+  $("#btn-tema").setAttribute("aria-label", "Tema: " + ({ auto: "automático", light: "claro", dark: "oscuro" })[t] + ". Pulsa para cambiar");
+  $("#btn-tema").title = $("#btn-tema").getAttribute("aria-label");
+  try { if (t === "auto") localStorage.removeItem("pitchiq-tema"); else localStorage.setItem("pitchiq-tema", t); } catch (e) { /* sin almacenamiento */ }
+}
+$("#btn-tema").addEventListener("click", () => {
+  const actualT = document.documentElement.dataset.theme || "auto";
+  aplicarTema(TEMAS[(TEMAS.indexOf(actualT) + 1) % TEMAS.length]);
+});
+$("#btn-pdf").addEventListener("click", () => window.print());
+
 /* ---------- navegación ---------- */
 const bySlug = Object.fromEntries(TEAMS.map((t) => [t.slug, t]));
 let slugActual = INITIAL;
@@ -1700,6 +1762,7 @@ try {
 } catch (err) { /* sin URL */ }
 render();
 
+$("#tema-ico").setAttribute("href", "#i-" + ({ light: "sol", dark: "luna" }[document.documentElement.dataset.theme] || "auto"));
 const enlaces = [...document.querySelectorAll(".secnav a")];
 const io = new IntersectionObserver((entries) => {
   for (const en of entries) {

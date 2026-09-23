@@ -16,6 +16,7 @@ from pathlib import Path
 
 import markdown as md
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -68,6 +69,7 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
             }
 
     app = FastAPI(title="PitchIQ", docs_url=None, redoc_url=None)
+    app.add_middleware(GZipMiddleware, minimum_size=1000)
     figures_dir = report_base / "figures"
     if figures_dir.exists():
         app.mount("/figures", StaticFiles(directory=figures_dir), name="figures")

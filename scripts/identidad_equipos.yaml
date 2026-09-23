@@ -1,0 +1,106 @@
+# Identidad visual de los equipos en la web (sin logos: los escudos oficiales son
+# marcas registradas de cada club).
+#
+# - Clubes: colores del equipo para el escudo con iniciales (fondo, texto, borde).
+# - Selecciones: código ISO de la bandera (librería abierta flag-icons; las banderas
+#   son de dominio público). Clave = nombre de StatsBomb sin " Women's".
+# Los equipos que no aparezcan aquí usan el escudo neutro de la web.
+
+colores:
+  # fondo, texto, borde
+  Bayer Leverkusen: ["#e32221", "#ffffff", "#111111"]
+  Barcelona: ["#a50044", "#ffffff", "#004d98"]
+  Paris Saint-Germain: ["#004170", "#ffffff", "#da291c"]
+  # La Liga 2015/16
+  Real Madrid: ["#ffffff", "#00529f", "#febe10"]
+  Atlético Madrid: ["#cb3524", "#ffffff", "#272e61"]
+  Villarreal: ["#ffe667", "#005187", "#005187"]
+  Athletic Club: ["#ee2523", "#ffffff", "#111111"]
+  Celta Vigo: ["#8ac3ee", "#0b2f5b", "#e5254e"]
+  Sevilla: ["#ffffff", "#d81920", "#d81920"]
+  Málaga: ["#0055a5", "#ffffff", "#ffffff"]
+  Real Sociedad: ["#0067b1", "#ffffff", "#ffffff"]
+  Real Betis: ["#00954c", "#ffffff", "#ffffff"]
+  Las Palmas: ["#ffe400", "#0055a0", "#0055a0"]
+  Valencia: ["#ffffff", "#111111", "#ee7f00"]
+  Eibar: ["#0a346f", "#ffffff", "#a6192e"]
+  Espanyol: ["#007fc8", "#ffffff", "#ffffff"]
+  RC Deportivo La Coruña: ["#0053a4", "#ffffff", "#ffffff"]
+  Granada: ["#c8102e", "#ffffff", "#ffffff"]
+  Sporting Gijón: ["#e2001a", "#ffffff", "#ffffff"]
+  Rayo Vallecano: ["#ffffff", "#e53027", "#e53027"]
+  Getafe: ["#005999", "#ffffff", "#ffffff"]
+  Levante UD: ["#b4053f", "#ffffff", "#004f9f"]
+  # Premier League 2015/16
+  Leicester City: ["#003090", "#ffffff", "#fdbe11"]
+  Arsenal: ["#ef0107", "#ffffff", "#ffffff"]
+  Tottenham Hotspur: ["#ffffff", "#132257", "#132257"]
+  Manchester City: ["#6cabdd", "#1c2c5b", "#ffffff"]
+  Manchester United: ["#da291c", "#ffffff", "#fbe122"]
+  Southampton: ["#d71920", "#ffffff", "#111111"]
+  West Ham United: ["#7a263a", "#ffffff", "#1bb1e7"]
+  Liverpool: ["#c8102e", "#ffffff", "#00b2a9"]
+  Stoke City: ["#e03a3e", "#ffffff", "#ffffff"]
+  Chelsea: ["#034694", "#ffffff", "#ffffff"]
+  Everton: ["#003399", "#ffffff", "#ffffff"]
+  Swansea City: ["#ffffff", "#121212", "#121212"]
+  Watford: ["#fbee23", "#111111", "#ed2127"]
+  West Bromwich Albion: ["#122f67", "#ffffff", "#ffffff"]
+  Crystal Palace: ["#1b458f", "#ffffff", "#c4122e"]
+  AFC Bournemouth: ["#da291c", "#ffffff", "#111111"]
+  Sunderland: ["#eb172b", "#ffffff", "#111111"]
+  Newcastle United: ["#241f20", "#ffffff", "#ffffff"]
+  Norwich City: ["#fff200", "#00a650", "#00a650"]
+  Aston Villa: ["#670e36", "#ffffff", "#95bfe5"]
+
+banderas:
+  Albania: al
+  Argentina: ar
+  Australia: au
+  Austria: at
+  Belgium: be
+  Brazil: br
+  Cameroon: cm
+  Canada: ca
+  Costa Rica: cr
+  Croatia: hr
+  Czech Republic: cz
+  Denmark: dk
+  Ecuador: ec
+  England: gb-eng
+  Finland: fi
+  WNT Finland: fi
+  France: fr
+  Georgia: ge
+  Germany: de
+  Ghana: gh
+  Hungary: hu
+  Iceland: is
+  Iran: ir
+  Italy: it
+  Japan: jp
+  Mexico: mx
+  Morocco: ma
+  Netherlands: nl
+  Norway: "no"
+  Poland: pl
+  Portugal: pt
+  Qatar: qa
+  Romania: ro
+  Saudi Arabia: sa
+  Scotland: gb-sct
+  Senegal: sn
+  Serbia: rs
+  Slovakia: sk
+  Slovenia: si
+  South Korea: kr
+  Spain: es
+  Sweden: se
+  Switzerland: ch
+  Tunisia: tn
+  Turkey: tr
+  Ukraine: ua
+  United States: us
+  Uruguay: uy
+  Wales: gb-wls
+  Wales W: gb-wls

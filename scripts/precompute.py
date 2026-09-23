@@ -98,7 +98,8 @@ def equipos_a_publicar() -> "list[dict]":
     from pitchiq.data.loader import load_competitions, load_matches
 
     conf = yaml.safe_load(PUBLICACION.read_text(encoding="utf-8"))
-    traducir = _traductor(conf.get("traducciones") or {})
+    tabla = conf.get("traducciones") or {}
+    traducir = _traductor(tabla)
     catalogo = load_competitions()
     entradas = []
     for bloque in conf["competiciones"]:
@@ -112,19 +113,23 @@ def equipos_a_publicar() -> "list[dict]":
         matches = load_matches(competition_id=cid, season_id=sid)
         orden = clasificacion(matches)
         completa = temporada_completa(matches)
-        if "equipos" in bloque:
+        if bloque.get("equipos") == "todos":
+            equipos = list(orden)
+        elif "equipos" in bloque:
             equipos = list(bloque["equipos"])
         else:
             equipos = orden[: int(bloque["top"])]
+        puestos = {t: i + 1 for i, t in enumerate(orden)} if completa else {}
         for equipo in equipos:
             entradas.append({
-                "equipo": equipo, "nombre": traducir(equipo), "traducir": traducir,
+                "equipo": equipo, "nombre": traducir(equipo), "traducciones": tabla,
                 "competition_id": cid, "season_id": sid,
                 "competicion": competicion, "temporada": temporada,
                 "slug": _slugify(f"{traducir(equipo)} {temporada}"),
                 # el puesto solo tiene sentido si la temporada está completa
                 "posicion": orden.index(equipo) + 1 if completa else None,
                 "n_equipos": len(orden) if completa else None,
+                "puestos": puestos,
             })
     return entradas
 
@@ -185,7 +190,24 @@ SAMPLE_EVIDENCE = {
 def _sample_team(slug: str, nombre: str, orden: int, desplaz: float) -> dict:
     """Equipo sintético con la misma forma que los reales."""
     rivales = ["Rival A", "Rival B", "Rival C", "Rival D"]
+    estados = {"ganando": {"minutos": 40.0, "xg_favor": 0.5, "xg_contra": 0.3},
+               "empatando": {"minutos": 45.0, "xg_favor": 0.8, "xg_contra": 0.4},
+               "perdiendo": {"minutos": 5.0, "xg_favor": 0.1, "xg_contra": 0.1}}
+    partidos = [
+        {"fecha": f"2026-01-0{i + 1}", "rival": r, "local": i % 2 == 0,
+         "goles_favor": 2, "goles_contra": 1,
+         "altura_linea": None if i == 2 else 50.0 + i, "ppda": 2.5, "ppda_clasico": 10.0 + i,
+         "xg_favor": 1.4, "xg_contra": 0.8, "tiros": 3, "field_tilt": 55.0 + desplaz / 10,
+         "progresivos": 40 + i, "centros": 10, "acciones_defensivas": 200, "robos_altos": 3,
+         "robos_altos_tiro": 1, "entradas": {"izquierda": 5, "centro": 3, "derecha": 4},
+         "estados": estados, "rival_puesto": i + 1,
+         "zonas": [[1 + ix + iy for ix in range(6)] for iy in range(5)]}
+        for i, r in enumerate(rivales)
+    ]
+    tiros = [{"x": 100.0 + i, "y": 40.0, "xg": 0.3, "gol": i % 3 == 0, "penalti": False, "p": i % 4}
+             for i in range(12)]
     return {
+        "identidad": {},
         "slug": slug, "equipo": nombre, "nombre": nombre, "orden": orden,
         "competicion": "Liga de muestra", "temporada": "2026",
         "herramientas": {
@@ -220,16 +242,21 @@ def _sample_team(slug: str, nombre: str, orden: int, desplaz: float) -> dict:
             [round(math.exp(-((ix - 10) ** 2 + (iy - 8) ** 2) / 40), 3) for ix in range(24)]
             for iy in range(16)
         ],
-        "partidos": [
-            {"fecha": f"2026-01-0{i + 1}", "rival": r, "local": i % 2 == 0,
-             "goles_favor": 2, "goles_contra": 1,
-             "altura_linea": None if i == 2 else 50.0 + i, "ppda": 2.5}
-            for i, r in enumerate(rivales)
-        ],
+        "partidos": partidos,
         "corners": [
-            {"x": 115.0, "y": 40.0, "desde_arriba": False, "zona": "centro"},
-            {"x": 118.0, "y": 78.0, "desde_arriba": True, "zona": "corto"},
+            {"x": 115.0, "y": 40.0, "desde_arriba": False, "zona": "centro", "p": 0},
+            {"x": 118.0, "y": 78.0, "desde_arriba": True, "zona": "corto", "p": 1},
         ],
+        "tiros": tiros,
+        "jugadores": [
+            {"nombre": "Ana Muestra", "posicion": "Center Forward", "partidos": 4, "minutos": 360,
+             "goles": 3, "asistencias": 1, "tiros": 10, "xg": 2.1, "pases_clave": 5, "progresivos": 30,
+             "presiones": 40, "acciones_defensivas": 50, "recuperaciones": 12},
+            {"nombre": "Bea Ejemplo", "posicion": "Center Back", "partidos": 4, "minutos": 350,
+             "goles": 0, "asistencias": 0, "tiros": 1, "xg": 0.1, "pases_clave": 1, "progresivos": 45,
+             "presiones": 25, "acciones_defensivas": 80, "recuperaciones": 30},
+        ],
+        "agregados": agregados(partidos, tiros),
     }
 
 
@@ -266,6 +293,66 @@ def build_sample() -> None:
     print(f"fixtures de muestra en {sample_dir}")
 
 
+IDENTIDAD = config.ROOT_DIR / "scripts" / "identidad_equipos.yaml"
+
+
+def identidad(equipo: str) -> dict:
+    """Bandera (selecciones) o colores (clubes) para el escudo de la web; {} si no hay."""
+    import yaml
+
+    datos = yaml.safe_load(IDENTIDAD.read_text(encoding="utf-8"))
+    base = equipo.removesuffix(" Women's")
+    if base in datos.get("banderas", {}) or equipo in datos.get("banderas", {}):
+        return {"bandera": datos["banderas"].get(equipo) or datos["banderas"][base]}
+    if equipo in datos.get("colores", {}):
+        fondo, texto, borde = datos["colores"][equipo]
+        return {"colores": {"fondo": fondo, "texto": texto, "borde": borde}}
+    return {}
+
+
+def _jugadores_temporada(jugadores: dict) -> "list[dict]":
+    """Jugadores con minutos, ordenados por minutos, con su posición más jugada."""
+    out = []
+    for nombre, j in jugadores.items():
+        if j["minutos"] <= 0:
+            continue
+        pos = max(j["posiciones"], key=j["posiciones"].get) if j["posiciones"] else None
+        fila = {"nombre": nombre, "posicion": pos, "partidos": j["partidos"]}
+        fila.update({k: round(v, 2) if isinstance(v, float) else v
+                     for k, v in j.items() if k not in ("posiciones", "partidos")})
+        fila["minutos"] = round(fila["minutos"])
+        out.append(fila)
+    return sorted(out, key=lambda f: -f["minutos"])
+
+
+def agregados(partidos: list, tiros: list) -> dict:
+    """Medias por partido de la temporada: lo que usan los percentiles y la comparativa."""
+    import numpy as np
+
+    def media(clave):
+        vals = [p[clave] for p in partidos if p.get(clave) is not None]
+        return round(float(np.mean(vals)), 2) if vals else None
+
+    n = max(1, len(partidos))
+    ra = sum(p.get("robos_altos") or 0 for p in partidos)
+    entradas = {k: sum((p.get("entradas") or {}).get(k, 0) for p in partidos)
+                for k in ("izquierda", "centro", "derecha")}
+    tot_e = sum(entradas.values()) or 1
+    xg_sin_pen = [t["xg"] for t in tiros if not t["penalti"]]
+    return {
+        "partidos": len(partidos),
+        "goles_favor": media("goles_favor"), "goles_contra": media("goles_contra"),
+        "xg_favor": media("xg_favor"), "xg_contra": media("xg_contra"),
+        "tiros": media("tiros"),
+        "xg_por_tiro": round(float(np.mean(xg_sin_pen)), 3) if xg_sin_pen else None,
+        "field_tilt": media("field_tilt"), "progresivos": media("progresivos"),
+        "centros": media("centros"), "robos_altos": round(ra / n, 2),
+        "robos_altos_tiro_pct": round(100 * sum(p.get("robos_altos_tiro") or 0 for p in partidos) / ra, 1) if ra else None,
+        "ppda_clasico": media("ppda_clasico"), "acciones_defensivas": media("acciones_defensivas"),
+        "carriles_pct": {k: round(100 * v / tot_e, 1) for k, v in entradas.items()},
+    }
+
+
 def build_team_data(entry: dict, orden: int) -> None:
     """Exporta las métricas y gráficas de un equipo publicado (sin key)."""
     import warnings
@@ -275,12 +362,16 @@ def build_team_data(entry: dict, orden: int) -> None:
 
     from pitchiq.agent import tools as agent_tools
     from pitchiq.data.loader import has_360, load_events, load_frames, load_matches
+    from pitchiq.metrics.attack import attack_summary, game_states
+    from pitchiq.metrics.attack import shots as team_shots
     from pitchiq.metrics.frames import merge_frames_events, visible_teammates
+    from pitchiq.metrics.players import CAMPOS, player_stats
     from pitchiq.metrics.pressing import defensive_actions, high_turnovers, ppda, ppda_classic
     from pitchiq.metrics.set_pieces import delivery_zone, find_corners
     from pitchiq.metrics.spatial import defensive_line_height
 
     team = entry["equipo"]
+    traducir = _traductor(entry.get("traducciones") or {})
     competition_id, season_id = entry["competition_id"], entry["season_id"]
     matches = load_matches(competition_id=competition_id, season_id=season_id)
     matches = matches[
@@ -289,7 +380,9 @@ def build_team_data(entry: dict, orden: int) -> None:
 
     recovery = np.zeros((5, 6), dtype=int)  # filas = ancho (y), columnas = largo (x)
     block = np.zeros((16, 24))  # densidad de posiciones visibles al defender
-    per_match, corner_ends = [], []
+    per_match, corner_ends, tiros = [], [], []
+    jugadores: dict[str, dict] = {}
+    puestos = entry.get("puestos") or {}
 
     for i_match, (_, m) in enumerate(matches.iterrows()):
         match_id = int(m["match_id"])
@@ -320,9 +413,20 @@ def build_team_data(entry: dict, orden: int) -> None:
         shots = events[(events["type"] == "Shot") & (events["period"] < 5)]
         xg = shots.groupby("team")["shot_statsbomb_xg"].sum()
         robos = high_turnovers(events, team)
+        ataque = attack_summary(events, team)
+        for s in team_shots(events, team):
+            tiros.append({**s, "p": i_match})
+        for nombre, st in player_stats(events, team).items():
+            acc = jugadores.setdefault(nombre, {"posiciones": {}, "partidos": 0, **dict.fromkeys(CAMPOS, 0)})
+            if st["minutos"] > 0:
+                acc["partidos"] += 1
+                pos = st["posicion"] or "?"
+                acc["posiciones"][pos] = acc["posiciones"].get(pos, 0) + st["minutos"]
+            for k in CAMPOS:
+                acc[k] += st[k]
         per_match.append({
             "fecha": str(m["match_date"])[:10],
-            "rival": entry.get("traducir", str)(rival),
+            "rival": traducir(rival),
             "rival_en": nombre_en(rival),
             "local": bool(home),
             "goles_favor": int(m["home_score"] if home else m["away_score"]),
@@ -337,6 +441,13 @@ def build_team_data(entry: dict, orden: int) -> None:
             "robos_altos": robos["n"],
             "robos_altos_tiro": robos["con_tiro"],
             "zonas": grid.T.astype(int).tolist(),
+            "tiros": sum(1 for s in tiros if s["p"] == i_match),
+            "field_tilt": ataque["field_tilt"],
+            "progresivos": ataque["progresivos"],
+            "entradas": ataque["entradas_ultimo_tercio"],
+            "centros": ataque["centros"],
+            "estados": game_states(events, team),
+            "rival_puesto": puestos.get(rival),
         })
 
         attacking, _ = find_corners(events, team)
@@ -362,12 +473,16 @@ def build_team_data(entry: dict, orden: int) -> None:
         "competicion": entry["competicion"],
         "temporada": entry["temporada"],
         "orden": orden,
+        "identidad": identidad(team),
         "herramientas": {k: v.model_dump() for k, v in tools.items()},
         "zonas_recuperacion": recovery.tolist(),
         "bloque_densidad": (block / max(block.max(), 1)).round(3).tolist(),
         "partidos": per_match,
         "corners": corner_ends,
+        "tiros": tiros,
+        "jugadores": _jugadores_temporada(jugadores),
     }
+    payload["agregados"] = agregados(per_match, tiros)
     TEAMS_DIR.mkdir(parents=True, exist_ok=True)
     out = TEAMS_DIR / f"{entry['slug']}.json"
     out.write_text(json.dumps(_sin_nan(payload), ensure_ascii=False), encoding="utf-8")
@@ -443,8 +558,15 @@ def build_og_image(payload: dict, out_dir=OG_DIR) -> None:
     ax.text(70, 585, "Cada cifra, contrastada con las métricas calculadas · StatsBomb Open Data",
             color=muted, fontsize=15, va="center")
     out_dir.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out_dir / f"{payload['slug']}.png", facecolor=bg)
+    import io
+
+    from PIL import Image
+
+    buf = io.BytesIO()
+    fig.savefig(buf, facecolor=bg)
     plt.close(fig)
+    # paleta de 64 colores: ~4 veces menos peso y sin diferencia visible en la tarjeta
+    Image.open(buf).convert("RGB").quantize(64).save(out_dir / f"{payload['slug']}.png", optimize=True)
 
 
 def build_og_all() -> None:
@@ -454,7 +576,22 @@ def build_og_all() -> None:
         print(f"og: {f.stem}", flush=True)
 
 
-def build_demo_data() -> None:
+def _construir(args: tuple) -> str:
+    entry, orden = args
+    build_team_data(entry, orden)
+    return entry["slug"]
+
+
+def _al_dia(slug: str) -> bool:
+    """True si el JSON del equipo ya tiene el formato actual (para no recalcularlo)."""
+    f = TEAMS_DIR / f"{slug}.json"
+    if not f.exists():
+        return False
+    datos = json.loads(f.read_text(encoding="utf-8"))
+    return all(k in datos for k in ("agregados", "identidad", "jugadores", "tiros"))
+
+
+def build_demo_data(jobs: int = 1, solo_faltan: bool = False) -> None:
     """Exporta todos los equipos de publicacion.yaml (sin key), borrando los retirados."""
     entradas = equipos_a_publicar()
     print(f"publicando {len(entradas)} equipos", flush=True)
@@ -463,8 +600,17 @@ def build_demo_data() -> None:
     for viejo in [*TEAMS_DIR.glob("*.json"), *OG_DIR.glob("*.png")]:
         if viejo.stem not in vigentes:
             viejo.unlink()
-    for orden, entry in enumerate(entradas):
-        build_team_data(entry, orden)
+    tareas = [(e, i) for i, e in enumerate(entradas) if not (solo_faltan and _al_dia(e["slug"]))]
+    if jobs <= 1:
+        for t in tareas:
+            _construir(t)
+        return
+    from concurrent.futures import ProcessPoolExecutor
+
+    # cada equipo es independiente: en paralelo el precómputo baja de horas a minutos
+    with ProcessPoolExecutor(max_workers=jobs) as pool:
+        for _ in pool.map(_construir, tareas):
+            pass
 
 
 def build_real(team: str) -> None:
@@ -537,6 +683,9 @@ def main() -> None:
                         help="genera solo las fixtures sintéticas (sin key)")
     parser.add_argument("--demo-data", action="store_true",
                         help="exporta solo las métricas de los equipos (sin key)")
+    parser.add_argument("--jobs", type=int, default=1, help="equipos en paralelo (--demo-data)")
+    parser.add_argument("--solo-faltan", action="store_true",
+                        help="no recalcula los equipos ya exportados con el formato actual")
     parser.add_argument("--og", action="store_true",
                         help="regenera solo las imágenes de vista previa (sin key)")
     args = parser.parse_args()
@@ -544,7 +693,7 @@ def main() -> None:
     if args.sample:
         build_sample()
     elif args.demo_data:
-        build_demo_data()
+        build_demo_data(jobs=args.jobs, solo_faltan=args.solo_faltan)
     elif args.og:
         build_og_all()
     else:

@@ -83,3 +83,28 @@ def test_nombre_en_limpia_sufijos_de_statsbomb():
     assert precompute.nombre_en("Spain Women's") == "Spain"
     assert precompute.nombre_en("Wales W") == "Wales"
     assert precompute.nombre_en("RB Leipzig") == "RB Leipzig"
+
+
+def test_identidad_bandera_para_selecciones_y_colores_para_clubes():
+    assert precompute.identidad("Spain") == {"bandera": "es"}
+    assert precompute.identidad("England Women's") == {"bandera": "gb-eng"}
+    assert precompute.identidad("Norway Women's") == {"bandera": "no"}
+    assert precompute.identidad("Barcelona")["colores"]["fondo"] == "#a50044"
+    assert precompute.identidad("Equipo inventado") == {}
+
+
+def test_agregados_medias_y_carriles():
+    partidos = [
+        {"goles_favor": 2, "goles_contra": 0, "xg_favor": 1.5, "xg_contra": 0.5, "tiros": 10,
+         "field_tilt": 60.0, "progresivos": 50, "centros": 10, "robos_altos": 4, "robos_altos_tiro": 1,
+         "ppda_clasico": 10.0, "acciones_defensivas": 200, "entradas": {"izquierda": 6, "centro": 2, "derecha": 2}},
+        {"goles_favor": 0, "goles_contra": 1, "xg_favor": 0.5, "xg_contra": 1.5, "tiros": 6,
+         "field_tilt": 40.0, "progresivos": 30, "centros": 6, "robos_altos": 0, "robos_altos_tiro": 0,
+         "ppda_clasico": 14.0, "acciones_defensivas": 180, "entradas": {"izquierda": 4, "centro": 4, "derecha": 2}},
+    ]
+    tiros = [{"xg": 0.1, "penalti": False}, {"xg": 0.76, "penalti": True}, {"xg": 0.3, "penalti": False}]
+    a = precompute.agregados(partidos, tiros)
+    assert a["goles_favor"] == 1.0 and a["field_tilt"] == 50.0 and a["tiros"] == 8.0
+    assert a["xg_por_tiro"] == 0.2  # sin penaltis
+    assert a["robos_altos"] == 2.0 and a["robos_altos_tiro_pct"] == 25.0
+    assert a["carriles_pct"] == {"izquierda": 50.0, "centro": 30.0, "derecha": 20.0}

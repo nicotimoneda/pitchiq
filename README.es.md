@@ -20,7 +20,7 @@
 
 ## Qué es
 
-Un pipeline que computa métricas tácticas deterministas sobre StatsBomb Open Data (21 equipos: Bayer Leverkusen 23/24, Barça 20/21, PSG 22/23, el top 10 de La Liga 15/16 y los semifinalistas de la Euro 2024 y el Mundial 2022) y genera un informe con LLM donde **el modelo no puede calcular ni inventar números**: solo redacta sobre las salidas de las herramientas, y un validador coteja después cada cifra del texto contra la evidencia. La [evaluación](EVALUATION.md) mide todo lo medible sin key — incluido el hallazgo incómodo de que un "fix" de embeddings del propio proyecto resultó ser una regresión de −20 puntos al medirlo. Ese es el estándar del repo: números antes que sensaciones, también contra uno mismo.
+Un pipeline que computa métricas tácticas deterministas sobre StatsBomb Open Data (25 equipos: Bayer Leverkusen 23/24, Barça 20/21, PSG 22/23, el top 10 de La Liga 15/16 y los semifinalistas de la Euro 2024, el Mundial 2022 y la Eurocopa femenina 2025) y genera un informe con LLM donde **el modelo no puede calcular ni inventar números**: solo redacta sobre las salidas de las herramientas, y un validador coteja después cada cifra del texto contra la evidencia. La [evaluación](EVALUATION.md) mide todo lo medible sin key — incluido el hallazgo incómodo de que un "fix" de embeddings del propio proyecto resultó ser una regresión de −20 puntos al medirlo. Ese es el estándar del repo: números antes que sensaciones, también contra uno mismo.
 
 ## El recorrido (M1–M7)
 
@@ -97,7 +97,8 @@ La web es una herramienta de análisis por equipo:
 - **Presión, Defensa y Balón parado**: mapas de campo y gráficas por partido.
 - **Partidos**: rendimiento local/visitante y por mitades de temporada, tabla ordenable y una **ficha de cada partido** (xG, PPDA, mapa de acciones defensivas y córners).
 - **Comparar**: mapa de estilos de todos los equipos (intensidad de presión frente a altura) y comparación uno a uno.
-- Tema claro/oscuro, **exportar a PDF**, vista previa al compartir el enlace y carga bajo demanda de los datos de cada equipo.
+- **Robos altos**: recuperaciones en juego abierto a 40 yardas o menos de la portería rival, y cuántas acaban en tiro.
+- En **español e inglés** (según el idioma del navegador, con botón para cambiar), tema claro/oscuro, **exportar a PDF**, vista previa al compartir el enlace y carga bajo demanda de los datos de cada equipo.
 
 Qué equipos se publican lo decide [`scripts/publicacion.yaml`](scripts/publicacion.yaml): por competición de StatsBomb Open Data, una lista de equipos o los N primeros de la clasificación, con nombres en español. Donde no hay datos de posiciones (La Liga 2015/16), la sección de Defensa lo indica y esas métricas no se estiman. Una tarea semanal de GitHub Actions compara el catálogo de StatsBomb y abre una issue si publica temporadas nuevas.
 

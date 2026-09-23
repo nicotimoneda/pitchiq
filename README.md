@@ -20,13 +20,13 @@
 
 ## What it is
 
-PitchIQ computes deterministic tactical metrics from StatsBomb Open Data for 21 teams: Bayer Leverkusen 23/24, Barça 20/21, PSG 22/23, La Liga 15/16's top 10, and the Euro 2024 and World Cup 2022 semi-finalists. It then writes a report with an LLM that **is not allowed to compute or invent numbers**. The model only writes prose around the outputs of deterministic tools, and a validator then checks every figure in the text against that evidence.
+PitchIQ computes deterministic tactical metrics from StatsBomb Open Data for 25 teams: Bayer Leverkusen 23/24, Barça 20/21, PSG 22/23, La Liga 15/16's top 10, and the semi-finalists of Euro 2024, World Cup 2022 and Women's Euro 2025. It then writes a report with an LLM that **is not allowed to compute or invent numbers**. The model only writes prose around the outputs of deterministic tools, and a validator then checks every figure in the text against that evidence.
 
 The [evaluation](EVALUATION.md) measures everything that can be measured without an API key. That includes an uncomfortable finding: an embeddings "fix" I made turned out to be a **−20 point regression in top-1 retrieval** once measured, so it was reverted. That is the standard of the repo: numbers over impressions, including against myself.
 
 ## The web app
 
-The UI is in Spanish; the data covers clubs and national teams.
+The app is available in English and Spanish. It picks the browser's language, and a button switches between them. The data covers clubs, men's national teams and women's national teams.
 
 - **Search** any published team (press `/`). The header shows crest, record, league position, form and key metrics, each with a per-match sparkline.
 - **Report**: a summary where every number is highlighted and verified against the computed metrics. Hover a number to see which metric backs it.
@@ -101,7 +101,7 @@ The first run downloads from StatsBomb; later runs read from `data/cache/`.
 
 | Area | Metrics |
 |---|---|
-| Pressing | defensive actions by zone, PPDA, share in the opponent's half |
+| Pressing | defensive actions by zone, PPDA, share in the opponent's half, high turnovers (open-play regains within 40 yards of goal) and how many end in a shot |
 | Defensive shape (360) | line height, block width/depth, convex-hull area, pressing support |
 | Corners | delivery zone, box load, first contact, xG for/against, man-orientation index (a heuristic proxy) |
 | Matches | result, xG, PPDA, defensive actions and line height per match |

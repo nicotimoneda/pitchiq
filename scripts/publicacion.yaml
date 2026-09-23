@@ -38,8 +38,14 @@ competiciones:
     nombre: Mundial
     equipos: ["Argentina", "France", "Croatia", "Morocco"]
 
+  - competition_id: 53    # Eurocopa femenina 2025 (todos los partidos con 360): semifinalistas
+    season_id: 315
+    nombre: Eurocopa femenina
+    equipos: ["England Women's", "Spain Women's", "Germany Women's", "Italy Women's"]
+
 # Nombres en español para la web (equipos publicados y rivales). StatsBomb los
-# da en inglés; los que no aparecen aquí se muestran tal cual.
+# da en inglés; los que no aparecen aquí se muestran tal cual. En selecciones
+# femeninas se traduce el nombre sin el sufijo " Women's".
 traducciones:
   Paris Saint-Germain: PSG
   Albania: Albania
@@ -55,11 +61,13 @@ traducciones:
   Denmark: Dinamarca
   Ecuador: Ecuador
   England: Inglaterra
+  Finland: Finlandia
   France: Francia
   Georgia: Georgia
   Germany: Alemania
   Ghana: Ghana
   Hungary: Hungría
+  Iceland: Islandia
   Iran: Irán
   Italy: Italia
   Japan: Japón
@@ -79,9 +87,13 @@ traducciones:
   South Korea: Corea del Sur
   Spain: España
   Switzerland: Suiza
+  Sweden: Suecia
   Tunisia: Túnez
   Turkey: Turquía
   Ukraine: Ucrania
   United States: Estados Unidos
   Uruguay: Uruguay
+  Norway: Noruega
   Wales: Gales
+  WNT Finland: Finlandia
+  Wales W: Gales

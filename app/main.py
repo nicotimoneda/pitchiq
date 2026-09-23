@@ -46,6 +46,17 @@ def _load_report(report_dir: Path) -> "tuple[str, dict, Path, bool]":
     return report_md, evidence, base, is_sample
 
 
+PESADOS = ("corners", "bloque_densidad")
+
+
+def _ligero(team: dict) -> dict:
+    """Equipo sin los campos pesados (puntos de córner, densidades, zonas por partido)."""
+    ligero = {k: v for k, v in team.items() if k not in PESADOS}
+    ligero["partidos"] = [{k: v for k, v in p.items() if k != "zonas"} for p in team["partidos"]]
+    ligero["ligero"] = True
+    return ligero
+
+
 def create_app(report_dir: "Path | None" = None) -> FastAPI:
     """Construye la app sobre un directorio de artefactos (inyectable en tests)."""
     base = report_dir if report_dir is not None else REPORT_DIR
@@ -67,6 +78,10 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
                 "n_grounded": sum(1 for f in figures if f["grounded"]),
                 "sample": is_sample_report,
             }
+
+    # en la página van ligeros todos los equipos (para comparar y el mapa de estilos);
+    # los datos pesados de cada uno se piden a /api/equipos/{slug} al elegirlo
+    teams_light = [_ligero(t) for t in teams]
 
     app = FastAPI(title="PitchIQ", docs_url=None, redoc_url=None)
     app.add_middleware(GZipMiddleware, minimum_size=1000)
@@ -90,6 +105,7 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
             "index.html",
             {
                 "teams": teams,
+                "teams_light": teams_light,
                 "reports": reports,
                 "initial": initial,
                 "initial_team": by_slug[initial],

@@ -3,6 +3,7 @@
 Excluidos por defecto; se lanzan con `uv run pytest -m e2e` (CI los corre en su job).
 """
 
+import re
 import socket
 import threading
 import time
@@ -10,6 +11,7 @@ from pathlib import Path
 
 import pytest
 import uvicorn
+from playwright.sync_api import expect
 
 from app.main import REPORT_DIR, create_app
 
@@ -68,8 +70,8 @@ def test_buscador_cambia_de_equipo_y_la_url(pagina):
     pagina.locator("#buscador-btn").click()
     pagina.locator("#buscador-input").fill("rival")
     pagina.keyboard.press("Enter")
-    assert pagina.locator("#t-nombre").inner_text() == "Equipo Rival"
-    assert "equipo=equipo-rival" in pagina.url
+    expect(pagina.locator("#t-nombre")).to_have_text("Equipo Rival")
+    expect(pagina).to_have_url(re.compile("equipo=equipo-rival"))
     assert pagina.locator("#buscador-pop").is_hidden()
 
 

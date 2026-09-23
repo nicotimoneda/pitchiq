@@ -47,7 +47,9 @@ def test_index_con_selector_secciones_y_datos(client):
                     'id="partidos"', 'id="comparar"', 'id="probar-texto"']:
         assert seccion in html
     # los datos de todos los equipos se inyectan en la página (sin llamadas desde el cliente)
-    assert html.count('"zonas_recuperacion"') == 2
+    assert html.count('"zonas_recuperacion"') == 3  # los 2 ligeros + el inicial completo
+    # los datos pesados solo viajan del equipo inicial; el resto se pide a la API
+    assert html.count('"corners"') == 1
     # el informe del LLM (muestra) viaja con su recuento de cifras verificadas
     assert '"n_grounded": 3' in html
     assert "Datos de muestra" in html

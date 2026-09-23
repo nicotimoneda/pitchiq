@@ -536,7 +536,9 @@
     .stats div { padding: 6px 0; }
     .stats dd { font-size: 20px; }
     .corners-panel { display: block; }
-    main.fade { animation: none; }
+    main[aria-busy="true"] { opacity: .55; transition: opacity .15s ease .1s; pointer-events: none; }
+  #aviso { position: fixed; z-index: 60; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); transform: translateX(-50%); max-width: calc(100vw - 32px); background: var(--tip-bg); color: var(--tip-ink); padding: 12px 18px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, .3); font-size: 15px; }
+  main.fade { animation: none; }
   }
   main.fade { animation: fadein .28s ease; }
   @keyframes fadein { from { opacity: .35; } to { opacity: 1; } }
@@ -890,9 +892,11 @@
 </dialog>
 
 <div id="tip" hidden></div>
+<div id="aviso" role="alert" hidden></div>
 
 <script>
-const TEAMS = {{ teams | tojson }};
+const TEAMS = {{ teams_light | tojson }};
+const INICIAL_COMPLETO = {{ initial_team | tojson }};
 const REPORTS = {{ reports | tojson }};
 const INITIAL = {{ initial | tojson }};
 
@@ -1727,8 +1731,15 @@ $("#btn-pdf").addEventListener("click", () => window.print());
 
 /* ---------- navegación ---------- */
 const bySlug = Object.fromEntries(TEAMS.map((t) => [t.slug, t]));
+const completos = { [INICIAL_COMPLETO.slug]: INICIAL_COMPLETO };
 let slugActual = INITIAL;
-const actual = () => bySlug[slugActual];
+const actual = () => completos[slugActual] || bySlug[slugActual];
+async function cargarEquipo(slug) {
+  if (completos[slug]) return completos[slug];
+  const r = await fetch("/api/equipos/" + encodeURIComponent(slug));
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  return (completos[slug] = await r.json());
+}
 function render() {
   const team = actual();
   pintarBoton(team);
@@ -1749,17 +1760,33 @@ $("#rival").addEventListener("change", (e) => {
   renderComparar(actual());
   renderEstilos(actual());
 });
-$("#equipo").addEventListener("change", (e) => {
-  slugActual = e.target.value;
-  try { history.replaceState(null, "", "?equipo=" + encodeURIComponent(slugActual) + location.hash); } catch (err) { /* sin historial */ }
+$("#equipo").addEventListener("change", async (e) => {
+  const slug = e.target.value;
   const main = document.querySelector("main");
+  main.setAttribute("aria-busy", "true");
+  let team;
+  try {
+    team = await cargarEquipo(slug);
+  } catch (err) {
+    main.removeAttribute("aria-busy");
+    e.target.value = slugActual;
+    aviso("No se pudo cargar " + bySlug[slug].nombre + ". Comprueba la conexión y vuelve a intentarlo.");
+    return;
+  }
+  if (e.target.value !== slug) return;  // se eligió otro mientras cargaba
+  slugActual = team.slug;
+  try { history.replaceState(null, "", "?equipo=" + encodeURIComponent(slugActual) + location.hash); } catch (err) { /* sin historial */ }
+  main.removeAttribute("aria-busy");
   main.classList.remove("fade"); void main.offsetWidth; main.classList.add("fade");
   render();
 });
-try {
-  const pedido = new URLSearchParams(location.search).get("equipo");
-  if (pedido && bySlug[pedido]) { slugActual = pedido; $("#equipo").value = pedido; }
-} catch (err) { /* sin URL */ }
+function aviso(texto) {
+  const el = $("#aviso");
+  el.textContent = texto;
+  el.hidden = false;
+  clearTimeout(aviso.t);
+  aviso.t = setTimeout(() => { el.hidden = true; }, 5000);
+}
 render();
 
 $("#tema-ico").setAttribute("href", "#i-" + ({ light: "sol", dark: "luna" }[document.documentElement.dataset.theme] || "auto"));

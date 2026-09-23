@@ -20,7 +20,7 @@
 
 ## What it is
 
-PitchIQ computes deterministic tactical metrics from StatsBomb Open Data for 25 teams: Bayer Leverkusen 23/24, Barça 20/21, PSG 22/23, La Liga 15/16's top 10, and the semi-finalists of Euro 2024, World Cup 2022 and Women's Euro 2025. It then writes a report with an LLM that **is not allowed to compute or invent numbers**. The model only writes prose around the outputs of deterministic tools, and a validator then checks every figure in the text against that evidence.
+PitchIQ computes deterministic tactical metrics from StatsBomb Open Data for 115 teams, from full club seasons to every team at three international tournaments (men's and women's). It then writes a report with an LLM that **is not allowed to compute or invent numbers**. The model only writes prose around the outputs of deterministic tools, and a validator then checks every figure in the text against that evidence.
 
 The [evaluation](EVALUATION.md) measures everything that can be measured without an API key. That includes an uncomfortable finding: an embeddings "fix" I made turned out to be a **−20 point regression in top-1 retrieval** once measured, so it was reverted. That is the standard of the repo: numbers over impressions, including against myself.
 
@@ -34,18 +34,16 @@ Every number goes through three independent checks before anyone reads it:
 
 ## The web app
 
-The app is available in English and Spanish. It picks the browser's language, and a button switches between them. The data covers clubs, men's national teams and women's national teams.
+The app is available in English and Spanish. It picks the browser's language, and a button switches between them. It covers **115 teams**: full seasons of La Liga and the Premier League 2015/16, every team at Euro 2024, World Cup 2022 and Women's Euro 2025, plus Leverkusen 23/24, Barça 20/21 and PSG 22/23.
 
-- **Search** any published team (press `/`). The header shows crest, record, league position, form and key metrics, each with a per-match sparkline.
-- **Report**: a summary where every number is highlighted and verified against the computed metrics. Hover a number to see which metric backs it.
-- **Pressing, Defence, Set pieces**: pitch maps (defensive actions by zone, block density from 360 freeze-frames, corner deliveries) and per-match charts.
-- **Matches**: home/away and first/second-half splits, a sortable table, and a **sheet for every match** (xG, PPDA, defensive-action map, corners).
-- **Compare**: a style map of all teams (pressing intensity vs. share of actions in the opponent's half) and head-to-head bars.
-- **Also**:
-  - light and dark themes;
-  - **export to PDF**;
-  - link previews (Open Graph image per team);
-  - per-team data loaded on demand.
+- **Context for every number.** Each metric is shown as a percentile against the team's league or tournament, and the report lists the team's **strengths and weaknesses** automatically. It reads like a scouting sheet on the next opponent.
+- **Report**: a summary where every number is verified against the computed metrics (hover to see which metric backs it).
+- **Attack**: shot map sized by xG, territorial control, progressive passes and carries, and final-third entries by lane.
+- **Pressing, Defence, Set pieces**: pitch maps and 5-match rolling averages, including PPDA in both definitions (with pressures and the classic one used by public sources).
+- **Players**: a sortable table of every player (totals or per 90): goals, xG, key passes, progressive actions, pressures, defensive actions.
+- **Matches**: splits by venue, by half of the season, by opponent strength and by game state (winning, drawing, losing), a filterable table and a sheet for every match with its own link.
+- **Compare**: a style map of all 115 teams (classic PPDA vs. territorial control) and head-to-head bars.
+- **Also**: crests in club colours and flags for national teams, CSV export for matches and players, export to PDF, light and dark themes, link previews, and per-team data loaded on demand.
 
 ## The core feature: 100% grounded reports
 
@@ -111,7 +109,9 @@ The first run downloads from StatsBomb; later runs read from `data/cache/`.
 | Pressing | defensive actions by zone, PPDA, share in the opponent's half, high turnovers (open-play regains within 40 m of goal, as Opta defines them) and how many end in a shot |
 | Defensive shape (360) | line height, block width/depth, convex-hull area, pressing support |
 | Corners | delivery zone, box load, first contact, xG for/against, man-orientation index (a heuristic proxy) |
-| Matches | result, xG, PPDA, defensive actions and line height per match |
+| Attack | shots and xG (map sized by xG), xG per shot, territorial control (share of final-third passes), progressive passes and carries, final-third entries by lane, crosses |
+| Players | minutes rebuilt from line-ups and substitutions; goals, assists, xG, key passes, progressive actions, pressures, defensive actions, recoveries |
+| Matches | result, xG, shots, territory, PPDA, high turnovers and line height per match; minutes and xG by game state |
 
 The caveats are part of the product:
 - **360 freeze-frames only include players visible in the broadcast.** Spatial metrics are approximations over visible players, never assume 11, and are left empty rather than estimated when too few players are visible.

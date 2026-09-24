@@ -142,12 +142,15 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
         # los scripts de la página son inline: la CSP se limita a lo que no los rompe
         resp.headers.setdefault("Content-Security-Policy", "frame-ancestors 'none'; object-src 'none'; base-uri 'none'")
         # datos e imágenes solo cambian con cada despliegue: caché de una hora
-        if request.url.path.startswith(("/api/equipos/", "/og/")):
+        if request.url.path.startswith("/fonts/"):
+            resp.headers.setdefault("Cache-Control", "public, max-age=31536000, immutable")
+        elif request.url.path.startswith(("/api/equipos/", "/og/")):
             resp.headers.setdefault("Cache-Control", "public, max-age=3600, stale-while-revalidate=86400")
         return resp
     figures_dir = report_base / "figures"
     if figures_dir.exists():
         app.mount("/figures", StaticFiles(directory=figures_dir), name="figures")
+    app.mount("/fonts", StaticFiles(directory=APP_DIR / "static" / "fonts"), name="fonts")
     og_dir = base / "og"
     if og_dir.exists():
         app.mount("/og", StaticFiles(directory=og_dir), name="og")

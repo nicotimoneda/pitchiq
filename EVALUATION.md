@@ -190,7 +190,7 @@ Tres cosas que esta comparación enseña y que no se veían sin mirar fuera:
    inferiores. 3 de los 34 partidos del Leverkusen no tienen 360.
 2. **Muestras desiguales entre equipos.** Las ligas 2015/16 traen 38 partidos
    por club; el Leverkusen, el Barça 20/21 y el PSG, solo sus partidos (sin el
-   resto de su liga), y una selección, entre 6 y 7. Los percentiles comparan
+   resto de su liga), y una selección, entre 3 y 7. Los percentiles comparan
    equipos con muestras distintas y grupos pequeños (8 selecciones masculinas):
    sirven para describir estilos, no para sacar conclusiones finas.
 3. **El MOI es un proxy heurístico.** Distancia media al marcador más cercano

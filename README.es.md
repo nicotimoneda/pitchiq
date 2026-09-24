@@ -9,7 +9,7 @@
 ![LangGraph](https://img.shields.io/badge/LangGraph-1C3C3C?logo=langgraph&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-Anthropic-D97757?logo=anthropic&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-116%20passing-1A7F37?logo=pytest&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-117%20passing-1A7F37?logo=pytest&logoColor=white)
 ![Playwright](https://img.shields.io/badge/e2e-Playwright-2EAD33?logo=playwright&logoColor=white)
 ![Ruff](https://img.shields.io/badge/lint-ruff-D7FF64?logo=ruff&logoColor=black)
 ![License](https://img.shields.io/badge/License-MIT-1A7F37)
@@ -21,7 +21,7 @@
 ---
 
 <div align="center">
-<img src="assets/demo.gif" width="92%" alt="Recorrido por la web: puntos fuertes y débiles, buscador, mapa de tiros, jugadores, contexto según el marcador, ficha de partido y mapa de estilos"/>
+<img src="assets/demo.gif" width="92%" alt="Recorrido por la web: portada del equipo, informe del analista IA con cada cifra trazada a su fuente, buscador, mapa de tiros, jugadores, ficha de partido y mapa de estilos"/>
 </div>
 
 ## Qué hace
@@ -41,9 +41,9 @@ La ficha de un equipo empieza con su balance, su racha y cuatro cifras clave con
 
 ![Portada del equipo](assets/app/es_overview.png)
 
-El informe va primero. Cada cifra resaltada es una cita que el verificador ha comprobado, y al pasar el cursor se ve de qué dato sale. Con un informe de IA, el panel lateral enseña cómo se escribió (dossier → glosario → borrador → verificador) y enlaza al borrador y al dossier tal cual. Abajo, un equipo sin informe, que enseña el resumen determinista y pasa la misma comprobación ([cómo se generan los informes](#cómo-se-generan-los-informes)):
+El informe va primero. Cada cifra resaltada es una cita que el verificador ha comprobado; al pasar el cursor se ve de qué entrada del dossier sale. El panel lateral enseña cómo se escribió (dossier → glosario → borrador → verificador) y enlaza al borrador y al dossier tal cual. Ocho equipos escaparate tienen informe de IA; el resto enseña un resumen determinista que pasa la misma comprobación ([cómo se generan los informes](#cómo-se-generan-los-informes)):
 
-![Informe verificado con puntos fuertes y débiles](assets/app/es_report.png)
+![Informe del analista IA con citas verificadas y su traza](assets/app/es_report.png)
 
 Ataque: mapa de tiros con tamaño según el xG y los goles encima, y cada métrica frente a la liga. Barça 2015/16: 604 tiros, 109 goles, primero de La Liga en xG por partido y en dominio territorial:
 
@@ -69,7 +69,7 @@ Todo lo de abajo se mide sin API key y se reproduce desde el repositorio ([evalu
 
 | Comprobación | Resultado |
 |---|---|
-| Cifras de los informes respaldadas por los datos | **100 %**, re-verificado desde los borradores guardados con `scripts/run_eval.py` |
+| Cifras de los informes respaldadas por los datos | **977 de 977** en los 8 informes publicados (ES + EN), re-verificado desde los borradores guardados con `scripts/run_eval.py` |
 | Percentiles que cita el agente frente a los de la web | **1417 / 1417** idénticos (implementaciones en Python y JavaScript) |
 | Goles frente a [Understat](https://understat.com), partido a partido | **1.621 de 1.621** idénticos (43 clubes) |
 | xG frente a Understat, partido a partido | correlación **0,93** (modelos distintos, mismo orden de partidos) |
@@ -91,7 +91,7 @@ uv run uvicorn app.main:app --port 8000     # → http://localhost:8000
 Los datos calculados de los 67 equipos vienen en el repositorio: la web funciona tal cual, sin API key ni descargas.
 
 ```bash
-uv run pytest                                                  # 101 tests (sin red, LLM simulado)
+uv run pytest                                                  # 102 tests (sin red, LLM simulado)
 uv run playwright install chromium && uv run pytest -m e2e     # 15 tests en navegador
 ```
 

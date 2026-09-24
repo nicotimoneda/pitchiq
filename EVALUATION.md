@@ -31,11 +31,13 @@ verificador sobre el borrador de cada informe (ES y EN) y el dossier que recibi�
 
 | Métrica | Valor |
 |---|---|
-| Citas válidas / cifras en los informes | ver `eval/results/grounding.json` |
+| Cifras respaldadas / cifras en los informes | **977 / 977** (8 equipos × español e inglés; `eval/results/grounding.json`) |
 | Percentiles del dossier (Python) frente a los de la web (JavaScript) | **1417 / 1417** idénticos |
 
-*Nota:* mientras no se generen los informes reales, la medida corre sobre el
-informe de muestra; hay un test en CI que exige ratio 1,0 sobre lo servido.
+*Nota:* los 8 informes publicados se escribieron con Claude Opus sin el contexto del
+glosario (el índice no estaba construido). Ninguno terminó con cifras sin respaldo: 15 de
+16 textos pasaron a la primera y 1 necesitó un reintento. Un test de CI exige ratio 1,0
+sobre los informes servidos.
 Límite conocido: el verificador detecta cifras con dígitos, no cantidades
 escritas con letras («tres victorias»). El prompt lo prohíbe, pero no se comprueba.
 
@@ -75,9 +77,9 @@ cada pregunta vale 10 puntos, así que la diferencia real son 2 preguntas.
 
 Requiere LLM juez (API key) y corre fuera de CI:
 `ANTHROPIC_API_KEY=... uv run --script scripts/eval_rag.py`
-→ resultados en `eval/results/ragas.json`. **Estado: pendiente de corrida por
-el autor** (este repositorio no ejecuta llamadas de LLM en CI ni en sesiones
-sin key; el hueco se rellena con la corrida real, no con un número inventado).
+→ resultados en `eval/results/ragas.json`. **Estado: sin corrida publicada.**
+Este repositorio no ejecuta llamadas de LLM en CI; cuando exista la corrida real
+se publica aquí, en lugar de un número inventado.
 
 ### Generalización (Euro 2024, solo métricas deterministas, sin key)
 

@@ -49,14 +49,15 @@ def test_percentil_igual_que_la_web():
 
 
 def test_grupo_de_reserva_separa_clubes_y_selecciones_por_genero():
-    def eq(nombre, comp, bandera=False):
-        return {"equipo": nombre, "competicion": comp, "temporada": "2024",
+    def eq(nombre, comp, bandera=False, femenino=False):
+        return {"equipo": nombre, "competicion": comp, "temporada": "2024", "femenino": femenino,
                 "identidad": {"bandera": "x"} if bandera else {}}
+    # StatsBomb no nombra igual a todas las femeninas («WNT Finland»): manda el campo, no el nombre
     todos = [eq("Spain", "Euro", True), eq("France", "Mundial", True),
-             eq("Spain Women's", "Euro femenina", True), eq("Leverkusen", "Bundesliga")]
+             eq("WNT Finland", "Euro femenina", True, True), eq("Leverkusen", "Bundesliga")]
     assert [t["equipo"] for t in grupo(todos[0], todos)[2]] == ["Spain", "France"]
     assert grupo(todos[0], todos)[1] == "published men's national teams"
-    assert [t["equipo"] for t in grupo(todos[2], todos)[2]] == ["Spain Women's"]
+    assert [t["equipo"] for t in grupo(todos[2], todos)[2]] == ["WNT Finland"]
     assert [t["equipo"] for t in grupo(todos[3], todos)[2]] == ["Leverkusen"]
 
 
@@ -90,6 +91,15 @@ def test_fallos_persistentes_quedan_registrados(equipos):
     rep = generate_report(equipos[0], equipos, llm=llm, max_retries=1)
     assert len(llm.prompts) == 2 and rep.retries_used == 1
     assert [f.text for f in rep.grounding.ungrounded] == ["99"]
+
+
+def test_reintento_sugiere_la_clave_real_si_la_traduce(equipos):
+    # en inglés el modelo tiende a traducir la clave: {metrica.shots} en vez de {metrica.tiros}
+    llm = MockLLM(["They take {metrica.shots} shots.", "They take {metrica.tiros} shots."])
+    rep = generate_report(equipos[0], equipos, llm=llm, idioma="en")
+    assert rep.retries_used == 1 and rep.grounding.is_grounded
+    assert "{metrica.shots} (¿quizá {metrica.tiros}?)" in llm.prompts[1]
+    assert "cópialas tal cual" in llm.prompts[0]
 
 
 def test_informe_en_ingles(equipos):

@@ -42,7 +42,7 @@ def _load_teams(report_dir: Path) -> "tuple[list[dict], bool]":
 # Lo que la página lee de cada equipo para buscar, comparar y calcular percentiles
 # (METRICAS en index.html). El resto se pide a /api/equipos/{slug} al elegirlo.
 CAMPOS_LIGEROS = ("slug", "nombre", "equipo", "competicion", "temporada", "orden",
-                  "posicion", "n_equipos", "identidad")
+                  "posicion", "n_equipos", "identidad", "nombre_en", "femenino")
 HERRAMIENTAS_LIGERAS = {
     "presion": ("ppda_medio", "pct_acciones_campo_rival"),
     "forma_defensiva": ("altura_linea_media", "anchura_media", "profundidad_media",

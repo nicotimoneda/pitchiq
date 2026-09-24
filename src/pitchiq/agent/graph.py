@@ -7,6 +7,7 @@ grafo vuelve al redactor con la lista exacta de fallos (hasta ``max_retries``).
 """
 
 import json
+import re
 from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
@@ -94,7 +95,10 @@ def _writer_prompt(state: ReportState) -> str:
     )
     prompt = (
         f"Equipo: {team['nombre']} · {team['competicion']} {team['temporada']}.\n"
-        f"Idioma del informe: {IDIOMAS[idioma]}.\n\n"
+        f"Idioma del informe: {IDIOMAS[idioma]}."
+        + (" Las claves del dossier están en español: cópialas tal cual, sin traducirlas "
+           "(p. ej. {metrica.tiros}, nunca {metrica.shots})." if idioma != "es" else "")
+        + "\n\n"
         f"DOSSIER (única fuente de cifras; cita las claves entre llaves):\n{lineas}"
     )
     if state.get("context"):
@@ -114,6 +118,21 @@ def _writer_prompt(state: ReportState) -> str:
             "cada cifra, como cita a una clave existente del dossier."
         )
     return prompt
+
+
+def sugerir_clave(inventada: str, dossier: dict) -> "list[str]":
+    """Claves reales parecidas a una inventada, para el aviso del reintento.
+
+    El fallo típico en inglés es traducir la clave ({metrica.shots} por
+    {metrica.tiros}): se buscan las palabras de la clave inventada en las
+    descripciones del dossier, primero con el mismo prefijo.
+    """
+    prefijo, _, resto = inventada.strip("{}").partition(".")
+    palabras = [p for p in re.split(r"[_.]", resto.lower()) if len(p) >= 3]
+    encaja = [k for k, e in dossier.items()
+              if any(re.search(rf"\b{re.escape(p)}\b", f"{k} {e['es']} {e['en']}".lower()) for p in palabras)]
+    encaja.sort(key=lambda k: not k.startswith(prefijo + "."))
+    return encaja[:2]
 
 
 def _nombres(team: dict) -> "list[str]":
@@ -151,7 +170,12 @@ def build_graph(llm: LLMClient, retriever=None, max_retries: int = 1):
             libres = [t for t in fallos if t[0].isdigit()]
             partes = []
             if inventadas:
-                partes.append("citar claves que no existen: " + ", ".join(inventadas))
+                pistas = []
+                for t in inventadas:
+                    parecidas = sugerir_clave(t, state["dossier"])
+                    pistas.append(t + (" (¿quizá " + " o ".join("{" + k + "}" for k in parecidas) + "?)"
+                                       if parecidas else ""))
+                partes.append("citar claves que no existen: " + ", ".join(pistas))
             if mal:
                 partes.append("poner tras «percentil» una clave que no es un percentil: " + ", ".join(mal))
             if libres:

@@ -982,7 +982,7 @@
         <li><b>Unidades.</b> StatsBomb normaliza el campo a 120 × 80 yardas; aquí todo se convierte a metros (109,7 × 73,2 m): distancias en metros y áreas en m².</li>
         <li><b>PPDA.</b> Incluye las presiones como acción defensiva: mide volumen de presión. Sus valores no son comparables con los de otras fuentes y, contrastado con Understat, tampoco ordena igual a los equipos.</li>
         <li><b>Marcaje en córners.</b> La distancia al marcador más cercano es una aproximación; no clasifica sistemas de marcaje.</li>
-        <li><b>Interpretación.</b> Los informes redactados se apoyan en un glosario táctico en revisión.</li>
+        <li><b>Interpretación.</b> El glosario táctico que explica al modelo qué significan las métricas es opcional: la traza de cada informe dice si lo tuvo.</li>
       </ul>
     </details>
   </footer>
@@ -1092,7 +1092,7 @@ const T_EN = {
   "metros desde su portería": "metres from its own goal", "m² · más bajo = más compacto": "m² · lower = more compact",
   "metros desde su portería · el campo mide 109,7 m": "metres from its own goal · the pitch is 109.7 m long",
   "Córners a favor por partido": "Corners for per match", "Primer contacto en córners": "First contact at corners", "% ganado": "% won",
-  "Datos:": "Data:", "API": "API", "Evidencia del informe": "Report evidence", "Código": "Code", "Metodología y límites": "Methodology and limits",
+  "Datos:": "Data:", "API": "API", "Evidencia del informe": "Report evidence", "Dossier y borrador": "Dossier and draft", "Código": "Code", "Metodología y límites": "Methodology and limits",
   "Cifras verificadas.": "Verified figures.",
   "El analista IA no escribe cifras: cita entradas de un dossier calculado con los eventos de cada partido y el código pone los valores. Un verificador comprueba cada cita y marca cualquier número escrito a mano.":
     "The AI analyst does not write figures: it cites entries of a dossier computed from each match's events, and the code inserts the values. A verifier checks every citation and flags any number typed by hand.",
@@ -1106,7 +1106,7 @@ const T_EN = {
     "Pressures count as defensive actions, so it measures pressing volume. Values are not comparable with other sources and, checked against Understat, it does not rank teams the same way either.",
   "Marcaje en córners.": "Marking at corners.", "La distancia al marcador más cercano es una aproximación; no clasifica sistemas de marcaje.":
     "Distance to the nearest marker is an approximation; it does not classify marking systems.",
-  "Interpretación.": "Interpretation.", "Los informes redactados se apoyan en un glosario táctico en revisión.": "Written reports rely on a tactical glossary that is still under review.",
+  "Interpretación.": "Interpretation.", "El glosario táctico que explica al modelo qué significan las métricas es opcional: la traza de cada informe dice si lo tuvo.": "The tactical glossary that tells the model what the metrics mean is optional: each report's trace says whether it had it.",
   "xG": "xG", "Dónde defendió": "Where it defended", "PPDA": "PPDA", "Ningún equipo coincide": "No team matches",
   "Cifra verificada": "Verified figure", "Sin respaldo": "Unsupported", "No coincide con ninguna métrica calculada": "Does not match any computed metric",
   "Sin PPDA calculable": "No PPDA available", "Pulsa para comparar": "Click to compare", "PPDA: ": "PPDA: ",
@@ -1210,7 +1210,7 @@ function traducirArbol(root) {
 }
 function localizarEquipo(t) {
   if (!t._es) t._es = { nombre: t.nombre, competicion: t.competicion, rivales: (t.partidos || []).map((p) => p.rival) };
-  t.nombre = EN && t.equipo ? t.equipo.replace(/ Women's$/, "") : t._es.nombre;
+  t.nombre = EN && t.equipo ? t.nombre_en || t.equipo : t._es.nombre;
   t.competicion = EN ? (COMP_EN[t._es.competicion] || t._es.competicion) : t._es.competicion;
   (t.partidos || []).forEach((p, i) => { p.rival = EN && p.rival_en ? p.rival_en : t._es.rivales[i]; });
   return t;
@@ -1582,7 +1582,7 @@ const METRICAS = [
 ].map(([id, lab, sub, get, d, u, dir, sec]) => ({ id, lab, sub, get, d, u, dir, sec }));
 const METRICA = Object.fromEntries(METRICAS.map((m) => [m.id, m]));
 const esSeleccion = (t) => !!(t.identidad || {}).bandera;
-const esFemenino = (t) => / Women's$/.test(t.equipo || "");
+const esFemenino = (t) => !!t.femenino;
 // con quién se compara: su competición si hay suficientes equipos; si no, todos los de su tipo
 function grupoDe(team) {
   const misma = TEAMS.filter((t) => t.competicion === team.competicion && t.temporada === team.temporada);
@@ -1754,12 +1754,12 @@ function renderInforme(team) {
     const paso = (t, d) => "<li><b>" + t + "</b>" + d + "</li>";
     traza.innerHTML = EN ? [
       paso("Dossier", rep.n_dossier + " figures computed from the match events"),
-      paso("Glossary", rep.contexto.length ? "tactical context for " + rep.contexto.length + " sections (RAG, no figures)" : "no context"),
+      paso("Glossary", rep.contexto.length ? "tactical context for " + rep.contexto.length + " sections (RAG, no figures)" : "not used for this report"),
       paso("Draft", esc(rep.modelo || "sample, no LLM") + " · cites keys, never writes numbers"),
       paso("Verifier", citas + " valid citations · " + (total - ok) + " unsupported · " + r.reintentos + " retries"),
     ].join("") : [
       paso("Dossier", rep.n_dossier + " cifras calculadas con los eventos de los partidos"),
-      paso("Glosario", rep.contexto.length ? "contexto táctico para " + rep.contexto.length + " secciones (RAG, sin cifras)" : "sin contexto"),
+      paso("Glosario", rep.contexto.length ? "contexto táctico para " + rep.contexto.length + " secciones (RAG, sin cifras)" : "no usado en este informe"),
       paso("Redacción", esc(rep.modelo || "muestra, sin LLM") + " · cita claves, nunca escribe cifras"),
       paso("Verificador", citas + " citas válidas · " + (total - ok) + " sin respaldo · " + r.reintentos + " reintentos"),
     ].join("");
@@ -2290,6 +2290,14 @@ document.documentElement.lang = LANG;
 const bySlug = Object.fromEntries(TEAMS.map((t) => [t.slug, t]));
 TEAMS.forEach(localizarEquipo);
 localizarEquipo(INICIAL_COMPLETO);
+// el selector para lectores de pantalla llega renderizado en español desde el servidor
+if (EN) {
+  $("#equipo").querySelectorAll("option").forEach((o) => { if (bySlug[o.value]) o.textContent = bySlug[o.value].nombre; });
+  $("#equipo").querySelectorAll("optgroup").forEach((g) => {
+    const [comp, temp] = [g.label.slice(0, g.label.lastIndexOf(" ")), g.label.slice(g.label.lastIndexOf(" ") + 1)];
+    g.label = (COMP_EN[comp] || comp) + " " + temp;
+  });
+}
 const completos = { [INICIAL_COMPLETO.slug]: INICIAL_COMPLETO };
 let slugActual = INITIAL;
 const actual = () => completos[slugActual] || bySlug[slugActual];

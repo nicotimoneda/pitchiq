@@ -9,7 +9,7 @@
 ![LangGraph](https://img.shields.io/badge/LangGraph-1C3C3C?logo=langgraph&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-Anthropic-D97757?logo=anthropic&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-116%20passing-1A7F37?logo=pytest&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-117%20passing-1A7F37?logo=pytest&logoColor=white)
 ![Playwright](https://img.shields.io/badge/e2e-Playwright-2EAD33?logo=playwright&logoColor=white)
 ![Ruff](https://img.shields.io/badge/lint-ruff-D7FF64?logo=ruff&logoColor=black)
 ![License](https://img.shields.io/badge/License-MIT-1A7F37)
@@ -21,7 +21,7 @@
 ---
 
 <div align="center">
-<img src="assets/demo.gif" width="92%" alt="Walkthrough: strengths and weaknesses, team search, shot map, player table, game-state splits, a match sheet and the style map"/>
+<img src="assets/demo.gif" width="92%" alt="Walkthrough: team overview, the AI report with every figure traced to its source, team search, shot map, player table, a match sheet and the style map"/>
 </div>
 
 ## What it does
@@ -41,9 +41,9 @@ A team page opens with its record, form and four key metrics with their percenti
 
 ![Team overview](assets/app/en_overview.png)
 
-The report comes first. Each highlighted figure is a citation the verifier has checked, and hovering it shows the fact it came from. With an AI report, the side panel shows how it was produced (dossier → glossary → draft → verifier) and links to the raw draft and dossier. Below, a team without one, showing the deterministic summary that goes through the same check ([how reports are generated](#generating-the-reports)):
+The report comes first. Each highlighted figure is a citation the verifier has checked; hovering it shows the dossier entry it came from. The side panel shows how the report was produced (dossier → glossary → draft → verifier) and links to the raw draft and dossier. Eight showcase teams have an AI report; the rest show a deterministic summary that goes through the same check ([how reports are generated](#generating-the-reports)):
 
-![Verified report with strengths and weaknesses](assets/app/en_report.png)
+![AI report with verified citations and its trace](assets/app/en_report.png)
 
 Attack: shot map sized by xG with goals on top, and each metric against the league. Barça 2015/16: 604 shots, 109 goals, first in La Liga for xG per match and for territory:
 
@@ -69,7 +69,7 @@ Everything below is measured without an API key and reproducible from the repo (
 
 | Check | Result |
 |---|---|
-| Figures in the reports backed by the data | **100 %** — re-verified from the saved drafts by `scripts/run_eval.py` |
+| Figures in the reports backed by the data | **977 / 977** in the 8 published reports (ES + EN), re-verified from the saved drafts by `scripts/run_eval.py` |
 | Percentiles quoted by the agent vs. the web page | **1,417 / 1,417** identical (Python and JavaScript implementations) |
 | Goals vs. [Understat](https://understat.com), match by match | **1,621 / 1,621** identical (43 clubs) |
 | xG vs. Understat, match by match | correlation **0.93** (different models, same ranking of matches) |
@@ -91,7 +91,7 @@ uv run uvicorn app.main:app --port 8000     # → http://localhost:8000
 The computed data for all 67 teams ships in the repo, so the app runs out of the box — no API key, no downloads.
 
 ```bash
-uv run pytest                                                  # 101 unit tests (no network, LLM mocked)
+uv run pytest                                                  # 102 unit tests (no network, LLM mocked)
 uv run playwright install chromium && uv run pytest -m e2e     # 15 browser tests
 ```
 

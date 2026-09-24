@@ -1,8 +1,8 @@
 {
-  "artefactos": "sample",
-  "informes": 1,
-  "cifras_en_el_informe": 10,
-  "cifras_respaldadas": 10,
+  "artefactos": "reales",
+  "informes": 8,
+  "cifras_en_el_informe": 977,
+  "cifras_respaldadas": 977,
   "ratio_grounding": 1.0,
   "cifras_sueltas": []
 }

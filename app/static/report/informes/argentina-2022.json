@@ -1,0 +1,562 @@
+{
+ "slug": "argentina-2022",
+ "equipo": "Argentina",
+ "generated_at": "2026-09-24",
+ "sample": false,
+ "modelo": "claude-opus-5-5",
+ "dossier": {
+  "resultados.partidos": {
+   "valor": 7.0,
+   "decimales": 0,
+   "es": "partidos jugados",
+   "en": "matches played"
+  },
+  "resultados.victorias": {
+   "valor": 4.0,
+   "decimales": 0,
+   "es": "victorias",
+   "en": "wins"
+  },
+  "resultados.empates": {
+   "valor": 2.0,
+   "decimales": 0,
+   "es": "empates",
+   "en": "draws"
+  },
+  "resultados.derrotas": {
+   "valor": 1.0,
+   "decimales": 0,
+   "es": "derrotas",
+   "en": "losses"
+  },
+  "resultados.goles_favor": {
+   "valor": 15.0,
+   "decimales": 0,
+   "es": "goles a favor",
+   "en": "goals scored"
+  },
+  "resultados.goles_contra": {
+   "valor": 8.0,
+   "decimales": 0,
+   "es": "goles en contra",
+   "en": "goals conceded"
+  },
+  "local.partidos": {
+   "valor": 5.0,
+   "decimales": 0,
+   "es": "partidos jugados como local",
+   "en": "matches played at home"
+  },
+  "local.victorias": {
+   "valor": 3.0,
+   "decimales": 0,
+   "es": "victorias como local",
+   "en": "wins at home"
+  },
+  "local.empates": {
+   "valor": 1.0,
+   "decimales": 0,
+   "es": "empates como local",
+   "en": "draws at home"
+  },
+  "local.derrotas": {
+   "valor": 1.0,
+   "decimales": 0,
+   "es": "derrotas como local",
+   "en": "losses at home"
+  },
+  "local.goles_favor": {
+   "valor": 11.0,
+   "decimales": 0,
+   "es": "goles a favor como local",
+   "en": "goals scored at home"
+  },
+  "local.goles_contra": {
+   "valor": 6.0,
+   "decimales": 0,
+   "es": "goles en contra como local",
+   "en": "goals conceded at home"
+  },
+  "visitante.partidos": {
+   "valor": 2.0,
+   "decimales": 0,
+   "es": "partidos jugados como visitante",
+   "en": "matches played away"
+  },
+  "visitante.victorias": {
+   "valor": 1.0,
+   "decimales": 0,
+   "es": "victorias como visitante",
+   "en": "wins away"
+  },
+  "visitante.empates": {
+   "valor": 1.0,
+   "decimales": 0,
+   "es": "empates como visitante",
+   "en": "draws away"
+  },
+  "visitante.derrotas": {
+   "valor": 0.0,
+   "decimales": 0,
+   "es": "derrotas como visitante",
+   "en": "losses away"
+  },
+  "visitante.goles_favor": {
+   "valor": 4.0,
+   "decimales": 0,
+   "es": "goles a favor como visitante",
+   "en": "goals scored away"
+  },
+  "visitante.goles_contra": {
+   "valor": 2.0,
+   "decimales": 0,
+   "es": "goles en contra como visitante",
+   "en": "goals conceded away"
+  },
+  "grupo.equipos": {
+   "valor": 8.0,
+   "decimales": 0,
+   "es": "equipos en el grupo de comparación (selecciones masculinas publicadas)",
+   "en": "teams in the comparison group (published men's national teams)"
+  },
+  "metrica.xg": {
+   "valor": 1.99,
+   "decimales": 2,
+   "es": "xG por partido",
+   "en": "xG per match"
+  },
+  "percentil.xg": {
+   "valor": 100.0,
+   "decimales": 0,
+   "es": "percentil de xG por partido frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for xG per match vs published men's national teams (100 = best)"
+  },
+  "metrica.goles": {
+   "valor": 2.14,
+   "decimales": 2,
+   "es": "goles por partido",
+   "en": "goals per match"
+  },
+  "percentil.goles": {
+   "valor": 79.0,
+   "decimales": 0,
+   "es": "percentil de goles por partido frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for goals per match vs published men's national teams (100 = best)"
+  },
+  "metrica.tiros": {
+   "valor": 14.4,
+   "decimales": 1,
+   "es": "tiros por partido",
+   "en": "shots per match"
+  },
+  "percentil.tiros": {
+   "valor": 57.0,
+   "decimales": 0,
+   "es": "percentil de tiros por partido frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for shots per match vs published men's national teams (100 = best)"
+  },
+  "metrica.xg_tiro": {
+   "valor": 0.1,
+   "decimales": 2,
+   "es": "xG por tiro (sin penaltis)",
+   "en": "xG per shot (non-penalty)"
+  },
+  "percentil.xg_tiro": {
+   "valor": 100.0,
+   "decimales": 0,
+   "es": "percentil de xG por tiro (sin penaltis) frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for xG per shot (non-penalty) vs published men's national teams (100 = best)"
+  },
+  "metrica.tilt": {
+   "valor": 62.0,
+   "decimales": 1,
+   "es": "dominio territorial (% de los pases en el último tercio)",
+   "en": "field tilt (% of final-third passes)"
+  },
+  "percentil.tilt": {
+   "valor": 71.0,
+   "decimales": 0,
+   "es": "percentil de dominio territorial (% de los pases en el último tercio) frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for field tilt (% of final-third passes) vs published men's national teams (100 = best)"
+  },
+  "metrica.prog": {
+   "valor": 71.3,
+   "decimales": 1,
+   "es": "acciones progresivas por partido",
+   "en": "progressive actions per match"
+  },
+  "percentil.prog": {
+   "valor": 57.0,
+   "decimales": 0,
+   "es": "percentil de acciones progresivas por partido frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for progressive actions per match vs published men's national teams (100 = best)"
+  },
+  "metrica.centros": {
+   "valor": 11.7,
+   "decimales": 1,
+   "es": "centros por partido",
+   "en": "crosses per match"
+  },
+  "percentil.centros": {
+   "valor": 29.0,
+   "decimales": 0,
+   "es": "percentil de centros por partido frente a selecciones masculinas publicadas (rasgo de estilo, ni mejor ni peor)",
+   "en": "percentile for crosses per match vs published men's national teams (style trait, neither better nor worse)"
+  },
+  "metrica.ppda": {
+   "valor": 2.96,
+   "decimales": 2,
+   "es": "PPDA con presiones (menos = presión más intensa)",
+   "en": "PPDA incl. pressures (lower = more intense)"
+  },
+  "percentil.ppda": {
+   "valor": 86.0,
+   "decimales": 0,
+   "es": "percentil de PPDA con presiones (menos = presión más intensa) frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for PPDA incl. pressures (lower = more intense) vs published men's national teams (100 = best)"
+  },
+  "metrica.ppda_c": {
+   "valor": 14.12,
+   "decimales": 2,
+   "es": "PPDA clásico",
+   "en": "classic PPDA"
+  },
+  "percentil.ppda_c": {
+   "valor": 86.0,
+   "decimales": 0,
+   "es": "percentil de PPDA clásico frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for classic PPDA vs published men's national teams (100 = best)"
+  },
+  "metrica.campo_rival": {
+   "valor": 43.0,
+   "decimales": 1,
+   "es": "% de acciones defensivas en campo rival",
+   "en": "% of defensive actions in the opponent's half"
+  },
+  "percentil.campo_rival": {
+   "valor": 57.0,
+   "decimales": 0,
+   "es": "percentil de % de acciones defensivas en campo rival frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for % of defensive actions in the opponent's half vs published men's national teams (100 = best)"
+  },
+  "metrica.robos": {
+   "valor": 2.29,
+   "decimales": 2,
+   "es": "robos altos por partido (a 40 m o menos de la portería rival)",
+   "en": "high turnovers per match (within 40 m of goal)"
+  },
+  "percentil.robos": {
+   "valor": 71.0,
+   "decimales": 0,
+   "es": "percentil de robos altos por partido (a 40 m o menos de la portería rival) frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for high turnovers per match (within 40 m of goal) vs published men's national teams (100 = best)"
+  },
+  "metrica.robos_tiro": {
+   "valor": 37.5,
+   "decimales": 1,
+   "es": "% de robos altos que acaban en tiro",
+   "en": "% of high turnovers ending in a shot"
+  },
+  "percentil.robos_tiro": {
+   "valor": 100.0,
+   "decimales": 0,
+   "es": "percentil de % de robos altos que acaban en tiro frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for % of high turnovers ending in a shot vs published men's national teams (100 = best)"
+  },
+  "metrica.apoyo": {
+   "valor": 1.42,
+   "decimales": 2,
+   "es": "compañeros a menos de 10 m en cada presión",
+   "en": "teammates within 10 m of each pressure"
+  },
+  "percentil.apoyo": {
+   "valor": 7.0,
+   "decimales": 0,
+   "es": "percentil de compañeros a menos de 10 m en cada presión frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for teammates within 10 m of each pressure vs published men's national teams (100 = best)"
+  },
+  "metrica.goles_c": {
+   "valor": 1.14,
+   "decimales": 2,
+   "es": "goles encajados por partido",
+   "en": "goals conceded per match"
+  },
+  "percentil.goles_c": {
+   "valor": 21.0,
+   "decimales": 0,
+   "es": "percentil de goles encajados por partido frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for goals conceded per match vs published men's national teams (100 = best)"
+  },
+  "metrica.xg_c": {
+   "valor": 0.61,
+   "decimales": 2,
+   "es": "xG concedido por partido",
+   "en": "xG conceded per match"
+  },
+  "percentil.xg_c": {
+   "valor": 100.0,
+   "decimales": 0,
+   "es": "percentil de xG concedido por partido frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for xG conceded per match vs published men's national teams (100 = best)"
+  },
+  "metrica.altura": {
+   "valor": 42.2,
+   "decimales": 1,
+   "es": "altura media de la línea defensiva (m desde su portería)",
+   "en": "average defensive line height (m from own goal)"
+  },
+  "percentil.altura": {
+   "valor": 57.0,
+   "decimales": 0,
+   "es": "percentil de altura media de la línea defensiva (m desde su portería) frente a selecciones masculinas publicadas (rasgo de estilo, ni mejor ni peor)",
+   "en": "percentile for average defensive line height (m from own goal) vs published men's national teams (style trait, neither better nor worse)"
+  },
+  "metrica.anchura": {
+   "valor": 35.7,
+   "decimales": 1,
+   "es": "anchura media del bloque (m)",
+   "en": "average block width (m)"
+  },
+  "percentil.anchura": {
+   "valor": 100.0,
+   "decimales": 0,
+   "es": "percentil de anchura media del bloque (m) frente a selecciones masculinas publicadas (rasgo de estilo, ni mejor ni peor)",
+   "en": "percentile for average block width (m) vs published men's national teams (style trait, neither better nor worse)"
+  },
+  "metrica.prof": {
+   "valor": 23.2,
+   "decimales": 1,
+   "es": "profundidad media del bloque (m)",
+   "en": "average block depth (m)"
+  },
+  "percentil.prof": {
+   "valor": 100.0,
+   "decimales": 0,
+   "es": "percentil de profundidad media del bloque (m) frente a selecciones masculinas publicadas (rasgo de estilo, ni mejor ni peor)",
+   "en": "percentile for average block depth (m) vs published men's national teams (style trait, neither better nor worse)"
+  },
+  "metrica.area": {
+   "valor": 508.0,
+   "decimales": 0,
+   "es": "área media del bloque (m²; menos = más compacto)",
+   "en": "average block area (m²; lower = more compact)"
+  },
+  "percentil.area": {
+   "valor": 100.0,
+   "decimales": 0,
+   "es": "percentil de área media del bloque (m²; menos = más compacto) frente a selecciones masculinas publicadas (rasgo de estilo, ni mejor ni peor)",
+   "en": "percentile for average block area (m²; lower = more compact) vs published men's national teams (style trait, neither better nor worse)"
+  },
+  "metrica.corners": {
+   "valor": 5.4,
+   "decimales": 1,
+   "es": "córners a favor por partido",
+   "en": "corners won per match"
+  },
+  "percentil.corners": {
+   "valor": 64.0,
+   "decimales": 0,
+   "es": "percentil de córners a favor por partido frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for corners won per match vs published men's national teams (100 = best)"
+  },
+  "metrica.xg_corner": {
+   "valor": 0.23,
+   "decimales": 2,
+   "es": "xG en córners por partido",
+   "en": "corner xG per match"
+  },
+  "percentil.xg_corner": {
+   "valor": 71.0,
+   "decimales": 0,
+   "es": "percentil de xG en córners por partido frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for corner xG per match vs published men's national teams (100 = best)"
+  },
+  "metrica.contacto": {
+   "valor": 55.3,
+   "decimales": 1,
+   "es": "% de primer contacto ganado en sus córners",
+   "en": "% first contact won on own corners"
+  },
+  "percentil.contacto": {
+   "valor": 0.0,
+   "decimales": 0,
+   "es": "percentil de % de primer contacto ganado en sus córners frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for % first contact won on own corners vs published men's national teams (100 = best)"
+  },
+  "metrica.xg_corner_c": {
+   "valor": 0.06,
+   "decimales": 2,
+   "es": "xG concedido en córners por partido",
+   "en": "corner xG conceded per match"
+  },
+  "percentil.xg_corner_c": {
+   "valor": 86.0,
+   "decimales": 0,
+   "es": "percentil de xG concedido en córners por partido frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for corner xG conceded per match vs published men's national teams (100 = best)"
+  },
+  "metrica.contacto_c": {
+   "valor": 57.9,
+   "decimales": 1,
+   "es": "% de primer contacto del rival en córners en contra",
+   "en": "% first contact conceded on corners against"
+  },
+  "percentil.contacto_c": {
+   "valor": 14.0,
+   "decimales": 0,
+   "es": "percentil de % de primer contacto del rival en córners en contra frente a selecciones masculinas publicadas (100 = el mejor)",
+   "en": "percentile for % first contact conceded on corners against vs published men's national teams (100 = best)"
+  },
+  "metrica.marcaje": {
+   "valor": 3.26,
+   "decimales": 2,
+   "es": "distancia media al marcador en córners en contra (m, aproximada)",
+   "en": "average distance to marker on corners against (m, approximate)"
+  },
+  "percentil.marcaje": {
+   "valor": 43.0,
+   "decimales": 0,
+   "es": "percentil de distancia media al marcador en córners en contra (m, aproximada) frente a selecciones masculinas publicadas (rasgo de estilo, ni mejor ni peor)",
+   "en": "percentile for average distance to marker on corners against (m, approximate) vs published men's national teams (style trait, neither better nor worse)"
+  },
+  "corners.a_favor": {
+   "valor": 38.0,
+   "decimales": 0,
+   "es": "córners a favor en la temporada",
+   "en": "corners won in the season"
+  },
+  "corners.xg_a_favor": {
+   "valor": 1.61,
+   "decimales": 2,
+   "es": "xG total generado en córners",
+   "en": "total corner xG"
+  },
+  "corners.en_contra": {
+   "valor": 19.0,
+   "decimales": 0,
+   "es": "córners en contra en la temporada",
+   "en": "corners conceded in the season"
+  },
+  "corners.xg_en_contra": {
+   "valor": 0.45,
+   "decimales": 2,
+   "es": "xG total concedido en córners",
+   "en": "total corner xG conceded"
+  },
+  "carriles.izquierda": {
+   "valor": 33.5,
+   "decimales": 1,
+   "es": "% de las llegadas al último tercio por la izquierda",
+   "en": "% of final-third entries through the left"
+  },
+  "carriles.centro": {
+   "valor": 20.5,
+   "decimales": 1,
+   "es": "% de las llegadas al último tercio por el centro",
+   "en": "% of final-third entries through the centre"
+  },
+  "carriles.derecha": {
+   "valor": 46.0,
+   "decimales": 1,
+   "es": "% de las llegadas al último tercio por la derecha",
+   "en": "% of final-third entries through the right"
+  },
+  "jugador.goles": {
+   "valor": 7.0,
+   "decimales": 0,
+   "es": "goles de Lionel Andrés Messi Cuccittini, el máximo del equipo",
+   "en": "goals by Lionel Andrés Messi Cuccittini, the team's best"
+  },
+  "jugador.goles.minutos": {
+   "valor": 791.0,
+   "decimales": 0,
+   "es": "minutos jugados por Lionel Andrés Messi Cuccittini",
+   "en": "minutes played by Lionel Andrés Messi Cuccittini"
+  },
+  "jugador.asistencias": {
+   "valor": 3.0,
+   "decimales": 0,
+   "es": "asistencias de Lionel Andrés Messi Cuccittini, el máximo del equipo",
+   "en": "assists by Lionel Andrés Messi Cuccittini, the team's best"
+  },
+  "jugador.asistencias.minutos": {
+   "valor": 791.0,
+   "decimales": 0,
+   "es": "minutos jugados por Lionel Andrés Messi Cuccittini",
+   "en": "minutes played by Lionel Andrés Messi Cuccittini"
+  },
+  "jugador.xg": {
+   "valor": 6.03,
+   "decimales": 2,
+   "es": "xG de Lionel Andrés Messi Cuccittini, el máximo del equipo",
+   "en": "xG by Lionel Andrés Messi Cuccittini, the team's best"
+  },
+  "jugador.xg.minutos": {
+   "valor": 791.0,
+   "decimales": 0,
+   "es": "minutos jugados por Lionel Andrés Messi Cuccittini",
+   "en": "minutes played by Lionel Andrés Messi Cuccittini"
+  },
+  "jugador.pases_clave": {
+   "valor": 19.0,
+   "decimales": 0,
+   "es": "pases clave de Lionel Andrés Messi Cuccittini, el máximo del equipo",
+   "en": "key passes by Lionel Andrés Messi Cuccittini, the team's best"
+  },
+  "jugador.pases_clave.minutos": {
+   "valor": 791.0,
+   "decimales": 0,
+   "es": "minutos jugados por Lionel Andrés Messi Cuccittini",
+   "en": "minutes played by Lionel Andrés Messi Cuccittini"
+  },
+  "jugador.progresivos": {
+   "valor": 94.0,
+   "decimales": 0,
+   "es": "acciones progresivas de Lionel Andrés Messi Cuccittini, el máximo del equipo",
+   "en": "progressive actions by Lionel Andrés Messi Cuccittini, the team's best"
+  },
+  "jugador.progresivos.minutos": {
+   "valor": 791.0,
+   "decimales": 0,
+   "es": "minutos jugados por Lionel Andrés Messi Cuccittini",
+   "en": "minutes played by Lionel Andrés Messi Cuccittini"
+  },
+  "jugador.presiones": {
+   "valor": 118.0,
+   "decimales": 0,
+   "es": "presiones de Julián Álvarez, el máximo del equipo",
+   "en": "pressures by Julián Álvarez, the team's best"
+  },
+  "jugador.presiones.minutos": {
+   "valor": 517.0,
+   "decimales": 0,
+   "es": "minutos jugados por Julián Álvarez",
+   "en": "minutes played by Julián Álvarez"
+  },
+  "jugador.recuperaciones": {
+   "valor": 37.0,
+   "decimales": 0,
+   "es": "recuperaciones de Rodrigo Javier De Paul, el máximo del equipo",
+   "en": "ball recoveries by Rodrigo Javier De Paul, the team's best"
+  },
+  "jugador.recuperaciones.minutos": {
+   "valor": 678.0,
+   "decimales": 0,
+   "es": "minutos jugados por Rodrigo Javier De Paul",
+   "en": "minutes played by Rodrigo Javier De Paul"
+  }
+ },
+ "contexto": {},
+ "es": {
+  "markdown": "### Veredicto\n\nArgentina es un equipo dominante que genera ocasiones de mucha calidad y concede muy poco: su xG por partido, {metrica.xg}, y su xG concedido, {metrica.xg_c}, están en el percentil {percentil.xg_c} de su grupo de {grupo.equipos} selecciones. Ganó {resultados.victorias} de {resultados.partidos} partidos, con {resultados.empates} empates y {resultados.derrotas} derrota. Su nivel es de élite, aunque el balón parado defensivo y la presión aislada dejan resquicios.\n\n### Con balón\n\nNo ataca por volumen, sino por calidad. Con {metrica.tiros} tiros por partido (percentil {percentil.tiros}) alcanza un xG por tiro de {metrica.xg_tiro}, en el percentil {percentil.xg_tiro}: elige muy bien cuándo disparar. Vive en campo rival, con un dominio territorial del {metrica.tilt}% (percentil {percentil.tilt}). La derecha es su carril preferido: por ahí llega el {carriles.derecha}% de sus llegadas al último tercio, frente al {carriles.izquierda}% por la izquierda y el {carriles.centro}% por el centro. Centra poco, {metrica.centros} por partido (percentil {percentil.centros}): prefiere combinar y buscar el pase interior antes que el balón colgado.\n\n### Sin balón\n\nPresiona con intensidad. Su PPDA con presiones es {metrica.ppda} y el clásico {metrica.ppda_c}, ambos en el percentil {percentil.ppda}. Sus robos altos son letales: el {metrica.robos_tiro}% acaba en tiro (percentil {percentil.robos_tiro}). El punto débil es que presiona casi en solitario: solo tiene {metrica.apoyo} compañeros a menos de diez metros en cada presión, en el percentil {percentil.apoyo}, una carencia clara. Según la aproximación sobre jugadores visibles, su línea defensiva se sitúa a {metrica.altura} m de su portería. Su bloque es muy ancho, de {metrica.anchura} m, y muy profundo, de {metrica.prof} m, ambos en el percentil {percentil.prof}, con un área de {metrica.area} m². Encaja más de lo que su xG concedido sugiere: {metrica.goles_c} goles por partido, en el percentil {percentil.goles_c}.\n\n### Balón parado\n\nEn ataque genera {metrica.xg_corner} de xG en córners por partido (percentil {percentil.xg_corner}), pero gana el contacto inicial solo en el {metrica.contacto}% de sus córners, en el percentil {percentil.contacto}. En defensa concede poco xG en córners, {metrica.xg_corner_c} por partido (percentil {percentil.xg_corner_c}). Sin embargo, el rival gana el contacto inicial en el {metrica.contacto_c}% de los córners en contra, percentil {percentil.contacto_c}. La distancia aproximada a su marcador es de {metrica.marcaje} m.\n\n### Jugadores clave\n\n- **Lionel Messi** es el eje de todo el ataque. En {jugador.goles.minutos} minutos suma {jugador.goles} goles, {jugador.asistencias} asistencias, un xG de {jugador.xg}, {jugador.pases_clave} pases clave y {jugador.progresivos} acciones progresivas.\n- **Julián Álvarez** es el motor de la presión, con {jugador.presiones} presiones en {jugador.presiones.minutos} minutos.\n- **Rodrigo De Paul** es el recuperador del equipo, con {jugador.recuperaciones} recuperaciones en {jugador.recuperaciones.minutos} minutos.\n\n### Cómo hacerle daño\n\n- **Castigar la presión solitaria.** Con apoyo en el percentil {percentil.apoyo}, el presionador llega sin compañeros cerca. Hay que atraerlo y soltar a un tercer hombre libre para salir limpio.\n- **Atacar los espacios de un bloque estirado.** Con anchura y profundidad en el percentil {percentil.prof}, conviene buscar el pase entre líneas y el cambio de orientación rápido tras superar la primera presión.\n- **Cargar el área en córners.** El rival gana el contacto inicial en el {metrica.contacto_c}% de los casos. Hay que llevar rematadores al primer palo y buscar la segunda jugada.\n- **Cerrar la derecha y a Messi.** Por la derecha llega el {carriles.derecha}% de su juego. Conviene hacer superioridad en ese lado y vigilar a Messi en la recepción interior, sin arriesgar pérdidas en salida: sus robos altos acaban en tiro el {metrica.robos_tiro}% de las veces.",
+  "citas": 57,
+  "sin_respaldo": [],
+  "reintentos": 0
+ },
+ "en": {
+  "markdown": "### Verdict\n\nArgentina are an elite chance-creating side. They won {resultados.victorias} of {resultados.partidos} matches, with {resultados.empates} draws and {resultados.derrotas} defeat, scoring {resultados.goles_favor} and conceding {resultados.goles_contra}. Their xG per match, {metrica.xg}, and xG conceded, {metrica.xg_c}, both sit in the {percentil.xg}th percentile of a {grupo.equipos}-team group. The weak spot is that they concede more goals than their chance quality suggests.\n\n### In possession\n\nVolume is ordinary: {metrica.tiros} shots per match (percentile {percentil.tiros}) and {metrica.prog} progressive actions (percentile {percentil.prog}). Quality is what sets them apart. Their non-penalty xG per shot of {metrica.xg_tiro} is in percentile {percentil.xg_tiro}, so they work the ball into good positions rather than shooting from range. Field tilt of {metrica.tilt}% (percentile {percentil.tilt}) shows sustained territory.\n\nThey cross sparingly, {metrica.centros} per match (percentile {percentil.centros}), and prefer combining. Entries lean heavily right, with {carriles.derecha}% of final-third entries on that side, against {carriles.izquierda}% on the left and {carriles.centro}% through the centre.\n\n### Out of possession\n\nThe press is intense. PPDA is {metrica.ppda} including pressures and {metrica.ppda_c} classic (both percentile {percentil.ppda}). They force {metrica.robos} high turnovers per match. Of those, {metrica.robos_tiro}% end in a shot, which is the best rate in the group.\n\nThe flaw is support. Each pressure has only {metrica.apoyo} teammates within ten metres (percentile {percentil.apoyo}), a clear deficiency: pressers often go alone.\n\nPositional data are approximations from visible players. The line sits mid-height at {metrica.altura} m. The block is the widest and deepest in the group ({metrica.anchura} m by {metrica.prof} m, area {metrica.area} m²), so it is stretched rather than compact. They allow little, but goals conceded per match, {metrica.goles_c}, sit in a weak percentile ({percentil.goles_c}).\n\n### Set pieces\n\nIn attack, they win {metrica.corners} corners per match and generate {metrica.xg_corner} corner xG (percentile {percentil.xg_corner}). However, their first-contact rate of {metrica.contacto}% ranks bottom of the group (percentile {percentil.contacto}).\n\nIn defence, corner xG conceded is low at {metrica.xg_corner_c} (percentile {percentil.xg_corner_c}). Yet opponents win first contact {metrica.contacto_c}% of the time (percentile {percentil.contacto_c}). Distance to the marker averages about {metrica.marcaje} m.\n\n### Key players\n\n- **Lionel Messi** is the hub. In {jugador.goles.minutos} minutes he produced {jugador.goles} goals, {jugador.asistencias} assists, {jugador.xg} xG, {jugador.pases_clave} key passes and {jugador.progresivos} progressive actions.\n- **Julián Álvarez** leads the press with {jugador.presiones} pressures in {jugador.presiones.minutos} minutes.\n- **Rodrigo De Paul** is the ball-winner, with {jugador.recuperaciones} recoveries in {jugador.recuperaciones.minutos} minutes.\n\n### How to hurt them\n\n- **Play through the lone presser.** Support per pressure is among the lowest in the group. Use quick set-and-bounce combinations and a spare man behind Álvarez, and their press opens up.\n- **Never lose it cheaply in your own third.** Their high turnovers convert to shots at an elite rate. Go longer when trapped rather than risk a central giveaway.\n- **Attack the stretched block.** A wide, deep shape leaves gaps between the lines. Get a runner between the lines and switch play quickly.\n- **Target corners at both ends.** They concede first contact too often on corners against, so load the six-yard box. On their corners, attack the first contact, where they rank bottom.\n- **Shield their right.** Most entries come through that side. Double up there and deny Messi the half-space.",
+  "citas": 56,
+  "sin_respaldo": [],
+  "reintentos": 0
+ }
+}

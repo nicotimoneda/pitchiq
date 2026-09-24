@@ -1,0 +1,562 @@
+{
+ "slug": "inglaterra-2025",
+ "equipo": "Inglaterra",
+ "generated_at": "2026-09-24",
+ "sample": false,
+ "modelo": "claude-opus-5-5",
+ "dossier": {
+  "resultados.partidos": {
+   "valor": 6.0,
+   "decimales": 0,
+   "es": "partidos jugados",
+   "en": "matches played"
+  },
+  "resultados.victorias": {
+   "valor": 3.0,
+   "decimales": 0,
+   "es": "victorias",
+   "en": "wins"
+  },
+  "resultados.empates": {
+   "valor": 2.0,
+   "decimales": 0,
+   "es": "empates",
+   "en": "draws"
+  },
+  "resultados.derrotas": {
+   "valor": 1.0,
+   "decimales": 0,
+   "es": "derrotas",
+   "en": "losses"
+  },
+  "resultados.goles_favor": {
+   "valor": 16.0,
+   "decimales": 0,
+   "es": "goles a favor",
+   "en": "goals scored"
+  },
+  "resultados.goles_contra": {
+   "valor": 7.0,
+   "decimales": 0,
+   "es": "goles en contra",
+   "en": "goals conceded"
+  },
+  "local.partidos": {
+   "valor": 4.0,
+   "decimales": 0,
+   "es": "partidos jugados como local",
+   "en": "matches played at home"
+  },
+  "local.victorias": {
+   "valor": 3.0,
+   "decimales": 0,
+   "es": "victorias como local",
+   "en": "wins at home"
+  },
+  "local.empates": {
+   "valor": 1.0,
+   "decimales": 0,
+   "es": "empates como local",
+   "en": "draws at home"
+  },
+  "local.derrotas": {
+   "valor": 0.0,
+   "decimales": 0,
+   "es": "derrotas como local",
+   "en": "losses at home"
+  },
+  "local.goles_favor": {
+   "valor": 13.0,
+   "decimales": 0,
+   "es": "goles a favor como local",
+   "en": "goals scored at home"
+  },
+  "local.goles_contra": {
+   "valor": 3.0,
+   "decimales": 0,
+   "es": "goles en contra como local",
+   "en": "goals conceded at home"
+  },
+  "visitante.partidos": {
+   "valor": 2.0,
+   "decimales": 0,
+   "es": "partidos jugados como visitante",
+   "en": "matches played away"
+  },
+  "visitante.victorias": {
+   "valor": 0.0,
+   "decimales": 0,
+   "es": "victorias como visitante",
+   "en": "wins away"
+  },
+  "visitante.empates": {
+   "valor": 1.0,
+   "decimales": 0,
+   "es": "empates como visitante",
+   "en": "draws away"
+  },
+  "visitante.derrotas": {
+   "valor": 1.0,
+   "decimales": 0,
+   "es": "derrotas como visitante",
+   "en": "losses away"
+  },
+  "visitante.goles_favor": {
+   "valor": 3.0,
+   "decimales": 0,
+   "es": "goles a favor como visitante",
+   "en": "goals scored away"
+  },
+  "visitante.goles_contra": {
+   "valor": 4.0,
+   "decimales": 0,
+   "es": "goles en contra como visitante",
+   "en": "goals conceded away"
+  },
+  "grupo.equipos": {
+   "valor": 16.0,
+   "decimales": 0,
+   "es": "equipos en el grupo de comparación (Eurocopa femenina 2025)",
+   "en": "teams in the comparison group (Eurocopa femenina 2025)"
+  },
+  "metrica.xg": {
+   "valor": 2.39,
+   "decimales": 2,
+   "es": "xG por partido",
+   "en": "xG per match"
+  },
+  "percentil.xg": {
+   "valor": 93.0,
+   "decimales": 0,
+   "es": "percentil de xG por partido frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for xG per match vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.goles": {
+   "valor": 2.67,
+   "decimales": 2,
+   "es": "goles por partido",
+   "en": "goals per match"
+  },
+  "percentil.goles": {
+   "valor": 87.0,
+   "decimales": 0,
+   "es": "percentil de goles por partido frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for goals per match vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.tiros": {
+   "valor": 17.2,
+   "decimales": 1,
+   "es": "tiros por partido",
+   "en": "shots per match"
+  },
+  "percentil.tiros": {
+   "valor": 93.0,
+   "decimales": 0,
+   "es": "percentil de tiros por partido frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for shots per match vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.xg_tiro": {
+   "valor": 0.13,
+   "decimales": 2,
+   "es": "xG por tiro (sin penaltis)",
+   "en": "xG per shot (non-penalty)"
+  },
+  "percentil.xg_tiro": {
+   "valor": 93.0,
+   "decimales": 0,
+   "es": "percentil de xG por tiro (sin penaltis) frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for xG per shot (non-penalty) vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.tilt": {
+   "valor": 61.7,
+   "decimales": 1,
+   "es": "dominio territorial (% de los pases en el último tercio)",
+   "en": "field tilt (% of final-third passes)"
+  },
+  "percentil.tilt": {
+   "valor": 87.0,
+   "decimales": 0,
+   "es": "percentil de dominio territorial (% de los pases en el último tercio) frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for field tilt (% of final-third passes) vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.prog": {
+   "valor": 78.0,
+   "decimales": 1,
+   "es": "acciones progresivas por partido",
+   "en": "progressive actions per match"
+  },
+  "percentil.prog": {
+   "valor": 93.0,
+   "decimales": 0,
+   "es": "percentil de acciones progresivas por partido frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for progressive actions per match vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.centros": {
+   "valor": 21.3,
+   "decimales": 1,
+   "es": "centros por partido",
+   "en": "crosses per match"
+  },
+  "percentil.centros": {
+   "valor": 100.0,
+   "decimales": 0,
+   "es": "percentil de centros por partido frente a Eurocopa femenina 2025 (rasgo de estilo, ni mejor ni peor)",
+   "en": "percentile for crosses per match vs Eurocopa femenina 2025 (style trait, neither better nor worse)"
+  },
+  "metrica.ppda": {
+   "valor": 1.75,
+   "decimales": 2,
+   "es": "PPDA con presiones (menos = presión más intensa)",
+   "en": "PPDA incl. pressures (lower = more intense)"
+  },
+  "percentil.ppda": {
+   "valor": 87.0,
+   "decimales": 0,
+   "es": "percentil de PPDA con presiones (menos = presión más intensa) frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for PPDA incl. pressures (lower = more intense) vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.ppda_c": {
+   "valor": 11.19,
+   "decimales": 2,
+   "es": "PPDA clásico",
+   "en": "classic PPDA"
+  },
+  "percentil.ppda_c": {
+   "valor": 93.0,
+   "decimales": 0,
+   "es": "percentil de PPDA clásico frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for classic PPDA vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.campo_rival": {
+   "valor": 52.8,
+   "decimales": 1,
+   "es": "% de acciones defensivas en campo rival",
+   "en": "% of defensive actions in the opponent's half"
+  },
+  "percentil.campo_rival": {
+   "valor": 87.0,
+   "decimales": 0,
+   "es": "percentil de % de acciones defensivas en campo rival frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for % of defensive actions in the opponent's half vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.robos": {
+   "valor": 4.33,
+   "decimales": 2,
+   "es": "robos altos por partido (a 40 m o menos de la portería rival)",
+   "en": "high turnovers per match (within 40 m of goal)"
+  },
+  "percentil.robos": {
+   "valor": 83.0,
+   "decimales": 0,
+   "es": "percentil de robos altos por partido (a 40 m o menos de la portería rival) frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for high turnovers per match (within 40 m of goal) vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.robos_tiro": {
+   "valor": 26.9,
+   "decimales": 1,
+   "es": "% de robos altos que acaban en tiro",
+   "en": "% of high turnovers ending in a shot"
+  },
+  "percentil.robos_tiro": {
+   "valor": 33.0,
+   "decimales": 0,
+   "es": "percentil de % de robos altos que acaban en tiro frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for % of high turnovers ending in a shot vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.apoyo": {
+   "valor": 1.66,
+   "decimales": 2,
+   "es": "compañeros a menos de 10 m en cada presión",
+   "en": "teammates within 10 m of each pressure"
+  },
+  "percentil.apoyo": {
+   "valor": 27.0,
+   "decimales": 0,
+   "es": "percentil de compañeros a menos de 10 m en cada presión frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for teammates within 10 m of each pressure vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.goles_c": {
+   "valor": 1.17,
+   "decimales": 2,
+   "es": "goles encajados por partido",
+   "en": "goals conceded per match"
+  },
+  "percentil.goles_c": {
+   "valor": 80.0,
+   "decimales": 0,
+   "es": "percentil de goles encajados por partido frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for goals conceded per match vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.xg_c": {
+   "valor": 1.25,
+   "decimales": 2,
+   "es": "xG concedido por partido",
+   "en": "xG conceded per match"
+  },
+  "percentil.xg_c": {
+   "valor": 67.0,
+   "decimales": 0,
+   "es": "percentil de xG concedido por partido frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for xG conceded per match vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.altura": {
+   "valor": 48.4,
+   "decimales": 1,
+   "es": "altura media de la línea defensiva (m desde su portería)",
+   "en": "average defensive line height (m from own goal)"
+  },
+  "percentil.altura": {
+   "valor": 87.0,
+   "decimales": 0,
+   "es": "percentil de altura media de la línea defensiva (m desde su portería) frente a Eurocopa femenina 2025 (rasgo de estilo, ni mejor ni peor)",
+   "en": "percentile for average defensive line height (m from own goal) vs Eurocopa femenina 2025 (style trait, neither better nor worse)"
+  },
+  "metrica.anchura": {
+   "valor": 30.6,
+   "decimales": 1,
+   "es": "anchura media del bloque (m)",
+   "en": "average block width (m)"
+  },
+  "percentil.anchura": {
+   "valor": 87.0,
+   "decimales": 0,
+   "es": "percentil de anchura media del bloque (m) frente a Eurocopa femenina 2025 (rasgo de estilo, ni mejor ni peor)",
+   "en": "percentile for average block width (m) vs Eurocopa femenina 2025 (style trait, neither better nor worse)"
+  },
+  "metrica.prof": {
+   "valor": 20.5,
+   "decimales": 1,
+   "es": "profundidad media del bloque (m)",
+   "en": "average block depth (m)"
+  },
+  "percentil.prof": {
+   "valor": 80.0,
+   "decimales": 0,
+   "es": "percentil de profundidad media del bloque (m) frente a Eurocopa femenina 2025 (rasgo de estilo, ni mejor ni peor)",
+   "en": "percentile for average block depth (m) vs Eurocopa femenina 2025 (style trait, neither better nor worse)"
+  },
+  "metrica.area": {
+   "valor": 374.0,
+   "decimales": 0,
+   "es": "área media del bloque (m²; menos = más compacto)",
+   "en": "average block area (m²; lower = more compact)"
+  },
+  "percentil.area": {
+   "valor": 93.0,
+   "decimales": 0,
+   "es": "percentil de área media del bloque (m²; menos = más compacto) frente a Eurocopa femenina 2025 (rasgo de estilo, ni mejor ni peor)",
+   "en": "percentile for average block area (m²; lower = more compact) vs Eurocopa femenina 2025 (style trait, neither better nor worse)"
+  },
+  "metrica.corners": {
+   "valor": 5.8,
+   "decimales": 1,
+   "es": "córners a favor por partido",
+   "en": "corners won per match"
+  },
+  "percentil.corners": {
+   "valor": 80.0,
+   "decimales": 0,
+   "es": "percentil de córners a favor por partido frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for corners won per match vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.xg_corner": {
+   "valor": 0.16,
+   "decimales": 2,
+   "es": "xG en córners por partido",
+   "en": "corner xG per match"
+  },
+  "percentil.xg_corner": {
+   "valor": 33.0,
+   "decimales": 0,
+   "es": "percentil de xG en córners por partido frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for corner xG per match vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.contacto": {
+   "valor": 54.3,
+   "decimales": 1,
+   "es": "% de primer contacto ganado en sus córners",
+   "en": "% first contact won on own corners"
+  },
+  "percentil.contacto": {
+   "valor": 53.0,
+   "decimales": 0,
+   "es": "percentil de % de primer contacto ganado en sus córners frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for % first contact won on own corners vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.xg_corner_c": {
+   "valor": 0.11,
+   "decimales": 2,
+   "es": "xG concedido en córners por partido",
+   "en": "corner xG conceded per match"
+  },
+  "percentil.xg_corner_c": {
+   "valor": 87.0,
+   "decimales": 0,
+   "es": "percentil de xG concedido en córners por partido frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for corner xG conceded per match vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.contacto_c": {
+   "valor": 33.3,
+   "decimales": 1,
+   "es": "% de primer contacto del rival en córners en contra",
+   "en": "% first contact conceded on corners against"
+  },
+  "percentil.contacto_c": {
+   "valor": 93.0,
+   "decimales": 0,
+   "es": "percentil de % de primer contacto del rival en córners en contra frente a Eurocopa femenina 2025 (100 = el mejor)",
+   "en": "percentile for % first contact conceded on corners against vs Eurocopa femenina 2025 (100 = best)"
+  },
+  "metrica.marcaje": {
+   "valor": 3.48,
+   "decimales": 2,
+   "es": "distancia media al marcador en córners en contra (m, aproximada)",
+   "en": "average distance to marker on corners against (m, approximate)"
+  },
+  "percentil.marcaje": {
+   "valor": 80.0,
+   "decimales": 0,
+   "es": "percentil de distancia media al marcador en córners en contra (m, aproximada) frente a Eurocopa femenina 2025 (rasgo de estilo, ni mejor ni peor)",
+   "en": "percentile for average distance to marker on corners against (m, approximate) vs Eurocopa femenina 2025 (style trait, neither better nor worse)"
+  },
+  "corners.a_favor": {
+   "valor": 35.0,
+   "decimales": 0,
+   "es": "córners a favor en la temporada",
+   "en": "corners won in the season"
+  },
+  "corners.xg_a_favor": {
+   "valor": 0.94,
+   "decimales": 2,
+   "es": "xG total generado en córners",
+   "en": "total corner xG"
+  },
+  "corners.en_contra": {
+   "valor": 24.0,
+   "decimales": 0,
+   "es": "córners en contra en la temporada",
+   "en": "corners conceded in the season"
+  },
+  "corners.xg_en_contra": {
+   "valor": 0.68,
+   "decimales": 2,
+   "es": "xG total concedido en córners",
+   "en": "total corner xG conceded"
+  },
+  "carriles.izquierda": {
+   "valor": 34.7,
+   "decimales": 1,
+   "es": "% de las llegadas al último tercio por la izquierda",
+   "en": "% of final-third entries through the left"
+  },
+  "carriles.centro": {
+   "valor": 13.5,
+   "decimales": 1,
+   "es": "% de las llegadas al último tercio por el centro",
+   "en": "% of final-third entries through the centre"
+  },
+  "carriles.derecha": {
+   "valor": 51.8,
+   "decimales": 1,
+   "es": "% de las llegadas al último tercio por la derecha",
+   "en": "% of final-third entries through the right"
+  },
+  "jugador.goles": {
+   "valor": 2.0,
+   "decimales": 0,
+   "es": "goles de Georgia Stanway, el máximo del equipo",
+   "en": "goals by Georgia Stanway, the team's best"
+  },
+  "jugador.goles.minutos": {
+   "valor": 547.0,
+   "decimales": 0,
+   "es": "minutos jugados por Georgia Stanway",
+   "en": "minutes played by Georgia Stanway"
+  },
+  "jugador.asistencias": {
+   "valor": 3.0,
+   "decimales": 0,
+   "es": "asistencias de Alessia Russo, el máximo del equipo",
+   "en": "assists by Alessia Russo, the team's best"
+  },
+  "jugador.asistencias.minutos": {
+   "valor": 540.0,
+   "decimales": 0,
+   "es": "minutos jugados por Alessia Russo",
+   "en": "minutes played by Alessia Russo"
+  },
+  "jugador.xg": {
+   "valor": 2.41,
+   "decimales": 2,
+   "es": "xG de Alessia Russo, el máximo del equipo",
+   "en": "xG by Alessia Russo, the team's best"
+  },
+  "jugador.xg.minutos": {
+   "valor": 540.0,
+   "decimales": 0,
+   "es": "minutos jugados por Alessia Russo",
+   "en": "minutes played by Alessia Russo"
+  },
+  "jugador.pases_clave": {
+   "valor": 11.0,
+   "decimales": 0,
+   "es": "pases clave de Alessia Russo, el máximo del equipo",
+   "en": "key passes by Alessia Russo, the team's best"
+  },
+  "jugador.pases_clave.minutos": {
+   "valor": 540.0,
+   "decimales": 0,
+   "es": "minutos jugados por Alessia Russo",
+   "en": "minutes played by Alessia Russo"
+  },
+  "jugador.progresivos": {
+   "valor": 73.0,
+   "decimales": 0,
+   "es": "acciones progresivas de Alex Greenwood, el máximo del equipo",
+   "en": "progressive actions by Alex Greenwood, the team's best"
+  },
+  "jugador.progresivos.minutos": {
+   "valor": 678.0,
+   "decimales": 0,
+   "es": "minutos jugados por Alex Greenwood",
+   "en": "minutes played by Alex Greenwood"
+  },
+  "jugador.presiones": {
+   "valor": 155.0,
+   "decimales": 0,
+   "es": "presiones de Lauren Hemp, el máximo del equipo",
+   "en": "pressures by Lauren Hemp, the team's best"
+  },
+  "jugador.presiones.minutos": {
+   "valor": 574.0,
+   "decimales": 0,
+   "es": "minutos jugados por Lauren Hemp",
+   "en": "minutes played by Lauren Hemp"
+  },
+  "jugador.recuperaciones": {
+   "valor": 42.0,
+   "decimales": 0,
+   "es": "recuperaciones de Keira Walsh, el máximo del equipo",
+   "en": "ball recoveries by Keira Walsh, the team's best"
+  },
+  "jugador.recuperaciones.minutos": {
+   "valor": 650.0,
+   "decimales": 0,
+   "es": "minutos jugados por Keira Walsh",
+   "en": "minutes played by Keira Walsh"
+  }
+ },
+ "contexto": {},
+ "es": {
+  "markdown": "### Veredicto\n\nInglaterra es un equipo dominador y de alto volumen. Genera un xG por partido de {metrica.xg} (percentil {percentil.xg}, élite en su grupo de {grupo.equipos} equipos) y presiona arriba con intensidad. Su balance es de {resultados.victorias} victorias, {resultados.empates} empates y {resultados.derrotas} derrota en {resultados.partidos} partidos, con {resultados.goles_favor} goles a favor y {resultados.goles_contra} en contra. Ojo al matiz: como visitante suma {visitante.victorias} victorias, {visitante.empates} empate y {visitante.derrotas} derrota.\n\n### Con balón\n\nVive en campo rival. El {metrica.tilt} % de sus pases se juegan en el último tercio (percentil {percentil.tilt}) y suma {metrica.prog} acciones progresivas por partido (percentil {percentil.prog}). Tira mucho, {metrica.tiros} por partido, y tira bien: su xG por tiro es {metrica.xg_tiro} (ambos en percentil {percentil.tiros}).\n\nEl rasgo que lo define es el centro. Hace {metrica.centros} centros por partido, el percentil {percentil.centros} del torneo. Ataca sobre todo por la derecha, con un {carriles.derecha} % de las llegadas al último tercio, seguido de la izquierda con un {carriles.izquierda} %. Por el centro apenas entra: solo un {carriles.centro} %.\n\n### Sin balón\n\nPresiona con un PPDA de {metrica.ppda} (percentil {percentil.ppda}) y un PPDA clásico de {metrica.ppda_c} (percentil {percentil.ppda_c}). El {metrica.campo_rival} % de sus acciones defensivas ocurre en campo rival y roba alto {metrica.robos} veces por partido.\n\nTiene dos grietas en esa presión:\n- **Presiona con poco apoyo.** Tiene {metrica.apoyo} compañeras a menos de diez metros en cada presión, percentil {percentil.apoyo}, en la zona baja del grupo.\n- **Rentabiliza poco lo que roba.** Solo el {metrica.robos_tiro} % de sus robos altos acaba en tiro (percentil {percentil.robos_tiro}).\n\nLa línea defensiva se sitúa, de forma aproximada, a {metrica.altura} m de su portería, de las más altas del torneo (percentil {percentil.altura}). El bloque mide unos {metrica.anchura} m de ancho y {metrica.prof} m de profundo, con un área aproximada de {metrica.area} m².\n\nEncaja {metrica.goles_c} goles por partido (percentil {percentil.goles_c}), pero concede {metrica.xg_c} de xG (percentil {percentil.xg_c}). Es decir, concede más de lo que su marcador sugiere.\n\n### Balón parado\n\nFuerza {metrica.corners} córners por partido (percentil {percentil.corners}), pero los aprovecha mal. Genera solo {metrica.xg_corner} de xG por partido en córners (percentil {percentil.xg_corner}) y gana el primer contacto en el {metrica.contacto} % de sus saques.\n\nDefendiendo córners es sólido. El rival solo gana el primer contacto en el {metrica.contacto_c} % de los casos (percentil {percentil.contacto_c}). La distancia aproximada al marcador es de {metrica.marcaje} m.\n\n### Jugadoras clave\n\n- **Alessia Russo** es el eje ofensivo. Lidera el equipo en xG ({jugador.xg}), asistencias ({jugador.asistencias}) y pases clave ({jugador.pases_clave}) en {jugador.xg.minutos} minutos.\n- **Georgia Stanway** es la máxima goleadora, con {jugador.goles} goles.\n- **Alex Greenwood** es la que más progresa el balón, con {jugador.progresivos} acciones progresivas.\n- **Lauren Hemp** encabeza la presión, con {jugador.presiones} presiones.\n- **Keira Walsh** sostiene el mediocampo con {jugador.recuperaciones} recuperaciones.\n\n### Cómo hacerle daño\n\n- **Superar la primera presión con pases rápidos a la espalda de la presionadora.** Su apoyo en la presión está en el percentil {percentil.apoyo}: si se supera la primera línea, quedan espacios.\n- **Atacar la espalda de la línea.** Con la defensa a unos {metrica.altura} m de su portería, los balones largos y los desmarques en profundidad tras recuperar son la vía más directa.\n- **Cerrar su banda derecha y defender el área, no el origen del centro.** Por ese lado llega el {carriles.derecha} % de su juego. Cuanto más dependa del centro, mejor para una defensa bien plantada.\n- **Conceder córners sin miedo y proteger el balón tras perderlo.** Sus córners producen poco ({metrica.xg_corner}) y sus robos altos rara vez acaban en tiro. Lo que hay que evitar es la transición limpia hacia Russo.",
+  "citas": 63,
+  "sin_respaldo": [],
+  "reintentos": 0
+ },
+ "en": {
+  "markdown": "### Verdict\n\nEngland are among the tournament's most dominant attacking sides: {metrica.xg} xG per match (percentile {percentil.xg}), {metrica.tiros} shots per match (percentile {percentil.tiros}) and a field tilt of {metrica.tilt}% (percentile {percentil.tilt}). Their record reads {resultados.victorias} wins, {resultados.empates} draws and {resultados.derrotas} defeat from {resultados.partidos} matches, but the split matters. Away from home they won {visitante.victorias} of {visitante.partidos}, conceding {visitante.goles_contra} and scoring only {visitante.goles_favor}.\n\n### In possession\n\nThey progress relentlessly, with {metrica.prog} progressive actions per match (percentile {percentil.prog}), and chance quality holds up at {metrica.xg_tiro} xG per non-penalty shot (percentile {percentil.xg_tiro}). The defining trait is width. They put in {metrica.centros} crosses per match, the top of the group (percentile {percentil.centros}). The right is the main route, carrying {carriles.derecha}% of final-third entries against {carriles.izquierda}% on the left and just {carriles.centro}% through the middle. Expect overloads down the right and a steady supply of balls into the box.\n\n### Out of possession\n\nThey press aggressively. Their PPDA including pressures is {metrica.ppda} (percentile {percentil.ppda}), their classic PPDA is {metrica.ppda_c} (percentile {percentil.ppda_c}), and {metrica.campo_rival}% of their defensive actions come in the opponent's half. They win {metrica.robos} high turnovers per match (percentile {percentil.robos}). However, only {metrica.robos_tiro}% of those turnovers end in a shot (percentile {percentil.robos_tiro}). Support around the presser is modest, at {metrica.apoyo} teammates within ten metres (percentile {percentil.apoyo}).\n\nThe approximate line height is {metrica.altura} m from their own goal, one of the higher lines in the group (percentile {percentil.altura}). The block measures roughly {metrica.anchura} m wide and {metrica.prof} m deep. They concede {metrica.xg_c} xG per match, only around the middle of the group (percentile {percentil.xg_c}), even though goals conceded look better at {metrica.goles_c} per match (percentile {percentil.goles_c}).\n\n### Set pieces\n\nThey win {metrica.corners} corners per match (percentile {percentil.corners}) but generate little from them. Their corner xG is {metrica.xg_corner} per match (percentile {percentil.xg_corner}), and they win {metrica.contacto}% of first contacts, which is only average. Defending corners is a strength: they concede {metrica.xg_corner_c} xG per match (percentile {percentil.xg_corner_c}) and allow first contact on just {metrica.contacto_c}% of corners against (percentile {percentil.contacto_c}).\n\n### Key players\n\n- **Alessia Russo** is the attacking hub. She has {jugador.xg} xG, {jugador.asistencias} assists and {jugador.pases_clave} key passes in {jugador.xg.minutos} minutes.\n- **Georgia Stanway** is the top scorer, with {jugador.goles} goals in {jugador.goles.minutos} minutes.\n- **Alex Greenwood** drives progression from the back, with {jugador.progresivos} progressive actions in {jugador.progresivos.minutos} minutes.\n- **Lauren Hemp** leads the press, with {jugador.presiones} pressures in {jugador.presiones.minutos} minutes.\n- **Keira Walsh** anchors the recoveries, with {jugador.recuperaciones} in {jugador.recuperaciones.minutos} minutes.\n\n### How to hurt them\n\n- **Break the press with numbers near the ball.** Support around their presser is thin, so quick combinations with a third player can release pressure. That leaves a high line, at roughly {metrica.altura} m, exposed to runs in behind.\n- **Load their right flank and counter down it.** With {carriles.derecha}% of entries coming down the right, their full-back pushes on. Win the ball on that side and attack the space she leaves behind.\n- **Defend the box, not the crossers.** Few entries come through the centre and they cross heavily. Stay compact centrally, keep the six-yard box protected and concede wide possession willingly.\n- **Don't fear conceding corners.** Their corner threat is limited at {metrica.xg_corner} xG per match. Clearing for a corner is an acceptable outcome. Our own corners, however, will struggle against their strong first-contact defending, so vary delivery with short routines.",
+  "citas": 66,
+  "sin_respaldo": [],
+  "reintentos": 0
+ }
+}

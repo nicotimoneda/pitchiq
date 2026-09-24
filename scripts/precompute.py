@@ -120,6 +120,8 @@ def equipos_a_publicar() -> "list[dict]":
         fila = catalogo[(catalogo["competition_id"] == cid) & (catalogo["season_id"] == sid)]
         if fila.empty:
             raise SystemExit(f"competición {cid}/{sid} no está en StatsBomb Open Data")
+        # el género sale del catálogo: StatsBomb no nombra igual a todas las selecciones femeninas
+        femenino = str(fila.iloc[0].get("competition_gender", "")) == "female"
         competicion = bloque.get("nombre") or str(fila.iloc[0]["competition_name"]).replace(
             "1. Bundesliga", "Bundesliga")
         temporada = _temporada_corta(fila.iloc[0]["season_name"])
@@ -135,7 +137,8 @@ def equipos_a_publicar() -> "list[dict]":
         puestos = {t: i + 1 for i, t in enumerate(orden)} if completa else {}
         for equipo in equipos:
             entradas.append({
-                "equipo": equipo, "nombre": traducir(equipo), "traducciones": tabla,
+                "equipo": equipo, "nombre": traducir(equipo), "nombre_en": nombre_en(equipo),
+                "femenino": femenino, "traducciones": tabla,
                 "competition_id": cid, "season_id": sid,
                 "competicion": competicion, "temporada": temporada,
                 "slug": _slugify(f"{traducir(equipo)} {temporada}"),
@@ -467,6 +470,8 @@ def build_team_data(entry: dict, orden: int) -> None:
         "slug": entry["slug"],
         "equipo": team,
         "nombre": entry.get("nombre", team),
+        "nombre_en": entry.get("nombre_en", team),
+        "femenino": bool(entry.get("femenino")),
         "con_360": bool(tools["forma_defensiva"].partidos_con_360),
         "posicion": entry.get("posicion"),
         "n_equipos": entry.get("n_equipos"),
@@ -588,7 +593,7 @@ def _al_dia(slug: str) -> bool:
     if not f.exists():
         return False
     datos = json.loads(f.read_text(encoding="utf-8"))
-    return all(k in datos for k in ("agregados", "identidad", "jugadores", "tiros"))
+    return all(k in datos for k in ("agregados", "identidad", "jugadores", "tiros", "femenino"))
 
 
 def build_demo_data(jobs: int = 1, solo_faltan: bool = False) -> None:

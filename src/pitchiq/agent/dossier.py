@@ -77,7 +77,7 @@ def _es_seleccion(t: dict) -> bool:
 
 
 def _es_femenino(t: dict) -> bool:
-    return str(t.get("equipo") or "").endswith(" Women's")
+    return bool(t.get("femenino"))
 
 
 def grupo(team: dict, todos: "list[dict]") -> "tuple[str, str, list[dict]]":

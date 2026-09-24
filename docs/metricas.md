@@ -45,13 +45,13 @@ Los huecos en la gráfica son partidos sin datos 360: se muestran como NaN, no s
 
 ## Datos
 
-115 equipos de [StatsBomb Open Data](https://github.com/statsbomb/open-data), definidos en [`scripts/publicacion.yaml`](../scripts/publicacion.yaml):
+55 equipos de [StatsBomb Open Data](https://github.com/statsbomb/open-data), definidos en [`scripts/publicacion.yaml`](../scripts/publicacion.yaml):
 
 | Competición | Equipos | Datos de posiciones (360) |
 |---|---|---|
 | La Liga 2015/16 y Premier League 2015/16 | los 20 de cada liga, temporada completa | no |
 | Bundesliga 2023/24 · La Liga 2020/21 · Ligue 1 2022/23 | Leverkusen, Barça y PSG (solo sus partidos) | sí |
-| Eurocopa 2024 · Mundial 2022 · Eurocopa femenina 2025 | todas las selecciones | sí |
+| Eurocopa 2024 · Mundial 2022 · Eurocopa femenina 2025 | los 4 semifinalistas de cada torneo | sí |
 
 Dos salvedades:
 

@@ -2,7 +2,7 @@
 
 # ⚽ PitchIQ
 
-**Un analista de scouting con IA para 115 equipos de fútbol. Escribe el informe que lee un entrenador antes de un partido, y está construido para que no pueda inventarse una cifra: el modelo cita, el código pone los valores y un verificador rechaza lo demás.**
+**Un analista de scouting con IA para 55 equipos de fútbol. Escribe el informe que lee un entrenador antes de un partido, y está construido para que no pueda inventarse una cifra: el modelo cita, el código pone los valores y un verificador rechaza lo demás.**
 
 [![CI](https://github.com/nicotimoneda/pitchiq/actions/workflows/ci.yml/badge.svg)](https://github.com/nicotimoneda/pitchiq/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
@@ -57,7 +57,7 @@ Cada partido tiene su ficha y su enlace (`#partido-12`). Real Madrid 0–4 Barce
 
 ![Ficha de partido](assets/app/es_match.png)
 
-Y un mapa de estilos con los 115 equipos (PPDA clásico frente a dominio territorial); al pulsar un punto se compara uno a uno:
+Y un mapa de estilos con los 55 equipos (PPDA clásico frente a dominio territorial); al pulsar un punto se compara uno a uno:
 
 ![Mapa de estilos](assets/app/es_compare.png)
 
@@ -88,7 +88,7 @@ uv sync
 uv run uvicorn app.main:app --port 8000     # → http://localhost:8000
 ```
 
-Los datos calculados de los 115 equipos vienen en el repositorio: la web funciona tal cual, sin API key ni descargas.
+Los datos calculados de los 55 equipos vienen en el repositorio: la web funciona tal cual, sin API key ni descargas.
 
 ```bash
 uv run pytest                                                  # 98 tests (sin red, LLM simulado)

@@ -34,20 +34,20 @@ competiciones:
     season_id: 27
     equipos: todos
 
-  - competition_id: 55    # Eurocopa 2024 (todos los partidos con 360)
+  - competition_id: 55    # Eurocopa 2024 (todos los partidos con 360): semifinalistas
     season_id: 282
     nombre: Eurocopa
-    equipos: todos
+    equipos: ["Spain", "England", "France", "Netherlands"]
 
-  - competition_id: 43    # Mundial 2022 (todos los partidos con 360)
+  - competition_id: 43    # Mundial 2022 (todos los partidos con 360): semifinalistas
     season_id: 106
     nombre: Mundial
-    equipos: todos
+    equipos: ["Argentina", "France", "Croatia", "Morocco"]
 
-  - competition_id: 53    # Eurocopa femenina 2025 (todos los partidos con 360)
+  - competition_id: 53    # Eurocopa femenina 2025 (todos los partidos con 360): semifinalistas
     season_id: 315
     nombre: Eurocopa femenina
-    equipos: todos
+    equipos: ["England Women's", "Spain Women's", "Germany Women's", "Italy Women's"]
 
 # Nombres en español para la web (equipos publicados y rivales). StatsBomb los
 # da en inglés; los que no aparecen aquí se muestran tal cual. En selecciones

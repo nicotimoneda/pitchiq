@@ -132,6 +132,9 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
         resp.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
         # los scripts de la página son inline: la CSP se limita a lo que no los rompe
         resp.headers.setdefault("Content-Security-Policy", "frame-ancestors 'none'; object-src 'none'; base-uri 'none'")
+        # datos e imágenes solo cambian con cada despliegue: caché de una hora
+        if request.url.path.startswith(("/api/equipos/", "/og/")):
+            resp.headers.setdefault("Cache-Control", "public, max-age=3600, stale-while-revalidate=86400")
         return resp
     figures_dir = report_base / "figures"
     if figures_dir.exists():

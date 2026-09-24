@@ -19,7 +19,9 @@
 <meta name="theme-color" content="#0e1310" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f3f5f2" media="(prefers-color-scheme: light)">
 <script>try { const t = localStorage.getItem("pitchiq-tema"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" integrity="sha384-aQuvIWWIbpu/mSqULLDiUveyYiPoJzPKAWjUmGJ+Elm+N/LJhzfZqsutsfw870JS" crossorigin="anonymous">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<!-- las banderas solo salen en selecciones: la hoja no bloquea el primer pintado -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" integrity="sha384-aQuvIWWIbpu/mSqULLDiUveyYiPoJzPKAWjUmGJ+Elm+N/LJhzfZqsutsfw870JS" crossorigin="anonymous" media="print" onload="this.media='all'">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
@@ -382,7 +384,7 @@
   .sec-title { display: flex; align-items: center; gap: 12px; }
   .sec-icon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); flex: none; }
   .sec-icon .ico { width: 20px; height: 20px; }
-  section.block { border-top: 1px solid var(--rule); margin-top: 48px; padding-block: 40px 8px; }
+  section.block { border-top: 1px solid var(--rule); margin-top: 48px; padding-block: 40px 8px; content-visibility: auto; contain-intrinsic-size: auto 900px; }
   .team-head + section.block { border-top: 0; margin-top: 24px; }
 
   .verif { gap: 12px; }

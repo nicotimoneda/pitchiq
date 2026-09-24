@@ -165,3 +165,8 @@ def test_cabeceras_de_seguridad(client):
     h = client.get("/").headers
     assert h["x-content-type-options"] == "nosniff"
     assert "frame-ancestors 'none'" in h["content-security-policy"]
+
+
+def test_cache_en_datos_de_equipo(client):
+    assert "max-age" in client.get("/api/equipos/equipo-muestra").headers["cache-control"]
+    assert "cache-control" not in client.get("/health").headers

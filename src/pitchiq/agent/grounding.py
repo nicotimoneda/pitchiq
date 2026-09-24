@@ -106,6 +106,10 @@ def validate_grounding(
 CITA_RE = re.compile(r"\{([a-z_]+(?:\.[a-z_]+)+)\}")
 
 
+_PERCENTIL_MAL = re.compile(
+    r"percentil[e]?\s+(?:de\s+|del\s+|of\s+)?(\{(?!percentil\.)[a-z_]+(?:\.[a-z_]+)+\})", re.IGNORECASE)
+
+
 def verificar_citas(
     text: str, dossier: "dict[str, dict]", ignore: "tuple[str, ...] | list[str]" = (),
 ) -> GroundingReport:
@@ -120,6 +124,9 @@ def verificar_citas(
                grounded=k in dossier, matched_metric=k if k in dossier else None)
         for m in CITA_RE.finditer(text) for k in [m.group(1)]
     ]
+    # "percentil {metrica.xg}": la clave existe pero no es un percentil (cita que no encaja)
+    for m in _PERCENTIL_MAL.finditer(text):
+        figures.append(Figure(text=f"percentil {m.group(1)}", value=None, grounded=False))
     figures += [Figure(text=raw, value=value, grounded=False)
                 for raw, value in extract_figures(CITA_RE.sub(" ", text), ignore)]
     grounded = sum(f.grounded for f in figures)

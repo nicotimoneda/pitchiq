@@ -1736,6 +1736,8 @@ function renderInforme(team) {
     // cada cita del modelo ya viene resuelta: su clave dice de qué entrada del dossier sale
     body.querySelectorAll(".cifra").forEach((c) => {
       const f = rep.fuentes[c.dataset.k];
+      if (c.dataset.mal) return bindTip(c, "<b>" + (EN ? "Citation does not fit" : "La cita no encaja") + "</b><br>" +
+        (EN ? "The text says percentile, but the cited entry is " : "El texto dice percentil, pero la entrada citada es ") + esc(f ? f[EN ? 1 : 0] : c.dataset.k));
       bindTip(c, f
         ? "<b>" + (EN ? "Cited from the dossier" : "Cita del dossier") + "</b><br>" + esc(f[EN ? 1 : 0]) + ": " + esc(f[EN ? 3 : 2]) + '<br><code>' + esc(c.dataset.k) + "</code>"
         : "<b>" + (EN ? "Unknown key" : "Clave inexistente") + "</b><br>" + (EN ? "The model cited an entry that is not in the dossier" : "El modelo citó una entrada que no está en el dossier"));
@@ -1748,12 +1750,12 @@ function renderInforme(team) {
     traza.innerHTML = EN ? [
       paso("Dossier", rep.n_dossier + " figures computed from the match events"),
       paso("Glossary", rep.contexto.length ? "tactical context for " + rep.contexto.length + " sections (RAG, no figures)" : "no context"),
-      paso("Draft", (rep.modelo || "sample, no LLM") + " · cites keys, never writes numbers"),
+      paso("Draft", esc(rep.modelo || "sample, no LLM") + " · cites keys, never writes numbers"),
       paso("Verifier", citas + " valid citations · " + (total - ok) + " unsupported · " + r.reintentos + " retries"),
     ].join("") : [
       paso("Dossier", rep.n_dossier + " cifras calculadas con los eventos de los partidos"),
       paso("Glosario", rep.contexto.length ? "contexto táctico para " + rep.contexto.length + " secciones (RAG, sin cifras)" : "sin contexto"),
-      paso("Redacción", (rep.modelo || "muestra, sin LLM") + " · cita claves, nunca escribe cifras"),
+      paso("Redacción", esc(rep.modelo || "muestra, sin LLM") + " · cita claves, nunca escribe cifras"),
       paso("Verificador", citas + " citas válidas · " + (total - ok) + " sin respaldo · " + r.reintentos + " reintentos"),
     ].join("");
     $("#verif-texto").textContent = EN

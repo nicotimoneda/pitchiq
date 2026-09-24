@@ -15,6 +15,7 @@ import os
 import shutil
 import subprocess
 import urllib.error
+import urllib.parse
 import urllib.request
 from typing import Protocol
 
@@ -101,6 +102,9 @@ class OpenAICompatibleClient:
 
     def __init__(self, url: str, model: str, api_key: "str | None" = None, timeout: int = 900) -> None:
         """``url`` es la base de la API, p. ej. http://localhost:11434/v1."""
+        host = urllib.parse.urlsplit(url).hostname or ""
+        if api_key and url.startswith("http://") and host not in ("localhost", "127.0.0.1", "::1"):
+            raise RuntimeError(f"No envío la key sin cifrar a {host}: usa https://")
         self.url = url.rstrip("/") + "/chat/completions"
         self.model = self.model_used = model
         self.api_key = api_key

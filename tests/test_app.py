@@ -94,6 +94,11 @@ def test_informe_html_escapa_y_marca_claves_inventadas():
     assert "<script>" not in html and 'href="#' in html
     assert 'data-k="metrica.ppda">2,48</span>' in html
     assert '<span class="cifra sin" tabindex="0" data-k="metrica.nada">{metrica.nada}</span>' in html
+    # "percentil" delante de una clave que no es un percentil: se marca sin respaldo, como en el verificador
+    assert 'class="cifra sin" tabindex="0" data-k="metrica.ppda" data-mal="1"' in _informe_html("percentil {metrica.ppda}", dossier, "es")
+    # el modelo no puede fabricar el marcador interno ni colar imágenes de otro servidor
+    assert "CITA0FIN" in _informe_html("CITA0FIN {metrica.ppda}", dossier, "es")
+    assert "<img" not in _informe_html('![x](https://evil.example/t.png) ![y](x" onerror="a)', dossier, "es")
 
 
 def test_metricas_reales_sin_informe_no_mezcla_la_muestra(tmp_path):

@@ -19,3 +19,7 @@ data/index/
 
 # grafo local de graphify (se regenera con /graphify .)
 graphify-out/
+
+# secretos locales (keys de LLM): nunca al repo
+.env
+.env.*

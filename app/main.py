@@ -13,6 +13,7 @@ sample/ para tests y CI. Un equipo sin informe enseña el resumen determinista.
 import json
 import os
 import re
+import secrets
 from pathlib import Path
 
 import markdown as md
@@ -68,13 +69,13 @@ def _markdown_seguro(texto: str) -> str:
     neutralizan los esquemas peligrosos en los enlaces: la salida del modelo es
     el único texto no determinista que llega a la página.
     """
-    import re
-
     html = md.markdown(texto.replace("&", "&amp;").replace("<", "&lt;"), extensions=["extra"])
+    html = re.sub(r"<img\b[^>]*>", "", html)  # sin imágenes: nada se carga desde otro servidor
     return re.sub(r'(href|src)="\s*(javascript|data|vbscript):', r'\1="#', html, flags=re.IGNORECASE)
 
 
 _CITA = re.compile(r"\{([a-z_]+(?:\.[a-z_]+)+)\}")
+_TRAS_PERCENTIL = re.compile(r"percentil[e]?\s+(?:de\s+|del\s+|of\s+)?$", re.IGNORECASE)
 
 
 def _valor(entrada: dict, idioma: str) -> str:
@@ -86,18 +87,27 @@ def _valor(entrada: dict, idioma: str) -> str:
 def _informe_html(texto: str, dossier: dict, idioma: str) -> str:
     """Markdown del modelo a HTML seguro, con cada cita {clave} convertida en su valor trazable."""
     claves: list[str] = []
+    marca = "CITA" + secrets.token_hex(8)  # imposible de adivinar: el modelo no puede fabricarla
 
     def marcar(m: re.Match) -> str:
-        claves.append(m.group(1))
-        return f"CITA{len(claves) - 1}FIN"  # sin caracteres de markdown
+        k = m.group(1)
+        # "percentil {metrica.xg}": la clave existe pero no es un percentil (misma regla que el verificador)
+        if not k.startswith("percentil.") and _TRAS_PERCENTIL.search(texto[:m.start()]):
+            k = "!" + k
+        claves.append(k)
+        return f"{marca}X{len(claves) - 1}X"  # sin caracteres de markdown
 
     def cifra(m: re.Match) -> str:
         k = claves[int(m.group(1))]
+        if k.startswith("!"):
+            k = k[1:]
+            if k in dossier:
+                return f'<span class="cifra sin" tabindex="0" data-k="{k}" data-mal="1">{_valor(dossier[k], idioma)}</span>'
         if k not in dossier:  # clave inventada: se enseña tal cual y marcada
             return f'<span class="cifra sin" tabindex="0" data-k="{k}">{{{k}}}</span>'
         return f'<span class="cifra cita" tabindex="0" data-k="{k}">{_valor(dossier[k], idioma)}</span>'
 
-    return re.sub(r"CITA(\d+)FIN", cifra, _markdown_seguro(_CITA.sub(marcar, texto)))
+    return re.sub(marca + r"X(\d+)X", cifra, _markdown_seguro(_CITA.sub(marcar, texto)))
 
 
 def _load_informes(informes_dir: Path) -> "dict[str, dict]":

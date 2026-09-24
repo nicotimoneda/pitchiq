@@ -34,3 +34,9 @@ def test_eleccion_de_backend(monkeypatch):
     monkeypatch.delenv("PITCHIQ_LLM_URL")
     monkeypatch.setattr(llm.shutil, "which", lambda _: "/usr/bin/claude")
     assert isinstance(llm.cliente_por_defecto(), llm.ClaudeCodeClient)
+
+
+def test_no_envia_la_key_sin_cifrar_a_un_servidor_remoto():
+    with pytest.raises(RuntimeError, match="https"):
+        llm.OpenAICompatibleClient("http://api.ejemplo.com/v1", "m", api_key="secreta")
+    llm.OpenAICompatibleClient("http://localhost:11434/v1", "m", api_key="local")  # en local, sí

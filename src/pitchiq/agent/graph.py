@@ -147,10 +147,13 @@ def build_graph(llm: LLMClient, retriever=None, max_retries: int = 1):
         feedback = ""
         if fallos:
             inventadas = [t for t in fallos if t.startswith("{")]
-            libres = [t for t in fallos if not t.startswith("{")]
+            mal = [t for t in fallos if t.startswith("percentil ")]
+            libres = [t for t in fallos if t[0].isdigit()]
             partes = []
             if inventadas:
                 partes.append("citar claves que no existen: " + ", ".join(inventadas))
+            if mal:
+                partes.append("poner tras «percentil» una clave que no es un percentil: " + ", ".join(mal))
             if libres:
                 partes.append("escribir cifras sueltas: " + ", ".join(libres))
             feedback = " y ".join(partes)

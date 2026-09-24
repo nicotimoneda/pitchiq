@@ -28,6 +28,12 @@ jobs:
       - name: Tests
         run: uv run pytest
 
+      # vulnerabilidades conocidas en todas las dependencias del lockfile
+      - name: Auditoría de dependencias
+        run: |
+          uv export --all-groups --no-hashes --no-emit-project -q > req.txt
+          uvx pip-audit --disable-pip --no-deps -r req.txt
+
   docker:
     # smoke test: la imagen de la app (deps mínimas, sin ML) construye
     runs-on: ubuntu-latest

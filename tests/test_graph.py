@@ -84,3 +84,11 @@ def test_informe_en_ingles(equipos):
     llm = MockLLM(["PPDA of {metrica.ppda}."])
     generate_report(equipos[0], equipos, llm=llm, idioma="en")
     assert "{metrica.ppda} = 2.48" in llm.prompts[0] and "inglés" in llm.prompts[0]
+
+
+def test_percentil_con_clave_que_no_es_percentil(equipos):
+    d = construir_dossier(equipos[0], equipos)
+    d["percentil.xg"] = {"valor": 90, "decimales": 0, "es": "p", "en": "p"}
+    assert verificar_citas("Está en el percentil {percentil.xg}.", d).is_grounded
+    rep = verificar_citas("Está en el percentil {metrica.xg}.", d)
+    assert [f.text for f in rep.ungrounded] == ["percentil {metrica.xg}"]

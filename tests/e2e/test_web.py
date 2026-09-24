@@ -56,10 +56,22 @@ def pagina(page, servidor):
     assert errores == [], f"errores de JavaScript: {errores}"
 
 
-def test_carga_con_todas_las_cifras_verificadas(pagina):
+def test_informe_del_analista_con_citas_trazadas(pagina):
     assert pagina.locator("#t-nombre").inner_text() == "Equipo Muestra"
-    total = pagina.locator("#resumen .cifra").count()
-    assert total > 5
+    # el informe del analista manda: cada cifra es una cita resuelta, sin cifras libres
+    expect(pagina.locator("#informe-ia-body .cifra.cita")).to_have_count(5)
+    assert pagina.locator("#informe-ia-body .cifra.sin").count() == 0
+    assert pagina.locator("#resumen-panel").is_hidden()
+    expect(pagina.locator("#traza li")).to_have_count(4)
+    assert "5 / 5" in pagina.locator("#verif-num").inner_text().replace("\n", " ")
+    pagina.locator('#informe-ia-body .cifra[data-k="metrica.ppda"]').focus()
+    expect(pagina.locator("#tip")).to_contain_text("metrica.ppda")
+
+
+def test_equipo_sin_informe_usa_el_resumen_verificado(pagina, servidor):
+    pagina.goto(servidor + "/?equipo=equipo-rival")
+    assert pagina.locator("#informe-ia").is_hidden()
+    assert pagina.locator("#resumen .cifra").count() > 5
     assert pagina.locator("#resumen .cifra.sin").count() == 0
     assert "Cifras verificadas" in pagina.locator("#verif-badge").inner_text()
 
@@ -112,7 +124,8 @@ def test_version_en_ingles_con_cifras_verificadas(pagina, servidor):
     pagina.goto(servidor + "/?lang=en")
     expect(pagina.locator("#h-informe")).to_have_text("Report")
     assert "Figures verified" in pagina.locator("#verif-badge").inner_text()
-    assert pagina.locator("#resumen .cifra.sin").count() == 0
+    expect(pagina.locator("#informe-ia-body h3").first).to_have_text("Verdict")
+    assert pagina.locator('#informe-ia-body .cifra[data-k="metrica.ppda"]').inner_text() == "2.48"
     assert pagina.evaluate("document.documentElement.lang") == "en"
     # el botón vuelve al español y lo recuerda
     pagina.locator("#btn-lang").click()

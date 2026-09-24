@@ -9,28 +9,35 @@ Este documento reúne lo que el sistema **puede afirmar con evidencia**, lo que
 PitchIQ **NO afirma** que "scoutea mejor que un humano", ni que sus informes
 sustituyan a un analista. Lo que afirma, con evidencia:
 
-1. **Grounding total verificado.** Cada cifra del informe publicado proviene de
-   una métrica computada y un validador automático lo comprueba cifra a cifra.
+1. **Grounding por citas.** El redactor no escribe cifras: cita claves de un
+   dossier calculado con los datos y el código inserta los valores. Un
+   verificador comprueba cada cita y rechaza cualquier dígito escrito a mano,
+   aunque coincida por casualidad con un valor real.
 2. **Retrieval medido, no supuesto.** La capa RAG se evalúa con RAGAS
    (fidelidad, relevancia de contexto) y con top-k accuracy; los resultados se
    publican aunque no favorezcan las decisiones tomadas (ver embeddings).
 3. **Motor de métricas que generaliza.** Las métricas deterministas corren sin
    cambios sobre un torneo distinto (Euro 2024).
-4. **Comunicación trazable.** El informe publica su evidencia completa
-   (`/api/evidence`) y advierte del estado de revisión de sus interpretaciones.
+4. **Comunicación trazable.** Cada informe se publica con el borrador tal cual,
+   el dossier que recibió el modelo y su verificación
+   (`/api/equipos/{slug}/informe`), y la web enseña la fuente de cada cifra.
 
 ## Resultados
 
-### Grounding (validador de M4 sobre el informe servido)
+### Grounding (verificador de citas sobre los informes servidos)
+
+`scripts/run_eval.py` no se fía de lo guardado al generar: vuelve a pasar el
+verificador sobre el borrador de cada informe (ES y EN) y el dossier que recibió.
 
 | Métrica | Valor |
 |---|---|
-| Cifras en el informe | 3/3 respaldadas |
-| Ratio de grounding | **1.0** |
+| Citas válidas / cifras en los informes | ver `eval/results/grounding.json` |
+| Percentiles del dossier (Python) frente a los de la web (JavaScript) | **2617 / 2617** idénticos |
 
-*Nota:* medido sobre los artefactos actualmente servidos (fixtures de muestra;
-los artefactos reales se generan con `scripts/precompute.py` y el mismo check
-se re-ejecuta sobre ellos — hay un test que lo garantiza en CI).
+*Nota:* mientras no se generen los informes reales, la medida corre sobre el
+informe de muestra; hay un test en CI que exige ratio 1,0 sobre lo servido.
+Límite conocido: el verificador detecta cifras con dígitos, no cantidades
+escritas con letras («tres victorias»). El prompt lo prohíbe, pero no se comprueba.
 
 ### Comparación de embeddings (top-k accuracy, 10 preguntas, sin LLM)
 

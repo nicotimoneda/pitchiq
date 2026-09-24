@@ -5,14 +5,14 @@ vía scripts/precompute.py; esta app solo sirve los artefactos resultantes. Por
 eso sus dependencias son mínimas (fastapi, jinja2, markdown) y NO importa
 anthropic, langgraph, sentence-transformers ni torch.
 
-Los artefactos son dos piezas independientes, cada una con su fallback a
-sample/: las métricas de cada equipo publicado (teams/<slug>.json, sin key) y
-el informe del LLM (report.md + evidence.json, con key). Así la web enseña
-métricas reales aunque el informe todavía no se haya generado.
+Los artefactos son las métricas de cada equipo publicado (teams/<slug>.json)
+y el informe del analista IA de cada uno (informes/<slug>.json), con fallback a
+sample/ para tests y CI. Un equipo sin informe enseña el resumen determinista.
 """
 
 import json
 import os
+import re
 from pathlib import Path
 
 import markdown as md
@@ -36,15 +36,6 @@ def _load_teams(report_dir: Path) -> "tuple[list[dict], bool]":
             teams = [json.loads(f.read_text(encoding="utf-8")) for f in files]
             return sorted(teams, key=lambda t: t.get("orden", 0)), is_sample
     raise RuntimeError(f"no hay métricas de equipos en {report_dir}")
-
-
-def _load_report(report_dir: Path) -> "tuple[str, dict, Path, bool]":
-    """Informe del LLM y su evidencia (reales si existen; si no, los de sample/)."""
-    real = report_dir / "report.md"
-    base, is_sample = (report_dir, False) if real.exists() else (report_dir / "sample", True)
-    report_md = (base / "report.md").read_text(encoding="utf-8")
-    evidence = json.loads((base / "evidence.json").read_text(encoding="utf-8"))
-    return report_md, evidence, base, is_sample
 
 
 # Lo que la página lee de cada equipo para buscar, comparar y calcular percentiles
@@ -83,6 +74,51 @@ def _markdown_seguro(texto: str) -> str:
     return re.sub(r'(href|src)="\s*(javascript|data|vbscript):', r'\1="#', html, flags=re.IGNORECASE)
 
 
+_CITA = re.compile(r"\{([a-z_]+(?:\.[a-z_]+)+)\}")
+
+
+def _valor(entrada: dict, idioma: str) -> str:
+    """Valor de una entrada del dossier como se lee en cada idioma (coma decimal en español)."""
+    texto = f"{entrada['valor']:.{entrada['decimales']}f}"
+    return texto.replace(".", ",") if idioma == "es" else texto
+
+
+def _informe_html(texto: str, dossier: dict, idioma: str) -> str:
+    """Markdown del modelo a HTML seguro, con cada cita {clave} convertida en su valor trazable."""
+    claves: list[str] = []
+
+    def marcar(m: re.Match) -> str:
+        claves.append(m.group(1))
+        return f"CITA{len(claves) - 1}FIN"  # sin caracteres de markdown
+
+    def cifra(m: re.Match) -> str:
+        k = claves[int(m.group(1))]
+        if k not in dossier:  # clave inventada: se enseña tal cual y marcada
+            return f'<span class="cifra sin" tabindex="0" data-k="{k}">{{{k}}}</span>'
+        return f'<span class="cifra cita" tabindex="0" data-k="{k}">{_valor(dossier[k], idioma)}</span>'
+
+    return re.sub(r"CITA(\d+)FIN", cifra, _markdown_seguro(_CITA.sub(marcar, texto)))
+
+
+def _load_informes(informes_dir: Path) -> "dict[str, dict]":
+    """Informes del analista por slug, listos para la página (HTML + fuentes de cada cita)."""
+    informes = {}
+    for f in sorted(informes_dir.glob("*.json")) if informes_dir.exists() else []:
+        inf = json.loads(f.read_text(encoding="utf-8"))
+        dossier = inf["dossier"]
+        citadas = {k for i in ("es", "en") for k in _CITA.findall(inf[i]["markdown"]) if k in dossier}
+        informes[inf["slug"]] = {
+            "generated_at": inf["generated_at"], "modelo": inf.get("modelo"), "sample": inf.get("sample", False),
+            "n_dossier": len(dossier), "contexto": sorted(inf.get("contexto") or {}),
+            "fuentes": {k: [dossier[k]["es"], dossier[k]["en"], _valor(dossier[k], "es"), _valor(dossier[k], "en")]
+                        for k in sorted(citadas)},
+            **{i: {"html": _informe_html(inf[i]["markdown"], dossier, i), "citas": inf[i]["citas"],
+                   "sin_respaldo": inf[i]["sin_respaldo"], "reintentos": inf[i]["reintentos"]}
+               for i in ("es", "en")},
+        }
+    return informes
+
+
 def _celda_csv(v):
     """Valor de celda: coma decimal y sin fórmulas (un texto que empiece por = + - @ no se ejecuta)."""
     if isinstance(v, float):
@@ -111,25 +147,17 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
 
     teams, is_sample_data = _load_teams(base)
     by_slug = {t["slug"]: t for t in teams}
-    report_md, evidence, report_base, is_sample_report = _load_report(base)
-
     # un informe de muestra junto a métricas reales sería incoherente: no se publica
-    reports: dict[str, dict] = {}
-    if is_sample_data or not is_sample_report:
-        owner = next((t for t in teams if t["equipo"] == evidence["team"]), None)
-        if owner is not None:
-            figures = evidence["grounding"]["figures"]
-            reports[owner["slug"]] = {
-                "html": _markdown_seguro(report_md),
-                "generated_at": evidence["generated_at"],
-                "n_figures": len(figures),
-                "n_grounded": sum(1 for f in figures if f["grounded"]),
-                "sample": is_sample_report,
-            }
+    informes = _load_informes(base / ("sample" if is_sample_data else "") / "informes")
+    for slug, inf in informes.items():
+        if slug in by_slug:
+            by_slug[slug]["informe"] = inf
 
     # en la página van ligeros todos los equipos (para comparar y el mapa de estilos);
     # los datos pesados de cada uno se piden a /api/equipos/{slug} al elegirlo
     teams_light = [_ligero(t) for t in teams]
+    for t in teams_light:
+        t["con_informe"] = t["slug"] in informes
 
     app = FastAPI(title="PitchIQ", docs_url=None, redoc_url=None)
     app.add_middleware(GZipMiddleware, minimum_size=1000)
@@ -147,9 +175,6 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
         elif request.url.path.startswith(("/api/equipos/", "/og/")):
             resp.headers.setdefault("Cache-Control", "public, max-age=3600, stale-while-revalidate=86400")
         return resp
-    figures_dir = report_base / "figures"
-    if figures_dir.exists():
-        app.mount("/figures", StaticFiles(directory=figures_dir), name="figures")
     app.mount("/fonts", StaticFiles(directory=APP_DIR / "static" / "fonts"), name="fonts")
     og_dir = base / "og"
     if og_dir.exists():
@@ -170,7 +195,6 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
             {
                 "teams": teams,
                 "teams_light": teams_light,
-                "reports": reports,
                 "initial": initial,
                 "initial_team": by_slug[initial],
                 "is_sample_data": is_sample_data,
@@ -215,21 +239,13 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
         return Response(_csv(by_slug[slug].get("jugadores", []), cols), media_type="text/csv; charset=utf-8",
                         headers={"Content-Disposition": f'attachment; filename="{slug}-jugadores.csv"'})
 
-    @app.get("/api/report")
-    def api_report() -> dict:
-        """Informe del LLM en Markdown con metadatos."""
-        return {
-            "team": evidence["team"],
-            "generated_at": evidence["generated_at"],
-            "sample": is_sample_report,
-            "grounding_ratio": evidence["grounding"]["ratio"],
-            "markdown": report_md,
-        }
-
-    @app.get("/api/evidence")
-    def api_evidence() -> dict:
-        """Evidencia completa del informe: salidas de herramientas + grounding."""
-        return evidence
+    @app.get("/api/equipos/{slug}/informe")
+    def api_informe(slug: str) -> dict:
+        """Informe del analista tal cual lo escribió el modelo, con su dossier y su verificación."""
+        f = base / ("sample" if is_sample_data else "") / "informes" / f"{slug}.json"
+        if slug not in informes or not f.exists():
+            raise HTTPException(status_code=404, detail="equipo sin informe")
+        return json.loads(f.read_text(encoding="utf-8"))
 
     @app.get("/health")
     def health() -> dict:
@@ -237,7 +253,7 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
         return {
             "status": "ok",
             "sample_data": is_sample_data,
-            "sample_report": is_sample_report,
+            "informes": len(informes),
             "equipos": len(teams),
         }
 

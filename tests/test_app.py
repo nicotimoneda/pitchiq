@@ -33,7 +33,7 @@ def client(tmp_path_factory):
 def test_health(client):
     r = client.get("/health")
     assert r.status_code == 200
-    assert r.json() == {"status": "ok", "sample_data": True, "sample_report": True, "equipos": 2}
+    assert r.json() == {"status": "ok", "sample_data": True, "informes": 1, "equipos": 2}
 
 
 def test_index_con_selector_secciones_y_datos(client):
@@ -53,14 +53,17 @@ def test_index_con_selector_secciones_y_datos(client):
     inicial = json.loads(html.split("const INICIAL_COMPLETO = ", 1)[1].split(";\n", 1)[0])
     assert all("agregados" in t and "partidos" not in t and "corners" not in t for t in ligeros)
     assert {"partidos", "corners", "tiros", "jugadores", "zonas_recuperacion"} <= set(inicial)
-    # el informe del LLM (muestra) viaja con su recuento de cifras verificadas
-    assert '"n_grounded": 3' in html
+    # el informe del analista viaja con el equipo, con cada cita ya convertida en su valor
+    assert inicial["informe"]["es"]["citas"] == 5
+    assert '<span class="cifra cita" tabindex="0" data-k="metrica.ppda">2,48</span>' in inicial["informe"]["es"]["html"]
+    assert 'data-k="metrica.ppda">2.48</span>' in inicial["informe"]["en"]["html"]
+    assert [t["con_informe"] for t in ligeros] == [True, False]
     assert "Datos de muestra" in html
 
 
 def test_equipo_inicial_por_query(client):
     html = client.get("/?equipo=equipo-rival").text
-    assert "<title>PitchIQ · Equipo Rival</title>" in html
+    assert "<title>PitchIQ</title>" in html
     assert 'const INITIAL = "equipo-rival";' in html
     # un slug desconocido cae al primer equipo publicado
     assert 'const INITIAL = "equipo-muestra";' in client.get("/?equipo=no-existe").text
@@ -76,19 +79,21 @@ def test_api_equipos(client):
     assert client.get("/api/equipos/no-existe").status_code == 404
 
 
-def test_api_report_y_evidence(client):
-    report = client.get("/api/report").json()
-    assert {"team", "generated_at", "sample", "grounding_ratio", "markdown"} <= set(report)
-    assert report["markdown"].startswith("#")
-    evidence = client.get("/api/evidence").json()
-    assert {"team", "grounding", "tool_outputs"} <= set(evidence)
-    assert all("grounded" in f for f in evidence["grounding"]["figures"])
+def test_api_informe(client):
+    inf = client.get("/api/equipos/equipo-muestra/informe").json()
+    assert {"dossier", "es", "en", "generated_at", "sample"} <= set(inf)
+    assert "{metrica.ppda}" in inf["es"]["markdown"]  # tal cual lo escribió el modelo
+    assert client.get("/api/equipos/equipo-rival/informe").status_code == 404
 
 
-def test_figuras_estaticas_se_sirven(client):
-    r = client.get("/figures/sample_figure.png")
-    assert r.status_code == 200
-    assert r.headers["content-type"] == "image/png"
+def test_informe_html_escapa_y_marca_claves_inventadas():
+    from app.main import _informe_html
+
+    dossier = {"metrica.ppda": {"valor": 2.48, "decimales": 2, "es": "PPDA", "en": "PPDA"}}
+    html = _informe_html("<script>x</script> PPDA {metrica.ppda}, {metrica.nada} [a](javascript:alert(1))", dossier, "es")
+    assert "<script>" not in html and 'href="#' in html
+    assert 'data-k="metrica.ppda">2,48</span>' in html
+    assert '<span class="cifra sin" tabindex="0" data-k="metrica.nada">{metrica.nada}</span>' in html
 
 
 def test_metricas_reales_sin_informe_no_mezcla_la_muestra(tmp_path):
@@ -98,7 +103,8 @@ def test_metricas_reales_sin_informe_no_mezcla_la_muestra(tmp_path):
     client = TestClient(create_app(report_dir=base))
 
     html = client.get("/").text
-    assert "const REPORTS = {};" in html
+    inicial = json.loads(html.split("const INICIAL_COMPLETO = ", 1)[1].split(";\n", 1)[0])
+    assert "informe" not in inicial
     assert "Datos de muestra" not in html
     assert client.get("/health").json()["sample_data"] is False
 

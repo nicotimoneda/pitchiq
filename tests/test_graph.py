@@ -1,7 +1,21 @@
-"""Tests del grafo y el orquestador con LLMClient mockeado (sin red ni LLM real)."""
+"""Tests del analista (dossier -> redactar <-> verificar) con el LLM mockeado, sin red."""
 
+import json
+
+import pytest
+
+from pitchiq import config
+from pitchiq.agent.dossier import construir_dossier, percentil
 from pitchiq.agent.graph import build_graph
+from pitchiq.agent.grounding import verificar_citas
 from pitchiq.agent.report import generate_report
+
+SAMPLE_TEAMS = config.ROOT_DIR / "app" / "static" / "report" / "sample" / "teams"
+
+
+@pytest.fixture(scope="module")
+def equipos() -> "list[dict]":
+    return [json.loads(f.read_text(encoding="utf-8")) for f in sorted(SAMPLE_TEAMS.glob("*.json"))]
 
 
 class MockLLM:
@@ -16,47 +30,57 @@ class MockLLM:
         return self.responses[min(len(self.prompts) - 1, len(self.responses) - 1)]
 
 
-def test_grafo_produce_informe_y_estado(synthetic_season):
-    llm = MockLLM(["El equipo hizo 4 acciones defensivas con un PPDA de 3.33."])
-    app = build_graph(llm)
-    state = app.invoke({"team": "A"})
-
-    assert state["draft"].startswith("El equipo hizo 4 acciones")
-    assert set(state["tool_outputs"]) == {
-        "presion", "forma_defensiva", "corners_ataque", "corners_defensa",
-    }
-    assert state["evidence"]["presion.acciones_defensivas_totales"] == 4.0
-    # el LLM recibió las salidas de las herramientas, no datos crudos
-    assert "acciones_defensivas_totales" in llm.prompts[0]
-    assert len(llm.prompts) == 1  # una sola llamada, sin red
+def test_dossier_trae_balance_metricas_y_jugadores(equipos):
+    d = construir_dossier(equipos[0], equipos)
+    assert d["resultados.partidos"]["valor"] == 4
+    assert d["metrica.ppda"]["valor"] == 2.48
+    assert d["jugador.goles"]["valor"] == 3 and "Ana Muestra" in d["jugador.goles"]["es"]
+    # con dos equipos no hay grupo para percentiles (hacen falta cinco)
+    assert not any(k.startswith("percentil.") for k in d)
 
 
-def test_generate_report_grounded_a_la_primera(synthetic_season):
-    llm = MockLLM(["El equipo generó 0.3 xG a favor en 1 córner."])
-    report = generate_report("A", llm=llm)
-    assert report.grounding.is_grounded
-    assert report.retries_used == 0
-    assert "⚠️" not in report.markdown
+def test_percentil_igual_que_la_web():
+    equipos = [{"v": v} for v in (1, 2, 3, 4, 5)]
+    get = lambda t: t["v"]  # noqa: E731
+    assert percentil(equipos[4], get, 1, equipos) == 100
+    assert percentil(equipos[2], get, 1, equipos) == 50
+    assert percentil(equipos[0], get, -1, equipos) == 100  # menos es mejor
+    assert percentil({"v": None}, get, 1, equipos) is None
 
 
-def test_generate_report_reintenta_con_cifra_inventada(synthetic_season):
-    llm = MockLLM(
-        [
-            "El equipo ganó 99 duelos y su PPDA fue 3.33.",  # 99 inventado
-            "El PPDA del equipo fue 3.33.",  # reescrito, todo respaldado
-        ]
-    )
-    report = generate_report("A", llm=llm)
-    assert report.retries_used == 1
-    assert report.grounding.is_grounded
-    # el feedback del reintento nombra la cifra inventada
-    assert "99" in llm.prompts[1]
+def test_citas_validas_inventadas_y_cifras_libres(equipos):
+    d = construir_dossier(equipos[0], equipos)
+    rep = verificar_citas("Ganó {resultados.victorias}, PPDA {metrica.ppda}.", d)
+    assert rep.is_grounded and [f.matched_metric for f in rep.figures] == ["resultados.victorias", "metrica.ppda"]
+    rep = verificar_citas("Ganó {resultados.titulos} y 2,48 de PPDA en la 2023/24.", d)
+    # clave inexistente y cifra libre (aunque coincida con un valor real); la temporada no cuenta
+    assert [f.text for f in rep.ungrounded] == ["{resultados.titulos}", "2,48"]
 
 
-def test_generate_report_marca_cifras_persistentes(synthetic_season):
-    llm = MockLLM(["Inventé el 99 y lo mantengo."])  # nunca se corrige
-    report = generate_report("A", llm=llm, max_retries=1)
-    assert not report.grounding.is_grounded
-    assert report.retries_used == 1
-    assert "Aviso del validador de grounding" in report.markdown
-    assert "99" in report.markdown
+def test_grafo_redacta_con_el_dossier_y_verifica(equipos):
+    llm = MockLLM(["### Veredicto\n\nPPDA de {metrica.ppda}."])
+    state = build_graph(llm).invoke({"equipo": equipos[0], "todos": equipos, "idioma": "es"})
+    assert state["intentos"] == 1 and state["feedback"] == ""
+    # el LLM recibió el dossier con claves y valores formateados, no datos crudos
+    assert "{metrica.ppda} = 2,48" in llm.prompts[0]
+    assert "partidos\": [" not in llm.prompts[0]
+
+
+def test_reintenta_con_la_lista_de_fallos(equipos):
+    llm = MockLLM(["Ganó 99 duelos y {resultados.titulos}.", "PPDA de {metrica.ppda}."])
+    rep = generate_report(equipos[0], equipos, llm=llm)
+    assert rep.retries_used == 1 and rep.grounding.is_grounded
+    assert "99" in llm.prompts[1] and "{resultados.titulos}" in llm.prompts[1]
+
+
+def test_fallos_persistentes_quedan_registrados(equipos):
+    llm = MockLLM(["Inventé el 99 y lo mantengo."])
+    rep = generate_report(equipos[0], equipos, llm=llm, max_retries=1)
+    assert len(llm.prompts) == 2 and rep.retries_used == 1
+    assert [f.text for f in rep.grounding.ungrounded] == ["99"]
+
+
+def test_informe_en_ingles(equipos):
+    llm = MockLLM(["PPDA of {metrica.ppda}."])
+    generate_report(equipos[0], equipos, llm=llm, idioma="en")
+    assert "{metrica.ppda} = 2.48" in llm.prompts[0] and "inglés" in llm.prompts[0]

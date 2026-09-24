@@ -5,24 +5,22 @@ en app/static/report/. Hay dos tipos de artefacto:
 
 - teams/<slug>.json: las métricas y gráficas de cada equipo publicado (lista
   en scripts/publicacion.yaml). Solo métricas deterministas, SIN key.
-- report.md + evidence.json: el informe escrito por el LLM y su evidencia,
-  CON key (la única llamada cara).
+- informes/<slug>.json: el informe del analista IA (ES + EN), el dossier de
+  cifras que pudo citar y su verificación. Con el LLM: la API si hay
+  ANTHROPIC_API_KEY o, si no, el CLI `claude` con la suscripción.
 
 El humano corre esto en local, revisa el resultado y COMMITEA los artefactos.
 
 Uso:
-    uv run python scripts/precompute.py --demo-data     # métricas de los equipos (sin key)
-    ANTHROPIC_API_KEY=sk-ant-... uv run python scripts/precompute.py   # todo
-    uv run python scripts/precompute.py --sample        # fixtures sintéticas (sin key)
+    uv run python scripts/precompute.py --demo-data     # métricas de los equipos (sin LLM)
+    uv run python scripts/precompute.py                 # informes de todos los equipos
+    uv run python scripts/precompute.py --equipos bayer-leverkusen-2023-24 --solo-faltan
+    uv run python scripts/precompute.py --sample        # fixtures sintéticas (sin LLM)
 """
 
 import argparse
 import json
 import math
-import os
-import shutil
-import subprocess
-import sys
 from datetime import date
 
 from pitchiq import config
@@ -160,46 +158,47 @@ def _sin_nan(obj):
     return obj
 
 
-# Figuras de temporada (M1-M3) que acompañan al informe en la web
-SEASON_FIGURES = [
-    "defensive_block_{slug}_season.png",
-    "line_height_by_match_{slug}.png",
-    "corners_delivery_{slug}_temporada.png",
-    "corners_box_load_{slug}_temporada.png",
-    "corners_first_contact_for_{slug}_temporada.png",
-    "corners_first_contact_against_{slug}_temporada.png",
-]
+INFORMES_DIR = REPORT_DIR / "informes"  # informes del analista IA, uno por equipo
 
-SAMPLE_MARKDOWN = """\
-# Informe táctico — Equipo Muestra (datos sintéticos)
-
-Este es un informe de MUESTRA generado sin LLM para tests y CI. El equipo
-registró un PPDA medio de 2.48 y una altura de línea defensiva de 52.9,
-con 236 córners a favor en la temporada.
-"""
-
-SAMPLE_EVIDENCE = {
-    "team": "Equipo Muestra",
-    "generated_at": "2026-01-01",
-    "sample": True,
-    "model": None,
-    "grounding": {
-        "ratio": 1.0,
-        "figures": [
-            {"text": "2.48", "value": 2.48, "grounded": True,
-             "matched_metric": "presion.ppda_medio"},
-            {"text": "52.9", "value": 52.9, "grounded": True,
-             "matched_metric": "forma_defensiva.altura_linea_media"},
-            {"text": "236", "value": 236.0, "grounded": True,
-             "matched_metric": "corners_ataque.n_corners"},
-        ],
-    },
-    "tool_outputs": {
-        "presion": {"team": "Equipo Muestra", "ppda_medio": 2.48},
-        "forma_defensiva": {"team": "Equipo Muestra", "altura_linea_media": 52.9},
-        "corners_ataque": {"team": "Equipo Muestra", "n_corners": 236},
-    },
+# Informe de muestra, con citas como las escribe el modelo (tests y CI, sin LLM)
+SAMPLE_INFORME = {
+    "es": ("### Veredicto\n\nInforme de MUESTRA escrito sin LLM para tests y CI. "
+           "El equipo ganó {resultados.victorias} de {resultados.partidos} partidos, presiona "
+           "con un PPDA de {metrica.ppda} y defiende con la línea a {metrica.altura} m "
+           "de su portería.\n\n### Balón parado\n\nLanzó {corners.a_favor} córners."),
+    "en": ("### Verdict\n\nSAMPLE report written without an LLM for tests and CI. "
+           "The team won {resultados.victorias} of {resultados.partidos} matches, presses "
+           "with a PPDA of {metrica.ppda} and defends with its line {metrica.altura} m "
+           "from its own goal.\n\n### Set pieces\n\nIt took {corners.a_favor} corners."),
 }
+
+
+class _PlantillaLLM:
+    """LLM falso para la muestra: devuelve el texto fijo del idioma pedido."""
+
+    model_used = None
+
+    def complete(self, system: str, user: str) -> str:
+        return SAMPLE_INFORME["en" if "inglés" in user else "es"]
+
+
+def informe(team: dict, todos: "list[dict]", llm, retriever=None, sample: bool = False) -> dict:
+    """Informe del analista en español e inglés, con su dossier y su verificación."""
+    from pitchiq.agent.report import generate_report
+
+    out = {"slug": team["slug"], "equipo": team["nombre"], "generated_at": date.today().isoformat(),
+           "sample": sample, "modelo": None}
+    for idioma in ("es", "en"):
+        rep = generate_report(team, todos, llm=llm, idioma=idioma, retriever=retriever)
+        out["dossier"], out["contexto"] = rep.dossier, rep.context
+        out["modelo"] = getattr(llm, "model_used", None)
+        out[idioma] = {
+            "markdown": rep.markdown,
+            "citas": sum(f.grounded for f in rep.grounding.figures),
+            "sin_respaldo": [f.text for f in rep.grounding.ungrounded],
+            "reintentos": rep.retries_used,
+        }
+    return out
 
 
 def _sample_team(slug: str, nombre: str, orden: int, desplaz: float) -> dict:
@@ -278,33 +277,19 @@ def _sample_team(slug: str, nombre: str, orden: int, desplaz: float) -> dict:
 def build_sample() -> None:
     """Genera las fixtures sintéticas de sample/ (sin key, para tests y CI)."""
     sample_dir = REPORT_DIR / "sample"
-    figures_dir = sample_dir / "figures"
-    teams_dir = sample_dir / "teams"
-    figures_dir.mkdir(parents=True, exist_ok=True)
+    teams_dir, informes_dir = sample_dir / "teams", sample_dir / "informes"
     teams_dir.mkdir(parents=True, exist_ok=True)
-
-    (sample_dir / "report.md").write_text(SAMPLE_MARKDOWN, encoding="utf-8")
-    (sample_dir / "evidence.json").write_text(
-        json.dumps(SAMPLE_EVIDENCE, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-    for team in (
-        _sample_team("equipo-muestra", "Equipo Muestra", 0, 0.0),
-        _sample_team("equipo-rival", "Equipo Rival", 1, 10.0),
-    ):
+    informes_dir.mkdir(parents=True, exist_ok=True)
+    equipos = [_sample_team("equipo-muestra", "Equipo Muestra", 0, 0.0),
+               _sample_team("equipo-rival", "Equipo Rival", 1, 10.0)]
+    for team in equipos:
         (teams_dir / f"{team['slug']}.json").write_text(
             json.dumps(team, ensure_ascii=False), encoding="utf-8"
         )
-
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    fig, ax = plt.subplots(figsize=(4, 2.5))
-    ax.bar(["corto", "primer palo", "centro", "segundo palo"], [3, 2, 4, 1],
-           color="#d62828")
-    ax.set_title("figura de muestra (datos sintéticos)", fontsize=9)
-    fig.savefig(figures_dir / "sample_figure.png", dpi=72, bbox_inches="tight")
+    inf = informe(equipos[0], equipos, _PlantillaLLM(), sample=True)
+    inf["generated_at"] = "2026-01-01"
+    (informes_dir / "equipo-muestra.json").write_text(
+        json.dumps(inf, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"fixtures de muestra en {sample_dir}")
 
 
@@ -638,72 +623,49 @@ def build_demo_data(jobs: int = 1, solo_faltan: bool = False) -> None:
             pass
 
 
-def build_real(team: str) -> None:
-    """Genera métricas, figuras y el informe real (requiere ANTHROPIC_API_KEY)."""
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        raise SystemExit(
-            "Falta ANTHROPIC_API_KEY: el precómputo genera el informe con el LLM "
-            "una única vez, en local. Exporta la key y relanza:\n"
-            "  ANTHROPIC_API_KEY=sk-ant-... uv run python scripts/precompute.py\n"
-            "Las métricas no necesitan key: uv run python scripts/precompute.py --demo-data"
-        )
+def build_informes(slugs: "list[str] | None" = None, solo_faltan: bool = False) -> None:
+    """Informes del analista IA (ES + EN) de los equipos publicados.
 
-    from pitchiq.agent.report import generate_report
+    Usa la API si hay ANTHROPIC_API_KEY y, si no, el CLI `claude` con la sesión de
+    la suscripción. Cada informe se guarda en cuanto termina: se puede cortar y
+    reanudar con --solo-faltan.
+    """
+    from pitchiq.agent.llm import cliente_por_defecto
     from pitchiq.rag.retriever import open_default_retriever
 
-    slug = team.lower().replace(" ", "_")
-    figures_dir = REPORT_DIR / "figures"
-    figures_dir.mkdir(parents=True, exist_ok=True)
+    todos = [json.loads(f.read_text(encoding="utf-8")) for f in sorted(TEAMS_DIR.glob("*.json"))]
+    if not todos:
+        raise SystemExit("no hay métricas de equipos: uv run python scripts/precompute.py --demo-data")
+    elegidos = [t for t in todos if not slugs or t["slug"] in slugs]
+    if slugs and len(elegidos) != len(slugs):
+        faltan = set(slugs) - {t["slug"] for t in elegidos}
+        raise SystemExit(f"equipos no publicados: {', '.join(sorted(faltan))}")
+    INFORMES_DIR.mkdir(parents=True, exist_ok=True)
+    if solo_faltan:
+        elegidos = [t for t in elegidos if not (INFORMES_DIR / f"{t['slug']}.json").exists()]
 
-    print("1/4 regenerando figuras de temporada (datos cacheados, sin key)...")
-    for script, args in [
-        ("scripts/build_shape_report.py", ["--team", team]),
-        ("scripts/build_setpiece_report.py", ["--team", team]),
-    ]:
-        subprocess.run([sys.executable, script, *args], check=True,
-                       capture_output=True, cwd=config.ROOT_DIR)
-    for name in SEASON_FIGURES:
-        src = config.FIGURES_DIR / name.format(slug=slug)
-        if src.exists():
-            shutil.copy(src, figures_dir / src.name)
-        else:
-            print(f"  aviso: falta {src.name}")
-
-    print("2/4 exportando métricas de los equipos publicados (sin key)...")
-    build_demo_data()
-
-    print("3/4 generando el informe con el LLM (única llamada cara)...")
+    llm = cliente_por_defecto()
     retriever = open_default_retriever()
     if retriever is None:
-        raise SystemExit(
-            "no hay índice vectorial; constrúyelo con "
-            "`uv run python scripts/build_index.py`"
-        )
-    report = generate_report(team, retriever=retriever)
-    retriever.close()
-
-    print("4/4 escribiendo artefactos...")
-    (REPORT_DIR / "report.md").write_text(report.markdown, encoding="utf-8")
-    evidence = {
-        "team": report.team,
-        "generated_at": date.today().isoformat(),
-        "sample": False,
-        "model": "claude-opus-4-8",
-        "grounding": report.grounding.model_dump(),
-        "tool_outputs": report.tool_outputs,
-    }
-    (REPORT_DIR / "evidence.json").write_text(
-        json.dumps(evidence, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-    print(f"artefactos en {REPORT_DIR} — revísalos y commitéalos")
-    print(f"grounding: {report.grounding.ratio:.0%} "
-          f"({len(report.grounding.figures)} cifras)")
+        print("aviso: sin índice del glosario (scripts/build_index.py); se redacta sin contexto RAG")
+    try:
+        for i, team in enumerate(elegidos, 1):
+            inf = informe(team, todos, llm, retriever)
+            (INFORMES_DIR / f"{team['slug']}.json").write_text(
+                json.dumps(inf, ensure_ascii=False, indent=1), encoding="utf-8")
+            estado = " · ".join(f"{k}: {inf[k]['citas']} citas, {len(inf[k]['sin_respaldo'])} sin respaldo, "
+                                f"{inf[k]['reintentos']} reintentos" for k in ("es", "en"))
+            print(f"[{i}/{len(elegidos)}] {team['slug']} — {estado}")
+    finally:
+        if retriever is not None:
+            retriever.close()
 
 
 def main() -> None:
     """Punto de entrada del CLI."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--team", type=str, default=config.DEFAULT_TEAM)
+    parser.add_argument("--equipos", type=str, default="",
+                        help="slugs separados por comas (informes); por defecto, todos")
     parser.add_argument("--sample", action="store_true",
                         help="genera solo las fixtures sintéticas (sin key)")
     parser.add_argument("--demo-data", action="store_true",
@@ -722,7 +684,8 @@ def main() -> None:
     elif args.og:
         build_og_all()
     else:
-        build_real(args.team)
+        slugs = [x.strip() for x in args.equipos.split(",") if x.strip()]
+        build_informes(slugs or None, solo_faltan=args.solo_faltan)
 
 
 if __name__ == "__main__":

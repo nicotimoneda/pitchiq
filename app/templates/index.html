@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PitchIQ · {{ initial_team.nombre }}</title>
+<title>PitchIQ</title>
 <meta name="description" content="Análisis táctico de {{ initial_team.nombre }} ({{ initial_team.competicion }} {{ initial_team.temporada }}): presión, defensa, balón parado y partidos, con cifras verificadas.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PitchIQ">
@@ -243,7 +243,17 @@
   .report-body h3 { font-size: 18px; margin: 1em 0 .3em; }
   .report-body blockquote { border-left: 3px solid var(--rule); margin: 1em 0 0; padding-left: 14px; color: var(--muted); font-size: 14px; line-height: 1.5; }
   .report-kicker { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
-  .report-ai { margin-top: 16px; }
+  .report-ai .report-body h3 { font-size: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin: 1.3em 0 .35em; }
+  .report-ai .report-body h3:first-child { margin-top: 0; }
+  .report-ai .report-body ul { margin: 0 0 .9em; padding-left: 1.2em; max-width: 68ch; }
+  .report-ai .report-body li { margin-bottom: .35em; }
+  .cifra:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .traza { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: paso; }
+  .traza li { position: relative; padding: 0 0 12px 26px; font-size: 13px; line-height: 1.4; color: var(--ink-2); counter-increment: paso; }
+  .traza li:last-child { padding-bottom: 0; }
+  .traza li::before { content: counter(paso); position: absolute; left: 0; top: 0; width: 18px; height: 18px; border-radius: 50%; background: var(--surface-2); color: var(--ink); font-size: 11px; font-weight: 700; display: grid; place-items: center; }
+  .traza li:not(:last-child)::after { content: ""; position: absolute; left: 8.5px; top: 20px; bottom: 2px; width: 1px; background: var(--rule); }
+  .traza li b { display: block; color: var(--ink); font-size: 13px; }
   .cifra {
     font-weight: 700; border-radius: 5px; padding: 0 .22em; white-space: nowrap; cursor: help;
     background: var(--ok-bg); color: var(--ok);
@@ -748,13 +758,13 @@
     </div>
     <div class="report">
       <div class="stack">
-        <article class="panel">
-          <p class="report-kicker">Claves</p>
-          <div class="report-body" id="resumen"></div>
-        </article>
         <article class="panel report-ai" id="informe-ia" hidden>
           <p class="report-kicker" id="informe-ia-kicker">Informe del analista</p>
           <div class="report-body" id="informe-ia-body"></div>
+        </article>
+        <article class="panel" id="resumen-panel">
+          <p class="report-kicker">Claves</p>
+          <div class="report-body" id="resumen"></div>
         </article>
         <div class="fd-grid" id="fd">
           <article class="panel fd fd-pos"><p class="report-kicker">Puntos fuertes</p><ul id="fuertes"></ul></article>
@@ -767,10 +777,11 @@
           <svg viewBox="0 0 64 64" aria-hidden="true"><circle class="trk" cx="32" cy="32" r="27"/><circle class="val-ring" id="verif-arc" cx="32" cy="32" r="27" stroke-dasharray="169.65" stroke-dashoffset="169.65"/></svg>
           <span class="big" id="verif-num"></span>
         </div>
-        <p>Cada cifra del resumen se contrasta automáticamente con las métricas calculadas a partir de los datos de los partidos. Pasa el cursor por una cifra para ver de dónde sale.</p>
+        <ol class="traza" id="traza" hidden></ol>
+        <p id="verif-texto"></p>
         <p class="grupo-nota" id="grupo-nota"></p>
         <div class="dl-links">
-          <a class="btn-sm" href="/api/evidence"><svg class="ico"><use href="#i-verif"/></svg>Evidencia</a>
+          <a class="btn-sm" id="api-informe" href="/api/equipos" hidden><svg class="ico"><use href="#i-verif"/></svg>Dossier y borrador</a>
           <a class="btn-sm" id="api-equipo" href="/api/equipos"><svg class="ico"><use href="#i-codigo"/></svg>Datos (JSON)</a>
         </div>
       </aside>
@@ -966,7 +977,7 @@
     <details class="method">
       <summary>Metodología y límites</summary>
       <ul>
-        <li><b>Cifras verificadas.</b> Todas las cifras de los informes salen de métricas calculadas sobre los eventos de cada partido. Un validador automático contrasta cada número del texto y marca cualquiera sin respaldo.</li>
+        <li><b>Cifras verificadas.</b> El analista IA no escribe cifras: cita entradas de un dossier calculado con los eventos de cada partido y el código pone los valores. Un verificador comprueba cada cita y marca cualquier número escrito a mano.</li>
         <li><b>Posiciones visibles.</b> Las métricas de defensa usan las posiciones de los jugadores que aparecen en la imagen de la retransmisión (datos 360). Son aproximadas, y los partidos sin esos datos se excluyen.</li>
         <li><b>Unidades.</b> StatsBomb normaliza el campo a 120 × 80 yardas; aquí todo se convierte a metros (109,7 × 73,2 m): distancias en metros y áreas en m².</li>
         <li><b>PPDA.</b> Incluye las presiones como acción defensiva: mide volumen de presión. Sus valores no son comparables con los de otras fuentes y, contrastado con Understat, tampoco ordena igual a los equipos.</li>
@@ -1011,7 +1022,6 @@
 <script>
 const TEAMS = {{ teams_light | tojson }};
 const INICIAL_COMPLETO = {{ initial_team | tojson }};
-const REPORTS = {{ reports | tojson }};
 const INITIAL = {{ initial | tojson }};
 
 const NS = "http://www.w3.org/2000/svg";
@@ -1084,8 +1094,8 @@ const T_EN = {
   "Córners a favor por partido": "Corners for per match", "Primer contacto en córners": "First contact at corners", "% ganado": "% won",
   "Datos:": "Data:", "API": "API", "Evidencia del informe": "Report evidence", "Código": "Code", "Metodología y límites": "Methodology and limits",
   "Cifras verificadas.": "Verified figures.",
-  "Todas las cifras de los informes salen de métricas calculadas sobre los eventos de cada partido. Un validador automático contrasta cada número del texto y marca cualquiera sin respaldo.":
-    "Every figure in the reports comes from metrics computed on each match's events. An automatic validator checks each number in the text and flags any without support.",
+  "El analista IA no escribe cifras: cita entradas de un dossier calculado con los eventos de cada partido y el código pone los valores. Un verificador comprueba cada cita y marca cualquier número escrito a mano.":
+    "The AI analyst does not write figures: it cites entries of a dossier computed from each match's events, and the code inserts the values. A verifier checks every citation and flags any number typed by hand.",
   "Posiciones visibles.": "Visible positions.",
   "Las métricas de defensa usan las posiciones de los jugadores que aparecen en la imagen de la retransmisión (datos 360). Son aproximadas, y los partidos sin esos datos se excluyen.":
     "Defensive metrics use the positions of the players visible in the broadcast image (360 data). They are approximate, and matches without that data are excluded.",
@@ -1630,7 +1640,6 @@ function renderFiltro(team) {
 
 function renderCabecera(team) {
   const T = team.herramientas, R = resultados(team);
-  document.title = "PitchIQ · " + team.nombre;
   $("#t-comp").textContent = team.competicion + " · " + team.temporada;
   $("#t-nombre").textContent = team.nombre;
   escudo($("#t-crest"), team);
@@ -1717,23 +1726,50 @@ function renderInforme(team) {
   $("#resumen").innerHTML = frases.filter(Boolean).map((t) => "<p>" + esc(t) + "</p>").join("");
   let { total, ok } = marcarCifras($("#resumen"), ev, nombresDe(team));
 
-  const rep = REPORTS[team.slug];
-  const ia = $("#informe-ia");
+  const rep = team.informe, ia = $("#informe-ia"), traza = $("#traza");
+  ia.hidden = !rep; traza.hidden = !rep; $("#resumen-panel").hidden = !!rep; $("#api-informe").hidden = !rep;
+  $("#informe-ia-body").innerHTML = "";
   if (rep) {
-    ia.hidden = false;
-    $("#informe-ia-kicker").textContent = (EN ? "Analyst report · " : "Informe del analista · ") + fechaCorta(rep.generated_at) + (rep.sample ? (EN ? " · sample" : " · muestra") : "");
-    $("#informe-ia-body").innerHTML = rep.html;
-    const r2 = marcarCifras($("#informe-ia-body"), ev, nombresDe(team));
-    total += r2.total; ok += r2.ok;
-    $("#informe-nota").textContent = "Resumen de métricas e informe redactado";
+    const r = rep[EN ? "en" : "es"], body = $("#informe-ia-body");
+    $("#informe-ia-kicker").textContent = (EN ? "Scouting report · " : "Informe de scouting · ") + fechaCorta(rep.generated_at) + (rep.sample ? (EN ? " · sample" : " · muestra") : "");
+    body.innerHTML = r.html;
+    // cada cita del modelo ya viene resuelta: su clave dice de qué entrada del dossier sale
+    body.querySelectorAll(".cifra").forEach((c) => {
+      const f = rep.fuentes[c.dataset.k];
+      bindTip(c, f
+        ? "<b>" + (EN ? "Cited from the dossier" : "Cita del dossier") + "</b><br>" + esc(f[EN ? 1 : 0]) + ": " + esc(f[EN ? 3 : 2]) + '<br><code>' + esc(c.dataset.k) + "</code>"
+        : "<b>" + (EN ? "Unknown key" : "Clave inexistente") + "</b><br>" + (EN ? "The model cited an entry that is not in the dossier" : "El modelo citó una entrada que no está en el dossier"));
+    });
+    // cualquier dígito escrito a mano por el modelo es una cifra libre: sin respaldo, aunque coincida
+    marcarCifras(body, [], nombresDe(team));
+    const citas = body.querySelectorAll(".cifra.cita").length;
+    total = citas + body.querySelectorAll(".cifra.sin").length; ok = citas;
+    const paso = (t, d) => "<li><b>" + t + "</b>" + d + "</li>";
+    traza.innerHTML = EN ? [
+      paso("Dossier", rep.n_dossier + " figures computed from the match events"),
+      paso("Glossary", rep.contexto.length ? "tactical context for " + rep.contexto.length + " sections (RAG, no figures)" : "no context"),
+      paso("Draft", (rep.modelo || "sample, no LLM") + " · cites keys, never writes numbers"),
+      paso("Verifier", citas + " valid citations · " + (total - ok) + " unsupported · " + r.reintentos + " retries"),
+    ].join("") : [
+      paso("Dossier", rep.n_dossier + " cifras calculadas con los eventos de los partidos"),
+      paso("Glosario", rep.contexto.length ? "contexto táctico para " + rep.contexto.length + " secciones (RAG, sin cifras)" : "sin contexto"),
+      paso("Redacción", (rep.modelo || "muestra, sin LLM") + " · cita claves, nunca escribe cifras"),
+      paso("Verificador", citas + " citas válidas · " + (total - ok) + " sin respaldo · " + r.reintentos + " reintentos"),
+    ].join("");
+    $("#verif-texto").textContent = EN
+      ? "The model does not write numbers: it cites entries of a dossier computed from the data, and the code inserts the values. Hover over a figure to see its source."
+      : "El modelo no escribe cifras: cita entradas de un dossier calculado con los datos y el código inserta los valores. Pasa el cursor por una cifra para ver su fuente.";
+    $("#informe-nota").textContent = EN ? "Written by an AI analyst, every figure traced to the data" : "Redactado por un analista IA, con cada cifra trazada hasta los datos";
+    $("#api-informe").href = "/api/equipos/" + team.slug + "/informe";
   } else {
-    ia.hidden = true;
-    $("#informe-ia-body").innerHTML = "";
-    $("#informe-nota").textContent = "Resumen generado a partir de las métricas de " + R.partidos + " partidos";
+    $("#verif-texto").textContent = EN
+      ? "Every figure in the summary is automatically checked against the metrics computed from the match data. Hover over a figure to see where it comes from."
+      : "Cada cifra del resumen se contrasta automáticamente con las métricas calculadas a partir de los datos de los partidos. Pasa el cursor por una cifra para ver de dónde sale.";
+    $("#informe-nota").textContent = (EN ? "Summary generated from the metrics of " : "Resumen generado a partir de las métricas de ") + R.partidos + (EN ? " matches" : " partidos");
   }
   const todo = ok === total;
   $("#verif-badge").className = "verif-badge" + (todo ? "" : " sin");
-  $("#verif-badge").innerHTML = todo ? icono("verif") + "Cifras verificadas" : icono("alerta") + "Cifras sin respaldo";
+  $("#verif-badge").innerHTML = todo ? icono("verif") + (EN ? "Figures verified" : "Cifras verificadas") : icono("alerta") + (EN ? "Unsupported figures" : "Cifras sin respaldo");
   $("#verif-ring").classList.toggle("sin", !todo);
   $("#verif-arc").setAttribute("stroke-dashoffset", (169.65 * (1 - ok / Math.max(1, total))).toFixed(2));
   $("#verif-num").innerHTML = ok + "<small> / " + total + "</small>";
@@ -2045,7 +2081,7 @@ function renderEstilos(team) {
     (hayMisma ? '<span><i class="k-dot" style="--c: var(--ink-2)"></i>' + esc(team.competicion + " " + team.temporada) + "</span>" : "") +
     '<span><i class="k-dot" style="--c: var(--muted)"></i>otras competiciones</span><span><i class="k-mean"></i>media de todos</span>';
   const xs = pts.map(X_M.get), ys = pts.map(Y_M.get);
-  const pad = (a, b, f) => [a - (b - a) * f, b + (b - a) * f];
+  const pad = (a, b, f) => { const m = (b - a) * f || Math.abs(a) * 0.1 || 1; return [a - m, b + m]; };  // sin rango: margen fijo
   const [x0, x1] = pad(Math.min(...xs), Math.max(...xs), 0.06), [y0, y1] = pad(Math.min(...ys), Math.max(...ys), 0.08);
   const mx = xs.reduce((a, b) => a + b, 0) / xs.length, my = ys.reduce((a, b) => a + b, 0) / ys.length;
   let ultimo = 0;

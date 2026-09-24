@@ -1,0 +1,412 @@
+{
+ "slug": "equipo-muestra",
+ "equipo": "Equipo Muestra",
+ "generated_at": "2026-01-01",
+ "sample": true,
+ "modelo": null,
+ "dossier": {
+  "resultados.partidos": {
+   "valor": 4.0,
+   "decimales": 0,
+   "es": "partidos jugados",
+   "en": "matches played"
+  },
+  "resultados.victorias": {
+   "valor": 4.0,
+   "decimales": 0,
+   "es": "victorias",
+   "en": "wins"
+  },
+  "resultados.empates": {
+   "valor": 0.0,
+   "decimales": 0,
+   "es": "empates",
+   "en": "draws"
+  },
+  "resultados.derrotas": {
+   "valor": 0.0,
+   "decimales": 0,
+   "es": "derrotas",
+   "en": "losses"
+  },
+  "resultados.goles_favor": {
+   "valor": 8.0,
+   "decimales": 0,
+   "es": "goles a favor",
+   "en": "goals scored"
+  },
+  "resultados.goles_contra": {
+   "valor": 4.0,
+   "decimales": 0,
+   "es": "goles en contra",
+   "en": "goals conceded"
+  },
+  "local.partidos": {
+   "valor": 2.0,
+   "decimales": 0,
+   "es": "partidos jugados como local",
+   "en": "matches played at home"
+  },
+  "local.victorias": {
+   "valor": 2.0,
+   "decimales": 0,
+   "es": "victorias como local",
+   "en": "wins at home"
+  },
+  "local.empates": {
+   "valor": 0.0,
+   "decimales": 0,
+   "es": "empates como local",
+   "en": "draws at home"
+  },
+  "local.derrotas": {
+   "valor": 0.0,
+   "decimales": 0,
+   "es": "derrotas como local",
+   "en": "losses at home"
+  },
+  "local.goles_favor": {
+   "valor": 4.0,
+   "decimales": 0,
+   "es": "goles a favor como local",
+   "en": "goals scored at home"
+  },
+  "local.goles_contra": {
+   "valor": 2.0,
+   "decimales": 0,
+   "es": "goles en contra como local",
+   "en": "goals conceded at home"
+  },
+  "visitante.partidos": {
+   "valor": 2.0,
+   "decimales": 0,
+   "es": "partidos jugados como visitante",
+   "en": "matches played away"
+  },
+  "visitante.victorias": {
+   "valor": 2.0,
+   "decimales": 0,
+   "es": "victorias como visitante",
+   "en": "wins away"
+  },
+  "visitante.empates": {
+   "valor": 0.0,
+   "decimales": 0,
+   "es": "empates como visitante",
+   "en": "draws away"
+  },
+  "visitante.derrotas": {
+   "valor": 0.0,
+   "decimales": 0,
+   "es": "derrotas como visitante",
+   "en": "losses away"
+  },
+  "visitante.goles_favor": {
+   "valor": 4.0,
+   "decimales": 0,
+   "es": "goles a favor como visitante",
+   "en": "goals scored away"
+  },
+  "visitante.goles_contra": {
+   "valor": 2.0,
+   "decimales": 0,
+   "es": "goles en contra como visitante",
+   "en": "goals conceded away"
+  },
+  "grupo.equipos": {
+   "valor": 2.0,
+   "decimales": 0,
+   "es": "equipos en el grupo de comparación (equipos de club publicados)",
+   "en": "teams in the comparison group (published club teams)"
+  },
+  "metrica.xg": {
+   "valor": 1.4,
+   "decimales": 2,
+   "es": "xG por partido",
+   "en": "xG per match"
+  },
+  "metrica.goles": {
+   "valor": 2.0,
+   "decimales": 2,
+   "es": "goles por partido",
+   "en": "goals per match"
+  },
+  "metrica.tiros": {
+   "valor": 3.0,
+   "decimales": 1,
+   "es": "tiros por partido",
+   "en": "shots per match"
+  },
+  "metrica.xg_tiro": {
+   "valor": 0.3,
+   "decimales": 2,
+   "es": "xG por tiro (sin penaltis)",
+   "en": "xG per shot (non-penalty)"
+  },
+  "metrica.tilt": {
+   "valor": 55.0,
+   "decimales": 1,
+   "es": "dominio territorial (% de los pases en el último tercio)",
+   "en": "field tilt (% of final-third passes)"
+  },
+  "metrica.prog": {
+   "valor": 41.5,
+   "decimales": 1,
+   "es": "acciones progresivas por partido",
+   "en": "progressive actions per match"
+  },
+  "metrica.centros": {
+   "valor": 10.0,
+   "decimales": 1,
+   "es": "centros por partido",
+   "en": "crosses per match"
+  },
+  "metrica.ppda": {
+   "valor": 2.48,
+   "decimales": 2,
+   "es": "PPDA con presiones (menos = presión más intensa)",
+   "en": "PPDA incl. pressures (lower = more intense)"
+  },
+  "metrica.ppda_c": {
+   "valor": 11.5,
+   "decimales": 2,
+   "es": "PPDA clásico",
+   "en": "classic PPDA"
+  },
+  "metrica.campo_rival": {
+   "valor": 50.0,
+   "decimales": 1,
+   "es": "% de acciones defensivas en campo rival",
+   "en": "% of defensive actions in the opponent's half"
+  },
+  "metrica.robos": {
+   "valor": 3.0,
+   "decimales": 2,
+   "es": "robos altos por partido (a 40 m o menos de la portería rival)",
+   "en": "high turnovers per match (within 40 m of goal)"
+  },
+  "metrica.robos_tiro": {
+   "valor": 33.3,
+   "decimales": 1,
+   "es": "% de robos altos que acaban en tiro",
+   "en": "% of high turnovers ending in a shot"
+  },
+  "metrica.apoyo": {
+   "valor": 1.3,
+   "decimales": 2,
+   "es": "compañeros a menos de 10 m en cada presión",
+   "en": "teammates within 10 m of each pressure"
+  },
+  "metrica.goles_c": {
+   "valor": 1.0,
+   "decimales": 2,
+   "es": "goles encajados por partido",
+   "en": "goals conceded per match"
+  },
+  "metrica.xg_c": {
+   "valor": 0.8,
+   "decimales": 2,
+   "es": "xG concedido por partido",
+   "en": "xG conceded per match"
+  },
+  "metrica.altura": {
+   "valor": 52.9,
+   "decimales": 1,
+   "es": "altura media de la línea defensiva (m desde su portería)",
+   "en": "average defensive line height (m from own goal)"
+  },
+  "metrica.anchura": {
+   "valor": 32.0,
+   "decimales": 1,
+   "es": "anchura media del bloque (m)",
+   "en": "average block width (m)"
+  },
+  "metrica.prof": {
+   "valor": 22.0,
+   "decimales": 1,
+   "es": "profundidad media del bloque (m)",
+   "en": "average block depth (m)"
+  },
+  "metrica.area": {
+   "valor": 420.0,
+   "decimales": 0,
+   "es": "área media del bloque (m²; menos = más compacto)",
+   "en": "average block area (m²; lower = more compact)"
+  },
+  "metrica.corners": {
+   "valor": 59.0,
+   "decimales": 1,
+   "es": "córners a favor por partido",
+   "en": "corners won per match"
+  },
+  "metrica.xg_corner": {
+   "valor": 0.38,
+   "decimales": 2,
+   "es": "xG en córners por partido",
+   "en": "corner xG per match"
+  },
+  "metrica.contacto": {
+   "valor": 60.0,
+   "decimales": 1,
+   "es": "% de primer contacto ganado en sus córners",
+   "en": "% first contact won on own corners"
+  },
+  "metrica.xg_corner_c": {
+   "valor": 0.12,
+   "decimales": 2,
+   "es": "xG concedido en córners por partido",
+   "en": "corner xG conceded per match"
+  },
+  "metrica.contacto_c": {
+   "valor": 40.0,
+   "decimales": 1,
+   "es": "% de primer contacto del rival en córners en contra",
+   "en": "% first contact conceded on corners against"
+  },
+  "metrica.marcaje": {
+   "valor": 2.74,
+   "decimales": 2,
+   "es": "distancia media al marcador en córners en contra (m, aproximada)",
+   "en": "average distance to marker on corners against (m, approximate)"
+  },
+  "corners.a_favor": {
+   "valor": 236.0,
+   "decimales": 0,
+   "es": "córners a favor en la temporada",
+   "en": "corners won in the season"
+  },
+  "corners.xg_a_favor": {
+   "valor": 1.5,
+   "decimales": 2,
+   "es": "xG total generado en córners",
+   "en": "total corner xG"
+  },
+  "corners.en_contra": {
+   "valor": 5.0,
+   "decimales": 0,
+   "es": "córners en contra en la temporada",
+   "en": "corners conceded in the season"
+  },
+  "corners.xg_en_contra": {
+   "valor": 0.5,
+   "decimales": 2,
+   "es": "xG total concedido en córners",
+   "en": "total corner xG conceded"
+  },
+  "carriles.izquierda": {
+   "valor": 41.7,
+   "decimales": 1,
+   "es": "% de las llegadas al último tercio por la izquierda",
+   "en": "% of final-third entries through the left"
+  },
+  "carriles.centro": {
+   "valor": 25.0,
+   "decimales": 1,
+   "es": "% de las llegadas al último tercio por el centro",
+   "en": "% of final-third entries through the centre"
+  },
+  "carriles.derecha": {
+   "valor": 33.3,
+   "decimales": 1,
+   "es": "% de las llegadas al último tercio por la derecha",
+   "en": "% of final-third entries through the right"
+  },
+  "jugador.goles": {
+   "valor": 3.0,
+   "decimales": 0,
+   "es": "goles de Ana Muestra, el máximo del equipo",
+   "en": "goals by Ana Muestra, the team's best"
+  },
+  "jugador.goles.minutos": {
+   "valor": 360.0,
+   "decimales": 0,
+   "es": "minutos jugados por Ana Muestra",
+   "en": "minutes played by Ana Muestra"
+  },
+  "jugador.asistencias": {
+   "valor": 1.0,
+   "decimales": 0,
+   "es": "asistencias de Ana Muestra, el máximo del equipo",
+   "en": "assists by Ana Muestra, the team's best"
+  },
+  "jugador.asistencias.minutos": {
+   "valor": 360.0,
+   "decimales": 0,
+   "es": "minutos jugados por Ana Muestra",
+   "en": "minutes played by Ana Muestra"
+  },
+  "jugador.xg": {
+   "valor": 2.1,
+   "decimales": 2,
+   "es": "xG de Ana Muestra, el máximo del equipo",
+   "en": "xG by Ana Muestra, the team's best"
+  },
+  "jugador.xg.minutos": {
+   "valor": 360.0,
+   "decimales": 0,
+   "es": "minutos jugados por Ana Muestra",
+   "en": "minutes played by Ana Muestra"
+  },
+  "jugador.pases_clave": {
+   "valor": 5.0,
+   "decimales": 0,
+   "es": "pases clave de Ana Muestra, el máximo del equipo",
+   "en": "key passes by Ana Muestra, the team's best"
+  },
+  "jugador.pases_clave.minutos": {
+   "valor": 360.0,
+   "decimales": 0,
+   "es": "minutos jugados por Ana Muestra",
+   "en": "minutes played by Ana Muestra"
+  },
+  "jugador.progresivos": {
+   "valor": 45.0,
+   "decimales": 0,
+   "es": "acciones progresivas de Bea Ejemplo, el máximo del equipo",
+   "en": "progressive actions by Bea Ejemplo, the team's best"
+  },
+  "jugador.progresivos.minutos": {
+   "valor": 350.0,
+   "decimales": 0,
+   "es": "minutos jugados por Bea Ejemplo",
+   "en": "minutes played by Bea Ejemplo"
+  },
+  "jugador.presiones": {
+   "valor": 40.0,
+   "decimales": 0,
+   "es": "presiones de Ana Muestra, el máximo del equipo",
+   "en": "pressures by Ana Muestra, the team's best"
+  },
+  "jugador.presiones.minutos": {
+   "valor": 360.0,
+   "decimales": 0,
+   "es": "minutos jugados por Ana Muestra",
+   "en": "minutes played by Ana Muestra"
+  },
+  "jugador.recuperaciones": {
+   "valor": 30.0,
+   "decimales": 0,
+   "es": "recuperaciones de Bea Ejemplo, el máximo del equipo",
+   "en": "ball recoveries by Bea Ejemplo, the team's best"
+  },
+  "jugador.recuperaciones.minutos": {
+   "valor": 350.0,
+   "decimales": 0,
+   "es": "minutos jugados por Bea Ejemplo",
+   "en": "minutes played by Bea Ejemplo"
+  }
+ },
+ "contexto": {},
+ "es": {
+  "markdown": "### Veredicto\n\nInforme de MUESTRA escrito sin LLM para tests y CI. El equipo ganó {resultados.victorias} de {resultados.partidos} partidos, presiona con un PPDA de {metrica.ppda} y defiende con la línea a {metrica.altura} m de su portería.\n\n### Balón parado\n\nLanzó {corners.a_favor} córners.",
+  "citas": 5,
+  "sin_respaldo": [],
+  "reintentos": 0
+ },
+ "en": {
+  "markdown": "### Verdict\n\nSAMPLE report written without an LLM for tests and CI. The team won {resultados.victorias} of {resultados.partidos} matches, presses with a PPDA of {metrica.ppda} and defends with its line {metrica.altura} m from its own goal.\n\n### Set pieces\n\nIt took {corners.a_favor} corners.",
+  "citas": 5,
+  "sin_respaldo": [],
+  "reintentos": 0
+ }
+}

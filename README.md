@@ -2,14 +2,14 @@
 
 # ⚽ PitchIQ
 
-**Tactical scouting reports for 115 football teams — an LLM writes the prose, but it can't make up a single number: every figure is checked against metrics computed from StatsBomb event data.**
+**An AI scouting analyst for 115 football teams. It writes the report a coach reads before a match — and it is built so that it cannot invent a number: the model cites figures, the code supplies them, and a verifier rejects anything else.**
 
 [![CI](https://github.com/nicotimoneda/pitchiq/actions/workflows/ci.yml/badge.svg)](https://github.com/nicotimoneda/pitchiq/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
 ![LangGraph](https://img.shields.io/badge/LangGraph-1C3C3C?logo=langgraph&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-Anthropic-D97757?logo=anthropic&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-107%20passing-1A7F37?logo=pytest&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-110%20passing-1A7F37?logo=pytest&logoColor=white)
 ![Playwright](https://img.shields.io/badge/e2e-Playwright-2EAD33?logo=playwright&logoColor=white)
 ![Ruff](https://img.shields.io/badge/lint-ruff-D7FF64?logo=ruff&logoColor=black)
 ![License](https://img.shields.io/badge/License-MIT-1A7F37)
@@ -26,9 +26,14 @@
 
 ## What it does
 
-An analyst preparing for the next opponent needs two things: the numbers, and someone to explain them. LLMs are good at the second and dangerous at the first — they write statistics that sound right and aren't. PitchIQ splits the job. Deterministic Python computes every metric from raw StatsBomb events (pressing, defensive shape from 360 freeze-frames, set pieces, attack, players, game state) for **115 teams**. The LLM only writes around those outputs, and a **grounding validator** checks every figure in the text against them: an unsupported number triggers a retry, and if it survives it is flagged in the report instead of published as fact.
+Language models write scouting prose well and statistics badly: they produce numbers that sound right and aren't. PitchIQ is an agent designed around that failure mode.
 
-Each metric also comes with context — a **percentile against the team's league or tournament** — so the page tells you what a team does well and badly, not just what it did.
+1. **Dossier.** Deterministic Python turns raw StatsBomb events into ~85 facts per team — record, pressing, defensive shape from 360 freeze-frames, set pieces, attack, key players — and ranks each one as a **percentile** against the team's league or tournament. Every fact has a stable key, e.g. `{metrica.ppda}`.
+2. **Writer.** Claude writes the report (verdict, in and out of possession, set pieces, key players, *how to hurt them*) in Spanish and English. It is **not allowed to type a digit**: every figure is a citation to a dossier key, and the code inserts the value.
+3. **Verifier.** A LangGraph node checks every citation. A key that doesn't exist, or a number typed by hand — even one that happens to be right — sends the draft back to the writer with the exact list of problems. Whatever survives the retries is shown as unsupported, never as fact.
+4. **Context.** A RAG step over a tactical glossary tells the writer what the metrics *mean*. The glossary rejects any entry containing digits, so interpretation can never smuggle in a number.
+
+The result is a report where every figure is a link back to the data: hover it and you see which fact it came from.
 
 ## The app
 
@@ -36,7 +41,7 @@ A team page opens with its record, form and four key metrics with their percenti
 
 ![Team overview](assets/app/en_overview.png)
 
-The report: every number is highlighted and verified (23/23 here — hover one to see which metric backs it), followed by the team's **strengths and weaknesses**, computed automatically from the percentiles:
+The report comes first. Each highlighted figure is a citation the verifier has checked; the side panel shows how the report was produced (dossier → glossary → draft → verifier) and links to the raw draft and dossier. Teams without a generated report fall back to a deterministic summary with the same check:
 
 ![Verified report with strengths and weaknesses](assets/app/en_report.png)
 
@@ -64,7 +69,8 @@ Everything below is measured without an API key and reproducible from the repo (
 
 | Check | Result |
 |---|---|
-| Grounding of the verified summaries | **100 %** of figures backed by a metric, 115 teams × 2 languages |
+| Figures in the reports backed by the data | **100 %** — re-verified from the published drafts by `scripts/run_eval.py` |
+| Percentiles quoted by the agent vs. the web page | **2,617 / 2,617** identical (Python and JavaScript implementations) |
 | Goals vs. [Understat](https://understat.com), match by match | **1,621 / 1,621** identical (43 clubs) |
 | xG vs. Understat, match by match | correlation **0.93** (different models, same ranking of matches) |
 | Classic PPDA vs. Understat, team ranking | Spearman **0.93** |
@@ -85,11 +91,14 @@ uv run uvicorn app.main:app --port 8000     # → http://localhost:8000
 The computed data for all 115 teams ships in the repo, so the app runs out of the box — no API key, no downloads.
 
 ```bash
-uv run pytest                                                    # 94 unit tests (no network, LLM mocked)
-uv run playwright install chromium && uv run pytest -m e2e       # 13 browser tests
-uv run python scripts/precompute.py --demo-data --jobs 6         # recompute every team from StatsBomb (~20 min)
-ANTHROPIC_API_KEY=sk-ant-... uv run python scripts/precompute.py # + the LLM-written report
+uv run pytest                                                  # 96 unit tests (no network, LLM mocked)
+uv run playwright install chromium && uv run pytest -m e2e     # 14 browser tests
+uv run python scripts/precompute.py --demo-data --jobs 6       # recompute every team from StatsBomb (~20 min)
+uv run python scripts/precompute.py --equipos bayer-leverkusen-2023-24   # write that team's report
+uv run python scripts/precompute.py --solo-faltan              # write every missing report (resumable)
 ```
+
+The writer runs through the Anthropic API when `ANTHROPIC_API_KEY` is set, or otherwise through the `claude` CLI with your Claude subscription (`claude` → `/login` once). The model is `opus` by default; set `PITCHIQ_MODELO` to change it.
 
 ## How it works
 
@@ -98,17 +107,17 @@ ANTHROPIC_API_KEY=sk-ant-... uv run python scripts/precompute.py # + the LLM-wri
 | Data | StatsBomb Open Data | events + 360 freeze-frames, cached locally; teams chosen in [`publicacion.yaml`](scripts/publicacion.yaml) |
 | Metrics | deterministic Python, all in metres | PPDA (two definitions), high turnovers, defensive block from 360, corners, shots and xG, territory, progressive actions, players, game state |
 | Context | percentiles | against the league or tournament when it has ≥ 8 teams, otherwise against all published clubs or national teams |
-| Report | LangGraph + Claude | tools → writer → grounding validator (1 retry with feedback, then flag) |
+| Report | LangGraph + Claude | dossier → glossary → writer ⇄ verifier; the writer cites keys, never writes figures |
 | Interpretation | RAG over a tactical glossary | Qdrant + MiniLM; the glossary **rejects any entry with digits**, so numbers only come from tools |
 | Serving | FastAPI, precomputed | no API key and no ML libraries in production (CI checks the image); team data loaded on demand |
 | Quality | pytest, Playwright, GitHub Actions | unit + browser tests, Docker build, weekly check for new StatsBomb seasons |
 
 ```
-team ──▶ [deterministic tools] ──▶ [writer (LLM)] ──▶ grounding validator
-                                     prose only        figure by figure
-                                                            │ unsupported?
-                                                            ▼
-                                              1 retry with feedback ──▶ still there → flagged
+team data ──▶ dossier ──▶ glossary (RAG) ──▶ writer (LLM) ──▶ verifier ──▶ report
+             ~85 keyed facts   meaning,       cites {keys},       every key exists?
+             + percentiles     no digits      no digits           no hand-typed numbers?
+                                                  ▲                     │ no
+                                                  └──── exact list of problems (retry)
 ```
 
 ## Stack
@@ -122,14 +131,14 @@ pitchiq/
 ├── src/pitchiq/
 │   ├── data/            # StatsBomb loader with local cache
 │   ├── metrics/         # pressing, 360 shape, set pieces, attack, players (pure functions)
-│   ├── agent/           # LangGraph graph, tools, LLM client, grounding validator
+│   ├── agent/           # dossier, LangGraph graph, citation verifier, LLM clients (API / CLI)
 │   ├── rag/             # tactical glossary (no digits), Qdrant retriever, RAGAS eval
 │   └── eval/            # grounding, embeddings, generalisation, Understat comparison
 ├── app/                 # FastAPI + the web app (one template, no build step)
-│   └── static/report/   # precomputed data for the 115 teams + share images
+│   └── static/report/   # precomputed data, AI reports per team, share images
 ├── scripts/
 │   ├── publicacion.yaml       # which teams are published
-│   ├── precompute.py          # metrics (no key) and LLM report (key), --jobs for parallel
+│   ├── precompute.py          # metrics (no LLM) and AI reports (API key or Claude CLI)
 │   └── validacion_externa.py  # comparison against Understat
 ├── tests/               # unit tests + e2e/ (Playwright)
 ├── docs/metricas.md     # metric definitions and caveats (Spanish)
@@ -139,11 +148,12 @@ pitchiq/
 
 ## Design notes
 
-- **The LLM never computes.** Numbers come from tools; the model writes prose. The rule that verifies the LLM report is the same one that marks each figure in the web page.
+- **The model cites, the code computes.** Checking numbers after the fact still lets a lucky guess through; asking for citations removes the guess. The same keys drive the hover on every figure in the page.
+- **Agent logic in the graph, not in a wrapper.** The retry loop is a conditional edge in LangGraph, so the draft, the verdict and the number of retries are part of the state that gets saved with each report.
 - **Everything in metres.** StatsBomb works in yards on a normalised 120 × 80 pitch; values are converted at the source (and thresholds defined in metres), not relabelled.
 - **Honest caveats in the product.** 360 freeze-frames only show the players on screen, so spatial metrics are approximations and are left empty rather than estimated when data is missing. xG is StatsBomb's model and is not mixed with other sources.
 - **No logos.** Official crests are trademarks: clubs get their initials in club colours, national teams their flag.
-- **Generate once, serve static.** The production app has no API key to leak and costs zero LLM calls per visit.
+- **Generate once, serve static.** The app never calls a model: reports are written ahead of time, saved with their dossier, and served as files.
 
 ## Contact
 

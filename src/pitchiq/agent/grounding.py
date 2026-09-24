@@ -27,7 +27,7 @@ class Figure(BaseModel):
     """Una cifra extraída del texto del informe."""
 
     text: str  # tal y como aparece en el informe
-    value: float
+    value: "float | None"  # None: cita a una clave que no existe
     grounded: bool
     matched_metric: "str | None" = None
 
@@ -100,3 +100,27 @@ def validate_grounding(
     grounded = sum(f.grounded for f in figures)
     ratio = grounded / len(figures) if figures else 1.0
     return GroundingReport(figures=figures, ratio=ratio)
+
+
+# Cita a una entrada del dossier: {presion.ppda_medio}, {percentil.xg}
+CITA_RE = re.compile(r"\{([a-z_]+(?:\.[a-z_]+)+)\}")
+
+
+def verificar_citas(
+    text: str, dossier: "dict[str, dict]", ignore: "tuple[str, ...] | list[str]" = (),
+) -> GroundingReport:
+    """Grounding por citas: el redactor no escribe cifras, cita claves del dossier.
+
+    Una cita es válida si su clave existe; cualquier dígito que quede en la prosa
+    fuera de una cita es una cifra libre y cuenta como no respaldada, aunque
+    coincida por casualidad con algún valor (así no hay aciertos accidentales).
+    """
+    figures = [
+        Figure(text=m.group(0), value=dossier[k]["valor"] if k in dossier else None,
+               grounded=k in dossier, matched_metric=k if k in dossier else None)
+        for m in CITA_RE.finditer(text) for k in [m.group(1)]
+    ]
+    figures += [Figure(text=raw, value=value, grounded=False)
+                for raw, value in extract_figures(CITA_RE.sub(" ", text), ignore)]
+    grounded = sum(f.grounded for f in figures)
+    return GroundingReport(figures=figures, ratio=grounded / len(figures) if figures else 1.0)

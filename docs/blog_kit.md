@@ -80,17 +80,16 @@
 
 ## Datos y figuras disponibles para ilustrar
 
-- `app/static/report/figures/` (tras precompute) y `figures/` locales:
+- `figures/` locales (scripts/build_*_report.py):
   - bloque defensivo (KDE) temporada + línea por partido (con huecos sin 360)
   - mapa de recuperaciones 6×5 con PPDA
   - saques de córner (heatmap + conteos por zona), box load, primer contacto
     a favor/en contra
 - `eval/results/*.json`: grounding, embeddings (antes/después), generalización
 - `EVALUATION.md`: tabla completa de limitaciones para el punto 6
-- El informe servido y su evidencia: `/`, `/api/report`, `/api/evidence`
+- Cada informe con su borrador, dossier y verificación: `/api/equipos/{slug}/informe`
 
 ## Números pendientes de rellenar por el autor (con key)
 
 - RAGAS faithfulness / context_relevance (`eval/results/ragas.json`)
-- Ratio de grounding del informe REAL precomputado (hoy: fixtures de muestra)
-- LIVE URL del deploy en Render
+- Grounding de los informes REALES (tras `scripts/precompute.py`)

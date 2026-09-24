@@ -14,7 +14,7 @@ WORKDIR /srv
 COPY --from=deps /srv/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt
 
-# la app y sus artefactos precomputados (report.md, evidence.json, figuras)
+# la app y sus artefactos precomputados (métricas e informes por equipo)
 COPY app/ app/
 
 # sin privilegios: la app solo lee sus artefactos
@@ -22,5 +22,5 @@ RUN useradd --create-home --shell /usr/sbin/nologin app
 USER app
 
 EXPOSE 8000
-# Render inyecta $PORT; fallback a 8000 en local
+# $PORT si lo define el entorno; 8000 por defecto
 CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips=*"]

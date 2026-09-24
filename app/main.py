@@ -12,6 +12,7 @@ métricas reales aunque el informe todavía no se haya generado.
 """
 
 import json
+import os
 from pathlib import Path
 
 import markdown as md
@@ -60,6 +61,28 @@ def _ligero(team: dict) -> dict:
     return ligero
 
 
+def _markdown_seguro(texto: str) -> str:
+    """Markdown del informe del LLM a HTML sin HTML crudo ni enlaces javascript:.
+
+    Se escapan ``&`` y ``<`` (no ``>``, que marca las citas en markdown) y se
+    neutralizan los esquemas peligrosos en los enlaces: la salida del modelo es
+    el único texto no determinista que llega a la página.
+    """
+    import re
+
+    html = md.markdown(texto.replace("&", "&amp;").replace("<", "&lt;"), extensions=["extra"])
+    return re.sub(r'(href|src)="\s*(javascript|data|vbscript):', r'\1="#', html, flags=re.IGNORECASE)
+
+
+def _celda_csv(v):
+    """Valor de celda: coma decimal y sin fórmulas (un texto que empiece por = + - @ no se ejecuta)."""
+    if isinstance(v, float):
+        return str(v).replace(".", ",")
+    if isinstance(v, str) and v[:1] in ("=", "+", "-", "@", "\t", "\r"):
+        return "'" + v
+    return v
+
+
 def _csv(filas: "list[dict]", columnas: "list[str]") -> str:
     """CSV con separador ';' y coma decimal (lo que abre bien Excel en español)."""
     import csv
@@ -69,8 +92,7 @@ def _csv(filas: "list[dict]", columnas: "list[str]") -> str:
     w = csv.writer(buf, delimiter=";")
     w.writerow(columnas)
     for f in filas:
-        w.writerow([str(f.get(c, "")).replace(".", ",") if isinstance(f.get(c), float) else f.get(c, "")
-                    for c in columnas])
+        w.writerow([_celda_csv(f.get(c, "")) for c in columnas])
     return "\ufeff" + buf.getvalue()  # BOM: Excel detecta UTF-8 (tildes)
 
 
@@ -89,7 +111,7 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
         if owner is not None:
             figures = evidence["grounding"]["figures"]
             reports[owner["slug"]] = {
-                "html": md.markdown(report_md, extensions=["extra"]),
+                "html": _markdown_seguro(report_md),
                 "generated_at": evidence["generated_at"],
                 "n_figures": len(figures),
                 "n_grounded": sum(1 for f in figures if f["grounded"]),
@@ -102,6 +124,15 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
 
     app = FastAPI(title="PitchIQ", docs_url=None, redoc_url=None)
     app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+    @app.middleware("http")
+    async def cabeceras_seguridad(request: Request, call_next):
+        resp = await call_next(request)
+        resp.headers.setdefault("X-Content-Type-Options", "nosniff")
+        resp.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        # los scripts de la página son inline: la CSP se limita a lo que no los rompe
+        resp.headers.setdefault("Content-Security-Policy", "frame-ancestors 'none'; object-src 'none'; base-uri 'none'")
+        return resp
     figures_dir = report_base / "figures"
     if figures_dir.exists():
         app.mount("/figures", StaticFiles(directory=figures_dir), name="figures")
@@ -114,7 +145,8 @@ def create_app(report_dir: "Path | None" = None) -> FastAPI:
     def index(request: Request, equipo: "str | None" = None) -> HTMLResponse:
         """Página de análisis del equipo pedido (por defecto, el primero publicado)."""
         initial = equipo if equipo in by_slug else teams[0]["slug"]
-        base_url = str(request.base_url).rstrip("/")
+        # PUBLIC_URL fija el dominio de og:url/og:image (no se refleja la cabecera Host)
+        base_url = (os.environ.get("PUBLIC_URL") or str(request.base_url)).rstrip("/")
         og_image = (f"{base_url}/og/{initial}.png" if (og_dir / f"{initial}.png").exists()
                     else None)
         return templates.TemplateResponse(

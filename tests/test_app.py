@@ -144,3 +144,24 @@ def test_descargas_csv(client):
     j = client.get("/api/equipos/equipo-muestra/jugadores.csv")
     assert "Ana Muestra" in j.text
     assert client.get("/api/equipos/no-existe/partidos.csv").status_code == 404
+
+
+def test_informe_del_llm_sin_html_crudo_ni_javascript():
+    from app.main import _markdown_seguro
+
+    html = _markdown_seguro('# T\n\n<img src=x onerror=alert(1)> [x](javascript:alert(1))\n\n> cita')
+    assert "<img" not in html and "javascript:" not in html
+    assert "<blockquote>" in html and "<h1>" in html
+
+
+def test_csv_no_ejecuta_formulas():
+    from app.main import _celda_csv
+
+    assert _celda_csv("=HYPERLINK(1)") == "'=HYPERLINK(1)"
+    assert _celda_csv("Real Madrid") == "Real Madrid" and _celda_csv(1.5) == "1,5" and _celda_csv(-2) == -2
+
+
+def test_cabeceras_de_seguridad(client):
+    h = client.get("/").headers
+    assert h["x-content-type-options"] == "nosniff"
+    assert "frame-ancestors 'none'" in h["content-security-policy"]

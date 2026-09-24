@@ -19,7 +19,7 @@
 <meta name="theme-color" content="#0e1310" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f3f5f2" media="(prefers-color-scheme: light)">
 <script>try { const t = localStorage.getItem("pitchiq-tema"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" integrity="sha384-aQuvIWWIbpu/mSqULLDiUveyYiPoJzPKAWjUmGJ+Elm+N/LJhzfZqsutsfw870JS" crossorigin="anonymous">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap">
@@ -1879,7 +1879,7 @@ function renderJugadores(team) {
   $("#tabla-jug tbody").innerHTML = filas.map((j) => "<tr>" + COLS_JUG.map(([k, , num]) => {
     const v = val(j, k);
     if (k === "nombre") return '<td class="jug-nombre">' + esc(v) + "</td>";
-    if (k === "pos") return "<td>" + v + "</td>";
+    if (k === "pos") return "<td>" + esc(v) + "</td>";
     const d = !num ? 0 : k === "xg" ? 2 : p90 ? 2 : 0;
     return '<td class="n">' + (v ? fmt(v, d) : '<span class="na">0</span>') + "</td>";
   }).join("") + "</tr>").join("");
@@ -2001,7 +2001,7 @@ function renderComparar(team) {
   for (const t of otros) {
     const g = t.competicion + " " + t.temporada;
     if (g !== grupo) { opciones += (grupo ? "</optgroup>" : "") + '<optgroup label="' + esc(g) + '">'; grupo = g; }
-    opciones += '<option value="' + t.slug + '"' + (t.slug === rivalSlug ? " selected" : "") + ">" + esc(t.nombre) + "</option>";
+    opciones += '<option value="' + esc(t.slug) + '"' + (t.slug === rivalSlug ? " selected" : "") + ">" + esc(t.nombre) + "</option>";
   }
   sel.innerHTML = opciones + (grupo ? "</optgroup>" : "");
   const b = bySlug[rivalSlug], a = bySlug[team.slug] || team;
@@ -2154,7 +2154,7 @@ function pintarBuscador() {
     const g = t.competicion + " " + t.temporada;
     if (g !== grupo) { html += '<li class="grupo" role="presentation">' + esc(g) + "</li>"; grupo = g; }
     const extra = has(t.posicion) ? t.posicion + ".º" : AG(t).partidos + " partidos";
-    html += '<li role="option" id="opt-' + t.slug + '" data-slug="' + t.slug + '" aria-selected="' + (t.slug === slugActual) + '"' +
+    html += '<li role="option" id="opt-' + esc(t.slug) + '" data-slug="' + esc(t.slug) + '" aria-selected="' + (t.slug === slugActual) + '"' +
       (i === buscActivo ? ' class="activo"' : "") + ">" + escudoHtml(t, "mini-crest") +
       esc(t.nombre) + '<span class="extra">' + extra + "</span></li>";
   });

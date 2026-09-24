@@ -2,7 +2,7 @@
 # anthropic — la generación ocurre en local (scripts/precompute.py), no aquí.
 FROM python:3.12-slim AS deps
 
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+COPY --from=ghcr.io/astral-sh/uv:0.9.13 /uv /bin/uv
 WORKDIR /srv
 COPY pyproject.toml uv.lock ./
 # exporta SOLO el grupo "app" del lockfile (fastapi, uvicorn, jinja2, markdown)
@@ -16,6 +16,10 @@ RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt
 
 # la app y sus artefactos precomputados (report.md, evidence.json, figuras)
 COPY app/ app/
+
+# sin privilegios: la app solo lee sus artefactos
+RUN useradd --create-home --shell /usr/sbin/nologin app
+USER app
 
 EXPOSE 8000
 # Render inyecta $PORT; fallback a 8000 en local

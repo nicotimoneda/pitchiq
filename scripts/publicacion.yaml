@@ -44,10 +44,10 @@ competiciones:
     nombre: Mundial
     equipos: ["Argentina", "France", "Croatia", "Morocco"]
 
-  - competition_id: 53    # Eurocopa femenina 2025 (todos los partidos con 360): semifinalistas
-    season_id: 315
+  - competition_id: 53    # Eurocopa femenina 2025 (todos los partidos con 360): completa, para que
+    season_id: 315        # las selecciones femeninas tengan su propio grupo de percentiles
     nombre: Eurocopa femenina
-    equipos: ["England Women's", "Spain Women's", "Germany Women's", "Italy Women's"]
+    equipos: todos
 
 # Nombres en español para la web (equipos publicados y rivales). StatsBomb los
 # da en inglés; los que no aparecen aquí se muestran tal cual. En selecciones

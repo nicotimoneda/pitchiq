@@ -2,14 +2,14 @@
 
 # ⚽ PitchIQ
 
-**Un analista de scouting con IA para 55 equipos de fútbol. Escribe el informe que lee un entrenador antes de un partido, y está construido para que no pueda inventarse una cifra: el modelo cita, el código pone los valores y un verificador rechaza lo demás.**
+**Un analista de scouting con IA para 67 equipos de fútbol. Escribe el informe que lee un entrenador antes de un partido, y está construido para que no pueda inventarse una cifra: el modelo cita, el código pone los valores y un verificador rechaza lo demás.**
 
 [![CI](https://github.com/nicotimoneda/pitchiq/actions/workflows/ci.yml/badge.svg)](https://github.com/nicotimoneda/pitchiq/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
 ![LangGraph](https://img.shields.io/badge/LangGraph-1C3C3C?logo=langgraph&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-Anthropic-D97757?logo=anthropic&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-112%20passing-1A7F37?logo=pytest&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-116%20passing-1A7F37?logo=pytest&logoColor=white)
 ![Playwright](https://img.shields.io/badge/e2e-Playwright-2EAD33?logo=playwright&logoColor=white)
 ![Ruff](https://img.shields.io/badge/lint-ruff-D7FF64?logo=ruff&logoColor=black)
 ![License](https://img.shields.io/badge/License-MIT-1A7F37)
@@ -28,7 +28,7 @@
 
 Los modelos de lenguaje escriben bien un informe de scouting y mal sus estadísticas: sacan números que suenan bien y no lo son. PitchIQ es un agente diseñado alrededor de ese fallo.
 
-1. **Dossier.** Python determinista convierte los eventos de StatsBomb en unos 85 datos por equipo (balance, presión, forma defensiva con datos 360, balón parado, ataque, jugadores clave) y sitúa cada uno como **percentil** frente a su liga o torneo. Cada dato tiene una clave fija, por ejemplo `{metrica.ppda}`.
+1. **Dossier.** Python determinista convierte los eventos de StatsBomb en unos 85 datos por equipo (balance, presión, forma defensiva con datos 360, balón parado, ataque, jugadores clave) y sitúa cada uno como **percentil** frente a equipos comparables. Cada dato tiene una clave fija, por ejemplo `{metrica.ppda}`.
 2. **Redactor.** Claude escribe el informe (veredicto, con balón, sin balón, balón parado, jugadores clave y *cómo hacerle daño*) en español y en inglés. **No puede escribir un dígito**: cada cifra es una cita a una clave del dossier y el código pone el valor.
 3. **Verificador.** Un nodo de LangGraph revisa cada cita. Una clave que no existe o un número escrito a mano, aunque sea correcto, devuelve el borrador al redactor con la lista exacta de fallos. Lo que sobreviva a los reintentos se enseña como sin respaldo, nunca como cierto.
 4. **Contexto.** Un paso de RAG sobre un glosario táctico le explica al redactor qué *significan* las métricas. El glosario rechaza cualquier entrada con dígitos, así que la interpretación nunca cuela un número.
@@ -41,7 +41,7 @@ La ficha de un equipo empieza con su balance, su racha y cuatro cifras clave con
 
 ![Portada del equipo](assets/app/es_overview.png)
 
-El informe va primero. Cada cifra resaltada es una cita que el verificador ha comprobado; el panel lateral enseña cómo se escribió (dossier → glosario → borrador → verificador) y enlaza al borrador y al dossier tal cual. Los equipos sin informe generado muestran un resumen determinista con la misma comprobación:
+El informe va primero. Cada cifra resaltada es una cita que el verificador ha comprobado, y al pasar el cursor se ve de qué dato sale. Con un informe de IA, el panel lateral enseña cómo se escribió (dossier → glosario → borrador → verificador) y enlaza al borrador y al dossier tal cual. Abajo, un equipo sin informe, que enseña el resumen determinista y pasa la misma comprobación ([cómo se generan los informes](#cómo-se-generan-los-informes)):
 
 ![Informe verificado con puntos fuertes y débiles](assets/app/es_report.png)
 
@@ -57,7 +57,7 @@ Cada partido tiene su ficha y su enlace (`#partido-12`). Real Madrid 0–4 Barce
 
 ![Ficha de partido](assets/app/es_match.png)
 
-Y un mapa de estilos con los 55 equipos (PPDA clásico frente a dominio territorial); al pulsar un punto se compara uno a uno:
+Y un mapa de estilos con los 67 equipos (PPDA clásico frente a dominio territorial); al pulsar un punto se compara uno a uno:
 
 ![Mapa de estilos](assets/app/es_compare.png)
 
@@ -69,8 +69,8 @@ Todo lo de abajo se mide sin API key y se reproduce desde el repositorio ([evalu
 
 | Comprobación | Resultado |
 |---|---|
-| Cifras de los informes respaldadas por los datos | **100 %**, re-verificado desde los borradores publicados con `scripts/run_eval.py` |
-| Percentiles que cita el agente frente a los de la web | **2617 / 2617** idénticos (implementaciones en Python y JavaScript) |
+| Cifras de los informes respaldadas por los datos | **100 %**, re-verificado desde los borradores guardados con `scripts/run_eval.py` |
+| Percentiles que cita el agente frente a los de la web | **1417 / 1417** idénticos (implementaciones en Python y JavaScript) |
 | Goles frente a [Understat](https://understat.com), partido a partido | **1.621 de 1.621** idénticos (43 clubes) |
 | xG frente a Understat, partido a partido | correlación **0,93** (modelos distintos, mismo orden de partidos) |
 | PPDA clásico frente a Understat, orden de equipos | Spearman **0,93** |
@@ -88,41 +88,82 @@ uv sync
 uv run uvicorn app.main:app --port 8000     # → http://localhost:8000
 ```
 
-Los datos calculados de los 55 equipos vienen en el repositorio: la web funciona tal cual, sin API key ni descargas.
+Los datos calculados de los 67 equipos vienen en el repositorio: la web funciona tal cual, sin API key ni descargas.
 
 ```bash
-uv run pytest                                                  # 98 tests (sin red, LLM simulado)
-uv run playwright install chromium && uv run pytest -m e2e     # 14 tests en navegador
-uv run python scripts/precompute.py --demo-data --jobs 6       # recalcula todos los equipos (~20 min)
-uv run python scripts/precompute.py --equipos bayer-leverkusen-2023-24   # informe de ese equipo
-uv run python scripts/precompute.py --solo-faltan              # todos los informes que falten (reanudable)
+uv run pytest                                                  # 101 tests (sin red, LLM simulado)
+uv run playwright install chromium && uv run pytest -m e2e     # 15 tests en navegador
 ```
 
-## Reproducirlo
+## Los equipos
 
-Todo se reproduce con datos públicos, y el paso del informe funciona con el modelo que tengas.
+67 equipos de [StatsBomb Open Data](https://github.com/statsbomb/open-data), definidos en [`publicacion.yaml`](scripts/publicacion.yaml):
 
-**1. La web y los datos.** Con `uv sync` la web arranca con los datos incluidos en el repositorio. Para rehacerlos desde cero, `--demo-data` descarga [StatsBomb Open Data](https://github.com/statsbomb/open-data) (público, sin cuenta) y recalcula cada métrica de forma determinista: mismos eventos, mismas cifras. Qué equipos se construyen se decide en [`publicacion.yaml`](scripts/publicacion.yaml), así que sirve para cualquier competición que publique StatsBomb.
+| Competición | Equipos | Datos 360 |
+|---|---|---|
+| La Liga 2015/16 · Premier League 2015/16 | los 20 de cada liga, temporada completa | no |
+| Bundesliga 2023/24 · La Liga 2020/21 · Ligue 1 2022/23 | Leverkusen, Barça y PSG (solo sus partidos) | sí |
+| Mundial 2022 · Eurocopa 2024 | los cuatro semifinalistas de cada torneo | sí |
+| Eurocopa femenina 2025 | las 16 selecciones | sí |
 
-**2. Los informes.** El backend se elige con variables de entorno:
+Por qué no hay ligas masculinas recientes completas: StatsBomb las vende. En su publicación gratuita hay temporadas completas antiguas y, de las recientes, solo los partidos de un equipo escaparate. Los percentiles se calculan frente a la liga cuando tiene al menos 8 equipos publicados y, si no, frente a los equipos publicados del mismo tipo: clubes, selecciones masculinas o selecciones femeninas.
+
+Para rehacer los datos desde cero, `--demo-data` descarga los eventos públicos (sin cuenta) y recalcula cada métrica de forma determinista. Mismos eventos, mismas cifras:
+
+```bash
+uv run python scripts/precompute.py --demo-data --jobs 6
+```
+
+## Cómo se generan los informes
+
+La web nunca llama a un modelo. Los informes se escriben antes, en la máquina del autor, se revisan y se suben al repositorio como archivos. Así la web pública no necesita API key y cualquier informe se puede auditar.
+
+**Qué pasa con cada equipo**, una vez en español y otra en inglés:
+
+1. `construir_dossier` calcula unos 85 datos con clave y sus percentiles a partir de los datos del equipo.
+2. El buscador del glosario añade qué significan las métricas relevantes (opcional; sin dígitos).
+3. El redactor escribe el borrador citando `{claves}` en lugar de escribir números.
+4. El verificador comprueba cada cita. Si algo falla, el borrador vuelve una vez con la lista exacta de fallos. Lo que siga fallando se guarda y se enseña como *sin respaldo*.
+
+**Cómo lanzarlo:**
+
+```bash
+uv run python scripts/build_index.py                                     # índice del glosario (una vez; opcional)
+uv run python scripts/precompute.py --equipos bayer-leverkusen-2023-24   # uno o varios equipos, separados por comas
+uv run python scripts/precompute.py --solo-faltan                        # todos los equipos que aún no tienen informe
+```
+
+Cada informe se guarda en cuanto termina, así que una tanda larga se puede cortar y reanudar con `--solo-faltan`. La consola enseña, por idioma, las citas válidas, las cifras sin respaldo y los reintentos.
+
+**El modelo se elige** con variables de entorno. Gana la primera que esté definida:
 
 | Backend | Cómo | Coste |
 |---|---|---|
 | Modelo local ([Ollama](https://ollama.com), LM Studio…) | `PITCHIQ_LLM_URL=http://localhost:11434/v1 PITCHIQ_MODELO=qwen2.5:14b` | gratis |
 | Cualquier API compatible con OpenAI | `PITCHIQ_LLM_URL=… PITCHIQ_MODELO=… PITCHIQ_LLM_KEY=…` | lo que cobre el proveedor |
 | API de Anthropic | `ANTHROPIC_API_KEY=…` (modelo: `PITCHIQ_MODELO`, por defecto `claude-opus-5-5`) | precio de la API |
-| Suscripción de Claude | nada: usa el CLI `claude` (`claude` → `/login` una vez) | tu plan |
+| Suscripción de Claude | nada: usa el CLI `claude` (`claude` → `/login` una vez; modelo: Opus, o `PITCHIQ_MODELO`) | tu plan |
+
+Si guardas las keys en un archivo `.env`, git lo ignora. Una key nunca viaja sin cifrar (HTTP) a un servidor remoto.
+
+**Qué se guarda**, en `app/static/report/informes/<slug>.json`:
+
+| Campo | Contenido |
+|---|---|
+| `es`, `en` | el borrador tal cual lo escribió el modelo (Markdown con `{claves}`), citas válidas, cifras sin respaldo y reintentos |
+| `dossier` | cada dato que el modelo podía citar, con su valor y su descripción |
+| `contexto` | las entradas del glosario que recibió |
+| `modelo`, `generated_at` | qué modelo lo escribió y cuándo |
+
+La web pinta el borrador, cambia cada `{clave}` por su valor y enlaza cada cifra con su fuente. El archivo tal cual es público en `/api/equipos/<slug>/informe`. Los equipos sin informe enseñan un resumen determinista hecho con el mismo dossier y comprobado igual.
+
+**Antes de subirlo**, se vuelve a verificar todo lo que se va a servir:
 
 ```bash
-PITCHIQ_LLM_URL=http://localhost:11434/v1 PITCHIQ_MODELO=qwen2.5:14b \
-  uv run python scripts/precompute.py --equipos bayer-leverkusen-2023-24
+uv run python scripts/run_eval.py --skip-generalization    # repasa con el verificador cada borrador guardado
 ```
 
-El contexto del glosario es opcional: se construye con `uv run python scripts/build_index.py` (descarga un modelo de embeddings pequeño); sin él, el redactor trabaja sin RAG.
-
-**3. La comprobación.** `uv run python scripts/run_eval.py --skip-generalization` vuelve a verificar cada informe publicado contra el dossier con el que se escribió.
-
-Entre ejecuciones, y entre modelos, cambia la prosa. Lo que no puede cambiar es una cifra: un modelo más flojo que ignore la regla de citar ve sus números rechazados y marcados como sin respaldo. Un modelo local de 7B hizo exactamente eso en las pruebas, y para eso está el diseño.
+Entre ejecuciones, y entre modelos, cambia la prosa. Lo que no puede cambiar es una cifra: un modelo más flojo que ignore la regla de citar ve sus números rechazados y marcados como sin respaldo. Un modelo local de 7B hizo exactamente eso en las pruebas, y para eso está el diseño. Lo que el verificador no puede detectar es una afirmación cualitativa sin números; por eso el borrador y el dossier están siempre a un clic ([detalles](EVALUATION.md)).
 
 ## Cómo funciona
 
@@ -130,7 +171,7 @@ Entre ejecuciones, y entre modelos, cambia la prosa. Lo que no puede cambiar es 
 |---|---|---|
 | Datos | StatsBomb Open Data | eventos + freeze-frames 360 con caché local; equipos elegidos en [`publicacion.yaml`](scripts/publicacion.yaml) |
 | Métricas | Python determinista, todo en metros | PPDA (dos definiciones), robos altos, bloque defensivo con 360, córners, tiros y xG, dominio, acciones progresivas, jugadores, estado del marcador |
-| Contexto | percentiles | frente a su liga o torneo si tiene 8 equipos o más; si no, frente a todos los clubes o selecciones publicados |
+| Contexto | percentiles | frente a su liga si tiene 8 equipos publicados o más; si no, frente a los publicados del mismo tipo (clubes, selecciones masculinas o femeninas) |
 | Informe | LangGraph + Claude | dossier → glosario → redactor ⇄ verificador; el redactor cita claves, nunca escribe cifras |
 | Interpretación | RAG sobre un glosario táctico | Qdrant + MiniLM; el glosario **rechaza entradas con dígitos**: los números solo salen de las herramientas |
 | Servicio | FastAPI precomputada | sin API key ni librerías de ML en producción (CI revisa la imagen); datos de cada equipo bajo demanda |

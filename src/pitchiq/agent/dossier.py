@@ -76,16 +76,26 @@ def _es_seleccion(t: dict) -> bool:
     return bool((t.get("identidad") or {}).get("bandera"))
 
 
+def _es_femenino(t: dict) -> bool:
+    return str(t.get("equipo") or "").endswith(" Women's")
+
+
 def grupo(team: dict, todos: "list[dict]") -> "tuple[str, str, list[dict]]":
-    """Con quién se compara: su competición si tiene 8+ equipos; si no, los de su tipo."""
+    """Con quién se compara: su competición si tiene 8+ equipos; si no, los de su tipo.
+
+    El tipo separa clubes de selecciones y fútbol masculino de femenino: no se
+    compara un semifinalista del Mundial con una selección de la Eurocopa femenina.
+    """
     misma = [t for t in todos if t["competicion"] == team["competicion"] and t["temporada"] == team["temporada"]]
     if len(misma) >= 8:
         nombre = f"{team['competicion']} {team['temporada']}"
         return nombre, nombre, misma
-    sel = _es_seleccion(team)
-    tipo = [t for t in todos if _es_seleccion(t) == sel]
+    sel, fem = _es_seleccion(team), _es_femenino(team)
+    tipo = [t for t in todos if _es_seleccion(t) == sel and _es_femenino(t) == fem]
+    if sel and fem:
+        return "selecciones femeninas publicadas", "published women's national teams", tipo
     if sel:
-        return "selecciones publicadas", "published national teams", tipo
+        return "selecciones masculinas publicadas", "published men's national teams", tipo
     return "equipos de club publicados", "published club teams", tipo
 
 

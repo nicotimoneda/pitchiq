@@ -45,17 +45,19 @@ Los huecos en la gráfica son partidos sin datos 360: se muestran como NaN, no s
 
 ## Datos
 
-55 equipos de [StatsBomb Open Data](https://github.com/statsbomb/open-data), definidos en [`scripts/publicacion.yaml`](../scripts/publicacion.yaml):
+67 equipos de [StatsBomb Open Data](https://github.com/statsbomb/open-data), definidos en [`scripts/publicacion.yaml`](../scripts/publicacion.yaml):
 
 | Competición | Equipos | Datos de posiciones (360) |
 |---|---|---|
 | La Liga 2015/16 y Premier League 2015/16 | los 20 de cada liga, temporada completa | no |
 | Bundesliga 2023/24 · La Liga 2020/21 · Ligue 1 2022/23 | Leverkusen, Barça y PSG (solo sus partidos) | sí |
-| Eurocopa 2024 · Mundial 2022 · Eurocopa femenina 2025 | los 4 semifinalistas de cada torneo | sí |
+| Eurocopa 2024 · Mundial 2022 | los 4 semifinalistas de cada torneo | sí |
+| Eurocopa femenina 2025 | las 16 selecciones | sí |
 
-Dos salvedades:
+Tres salvedades:
 
 - En las temporadas parciales (Leverkusen, Barça 20/21, PSG) solo están **los partidos de ese equipo**, así que sus percentiles se calculan frente al resto de clubes publicados, no frente a su liga.
+- Los semifinalistas del Mundial 2022 y de la Eurocopa 2024 son 4 por torneo, menos de 8: se comparan entre las **8 selecciones masculinas publicadas**. Las selecciones femeninas nunca se mezclan con las masculinas.
 - Los datos 360 son **freeze-frames** del área visible (ver arriba), no tracking continuo.
 
 Métricas de ataque, jugadores y estado del marcador: [`src/pitchiq/metrics/attack.py`](../src/pitchiq/metrics/attack.py) y [`players.py`](../src/pitchiq/metrics/players.py). Contraste con Understat: [EVALUATION.md](../EVALUATION.md#validación-externa-understat-1621-partidos-sin-key).

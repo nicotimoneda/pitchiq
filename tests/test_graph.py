@@ -5,7 +5,7 @@ import json
 import pytest
 
 from pitchiq import config
-from pitchiq.agent.dossier import construir_dossier, percentil
+from pitchiq.agent.dossier import construir_dossier, grupo, percentil
 from pitchiq.agent.graph import build_graph
 from pitchiq.agent.grounding import verificar_citas
 from pitchiq.agent.report import generate_report
@@ -46,6 +46,18 @@ def test_percentil_igual_que_la_web():
     assert percentil(equipos[2], get, 1, equipos) == 50
     assert percentil(equipos[0], get, -1, equipos) == 100  # menos es mejor
     assert percentil({"v": None}, get, 1, equipos) is None
+
+
+def test_grupo_de_reserva_separa_clubes_y_selecciones_por_genero():
+    def eq(nombre, comp, bandera=False):
+        return {"equipo": nombre, "competicion": comp, "temporada": "2024",
+                "identidad": {"bandera": "x"} if bandera else {}}
+    todos = [eq("Spain", "Euro", True), eq("France", "Mundial", True),
+             eq("Spain Women's", "Euro femenina", True), eq("Leverkusen", "Bundesliga")]
+    assert [t["equipo"] for t in grupo(todos[0], todos)[2]] == ["Spain", "France"]
+    assert grupo(todos[0], todos)[1] == "published men's national teams"
+    assert [t["equipo"] for t in grupo(todos[2], todos)[2]] == ["Spain Women's"]
+    assert [t["equipo"] for t in grupo(todos[3], todos)[2]] == ["Leverkusen"]
 
 
 def test_citas_validas_inventadas_y_cifras_libres(equipos):

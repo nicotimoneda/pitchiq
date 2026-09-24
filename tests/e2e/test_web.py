@@ -132,6 +132,16 @@ def test_version_en_ingles_con_cifras_verificadas(pagina, servidor):
     expect(pagina.locator("#h-informe")).to_have_text("Informe")
 
 
+def test_cambiar_de_rival_en_ingles_no_deja_textos_en_espanol(pagina, servidor):
+    pagina.goto(servidor + "/?lang=en")
+    pagina.locator("#comparar").scroll_into_view_if_needed()
+    rival = pagina.locator("#rival option").first.get_attribute("value")
+    pagina.locator("#rival").select_option(rival)
+    expect(pagina.locator("#estilos-nota")).to_contain_text("click one to compare")
+    expect(pagina.locator("#key-estilos")).to_contain_text("(compared)")
+    expect(pagina.locator("#key-estilos")).not_to_contain_text("otras competiciones")
+
+
 def test_filtro_de_partidos_reduce_la_tabla(pagina):
     # Partidos se dibuja diferido (al acercarse o en ratos libres): se espera a que aparezca
     expect(pagina.locator("#tabla tbody tr")).to_have_count(4)

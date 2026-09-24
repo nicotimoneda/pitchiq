@@ -1179,7 +1179,8 @@ P_EN.unshift(
   [/^PPDA clásico (.+) · dominio (.+) %$/, "Classic PPDA $1 · territory $2 %"],
 );
 function grupoEn(g) {
-  return g === "equipos de club publicados" ? "published club teams" : g === "selecciones publicadas" ? "published national teams" : g;
+  return { "equipos de club publicados": "published club teams", "selecciones masculinas publicadas": "published men's national teams",
+    "selecciones femeninas publicadas": "published women's national teams" }[g] || g;
 }
 function tr(txt) {
   if (!EN) return txt;
@@ -1581,12 +1582,16 @@ const METRICAS = [
 ].map(([id, lab, sub, get, d, u, dir, sec]) => ({ id, lab, sub, get, d, u, dir, sec }));
 const METRICA = Object.fromEntries(METRICAS.map((m) => [m.id, m]));
 const esSeleccion = (t) => !!(t.identidad || {}).bandera;
+const esFemenino = (t) => / Women's$/.test(t.equipo || "");
 // con quién se compara: su competición si hay suficientes equipos; si no, todos los de su tipo
 function grupoDe(team) {
   const misma = TEAMS.filter((t) => t.competicion === team.competicion && t.temporada === team.temporada);
   if (misma.length >= 8) return { equipos: misma, nombre: team.competicion + " " + team.temporada };
-  const tipo = TEAMS.filter((t) => esSeleccion(t) === esSeleccion(team));
-  return { equipos: tipo, nombre: esSeleccion(team) ? "selecciones publicadas" : "equipos de club publicados" };
+  // clubes y selecciones por separado, y fútbol masculino y femenino también (como grupo() en dossier.py)
+  const tipo = TEAMS.filter((t) => esSeleccion(t) === esSeleccion(team) && esFemenino(t) === esFemenino(team));
+  const nombre = !esSeleccion(team) ? "equipos de club publicados"
+    : esFemenino(team) ? "selecciones femeninas publicadas" : "selecciones masculinas publicadas";
+  return { equipos: tipo, nombre };
 }
 function percentil(team, m, grupo) {
   const v = m.get(team);
@@ -2346,6 +2351,7 @@ $("#rival").addEventListener("change", (e) => {
   rivalSlug = e.target.value;
   renderComparar(actual());
   renderEstilos(actual());
+  traducirArbol($("#comparar"));
 });
 $("#equipo").addEventListener("change", async (e) => {
   const slug = e.target.value;

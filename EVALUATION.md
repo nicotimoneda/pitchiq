@@ -32,7 +32,7 @@ verificador sobre el borrador de cada informe (ES y EN) y el dossier que recibi�
 | Métrica | Valor |
 |---|---|
 | Citas válidas / cifras en los informes | ver `eval/results/grounding.json` |
-| Percentiles del dossier (Python) frente a los de la web (JavaScript) | **2617 / 2617** idénticos |
+| Percentiles del dossier (Python) frente a los de la web (JavaScript) | **1417 / 1417** idénticos |
 
 *Nota:* mientras no se generen los informes reales, la medida corre sobre el
 informe de muestra; hay un test en CI que exige ratio 1,0 sobre lo servido.

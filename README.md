@@ -2,14 +2,14 @@
 
 # ⚽ PitchIQ
 
-**An AI scouting analyst for 55 football teams. It writes the report a coach reads before a match — and it is built so that it cannot invent a number: the model cites figures, the code supplies them, and a verifier rejects anything else.**
+**An AI scouting analyst for 67 football teams. It writes the report a coach reads before a match — and it is built so that it cannot invent a number: the model cites figures, the code supplies them, and a verifier rejects anything else.**
 
 [![CI](https://github.com/nicotimoneda/pitchiq/actions/workflows/ci.yml/badge.svg)](https://github.com/nicotimoneda/pitchiq/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
 ![LangGraph](https://img.shields.io/badge/LangGraph-1C3C3C?logo=langgraph&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-Anthropic-D97757?logo=anthropic&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-112%20passing-1A7F37?logo=pytest&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-116%20passing-1A7F37?logo=pytest&logoColor=white)
 ![Playwright](https://img.shields.io/badge/e2e-Playwright-2EAD33?logo=playwright&logoColor=white)
 ![Ruff](https://img.shields.io/badge/lint-ruff-D7FF64?logo=ruff&logoColor=black)
 ![License](https://img.shields.io/badge/License-MIT-1A7F37)
@@ -28,7 +28,7 @@
 
 Language models write scouting prose well and statistics badly: they produce numbers that sound right and aren't. PitchIQ is an agent designed around that failure mode.
 
-1. **Dossier.** Deterministic Python turns raw StatsBomb events into ~85 facts per team — record, pressing, defensive shape from 360 freeze-frames, set pieces, attack, key players — and ranks each one as a **percentile** against the team's league or tournament. Every fact has a stable key, e.g. `{metrica.ppda}`.
+1. **Dossier.** Deterministic Python turns raw StatsBomb events into ~85 facts per team — record, pressing, defensive shape from 360 freeze-frames, set pieces, attack, key players — and ranks each one as a **percentile** against comparable teams. Every fact has a stable key, e.g. `{metrica.ppda}`.
 2. **Writer.** Claude writes the report (verdict, in and out of possession, set pieces, key players, *how to hurt them*) in Spanish and English. It is **not allowed to type a digit**: every figure is a citation to a dossier key, and the code inserts the value.
 3. **Verifier.** A LangGraph node checks every citation. A key that doesn't exist, or a number typed by hand — even one that happens to be right — sends the draft back to the writer with the exact list of problems. Whatever survives the retries is shown as unsupported, never as fact.
 4. **Context.** A RAG step over a tactical glossary tells the writer what the metrics *mean*. The glossary rejects any entry containing digits, so interpretation can never smuggle in a number.
@@ -41,7 +41,7 @@ A team page opens with its record, form and four key metrics with their percenti
 
 ![Team overview](assets/app/en_overview.png)
 
-The report comes first. Each highlighted figure is a citation the verifier has checked; the side panel shows how the report was produced (dossier → glossary → draft → verifier) and links to the raw draft and dossier. Teams without a generated report fall back to a deterministic summary with the same check:
+The report comes first. Each highlighted figure is a citation the verifier has checked, and hovering it shows the fact it came from. With an AI report, the side panel shows how it was produced (dossier → glossary → draft → verifier) and links to the raw draft and dossier. Below, a team without one, showing the deterministic summary that goes through the same check ([how reports are generated](#generating-the-reports)):
 
 ![Verified report with strengths and weaknesses](assets/app/en_report.png)
 
@@ -57,7 +57,7 @@ Every match has its own sheet and link (`#partido-12`) — Real Madrid 0–4 Bar
 
 ![Match sheet](assets/app/en_match.png)
 
-And a style map of all 55 teams (classic PPDA vs. territorial control); click any dot to compare head to head:
+And a style map of all 67 teams (classic PPDA vs. territorial control); click any dot to compare head to head:
 
 ![Style map](assets/app/en_compare.png)
 
@@ -69,8 +69,8 @@ Everything below is measured without an API key and reproducible from the repo (
 
 | Check | Result |
 |---|---|
-| Figures in the reports backed by the data | **100 %** — re-verified from the published drafts by `scripts/run_eval.py` |
-| Percentiles quoted by the agent vs. the web page | **2,617 / 2,617** identical (Python and JavaScript implementations) |
+| Figures in the reports backed by the data | **100 %** — re-verified from the saved drafts by `scripts/run_eval.py` |
+| Percentiles quoted by the agent vs. the web page | **1,417 / 1,417** identical (Python and JavaScript implementations) |
 | Goals vs. [Understat](https://understat.com), match by match | **1,621 / 1,621** identical (43 clubs) |
 | xG vs. Understat, match by match | correlation **0.93** (different models, same ranking of matches) |
 | Classic PPDA vs. Understat, team ranking | Spearman **0.93** |
@@ -88,41 +88,82 @@ uv sync
 uv run uvicorn app.main:app --port 8000     # → http://localhost:8000
 ```
 
-The computed data for all 55 teams ships in the repo, so the app runs out of the box — no API key, no downloads.
+The computed data for all 67 teams ships in the repo, so the app runs out of the box — no API key, no downloads.
 
 ```bash
-uv run pytest                                                  # 98 unit tests (no network, LLM mocked)
-uv run playwright install chromium && uv run pytest -m e2e     # 14 browser tests
-uv run python scripts/precompute.py --demo-data --jobs 6       # recompute every team from StatsBomb (~20 min)
-uv run python scripts/precompute.py --equipos bayer-leverkusen-2023-24   # write that team's report
-uv run python scripts/precompute.py --solo-faltan              # write every missing report (resumable)
+uv run pytest                                                  # 101 unit tests (no network, LLM mocked)
+uv run playwright install chromium && uv run pytest -m e2e     # 15 browser tests
 ```
 
-## Reproduce it
+## The teams
 
-Everything is reproducible from public data, and the report step works with whatever model you have.
+67 teams from [StatsBomb Open Data](https://github.com/statsbomb/open-data), listed in [`publicacion.yaml`](scripts/publicacion.yaml):
 
-**1. The app and the data.** `uv sync` and the app runs with the data committed in the repo. To rebuild it from scratch, `--demo-data` downloads [StatsBomb Open Data](https://github.com/statsbomb/open-data) (public, no account) and recomputes every metric deterministically: same events, same numbers. Which teams are built is set in [`publicacion.yaml`](scripts/publicacion.yaml), so you can point it at any competition StatsBomb publishes.
+| Competition | Teams | 360 data |
+|---|---|---|
+| La Liga 2015/16 · Premier League 2015/16 | all 20 of each league, full season | no |
+| Bundesliga 2023/24 · La Liga 2020/21 · Ligue 1 2022/23 | Leverkusen, Barça and PSG (only their matches) | yes |
+| World Cup 2022 · Euro 2024 | the four semi-finalists of each | yes |
+| Women's Euro 2025 | all 16 national teams | yes |
 
-**2. The reports.** Pick a backend with environment variables:
+Why no recent full men's leagues: StatsBomb sells those. Its free release has older full seasons and, from recent ones, only the matches of one showcase team. Percentiles are computed against the league when it has at least 8 published teams, and otherwise against the published teams of the same kind: clubs, men's national teams or women's national teams.
+
+To rebuild the data from scratch, `--demo-data` downloads the public events (no account needed) and recomputes every metric deterministically. Same events, same numbers:
+
+```bash
+uv run python scripts/precompute.py --demo-data --jobs 6
+```
+
+## Generating the reports
+
+The app never calls a model. Reports are written ahead of time on the author's machine, reviewed, and committed as files, so the public site needs no API key and every report can be audited.
+
+**What happens for each team**, once in Spanish and once in English:
+
+1. `construir_dossier` computes ~85 keyed facts and their percentiles from the team's data.
+2. The glossary retriever adds what the relevant metrics mean (optional; no digits allowed).
+3. The writer drafts the report, citing `{keys}` instead of typing numbers.
+4. The verifier checks every citation. If anything fails, the draft goes back once with the exact list of problems. Whatever still fails is saved and shown as *unsupported*.
+
+**Run it:**
+
+```bash
+uv run python scripts/build_index.py                                     # glossary index (once; optional)
+uv run python scripts/precompute.py --equipos bayer-leverkusen-2023-24   # one or more teams, comma-separated
+uv run python scripts/precompute.py --solo-faltan                        # every team still missing a report
+```
+
+Each report is saved as soon as it finishes, so a long run can be stopped and resumed with `--solo-faltan`. The console prints the valid citations, unsupported figures and retries for each language.
+
+**Pick the model** with environment variables. The first one that is set wins:
 
 | Backend | Setup | Cost |
 |---|---|---|
 | Local model ([Ollama](https://ollama.com), LM Studio…) | `PITCHIQ_LLM_URL=http://localhost:11434/v1 PITCHIQ_MODELO=qwen2.5:14b` | free |
 | Any OpenAI-compatible API | `PITCHIQ_LLM_URL=… PITCHIQ_MODELO=… PITCHIQ_LLM_KEY=…` | provider's price |
 | Anthropic API | `ANTHROPIC_API_KEY=…` (model: `PITCHIQ_MODELO`, default `claude-opus-5-5`) | API price |
-| Claude subscription | nothing: uses the `claude` CLI (`claude` → `/login` once) | your plan |
+| Claude subscription | nothing: uses the `claude` CLI (`claude` → `/login` once; model: Opus, or `PITCHIQ_MODELO`) | your plan |
+
+If you keep keys in a `.env` file, git ignores it. A key is never sent over plain HTTP to a remote server.
+
+**What gets saved** — `app/static/report/informes/<slug>.json`:
+
+| Field | Content |
+|---|---|
+| `es`, `en` | the draft exactly as the model wrote it (Markdown with `{keys}`), valid citations, unsupported figures, retries |
+| `dossier` | every fact the model was allowed to cite, with its value and description |
+| `contexto` | the glossary entries it received |
+| `modelo`, `generated_at` | which model wrote it and when |
+
+The app renders the draft, swaps each `{key}` for its value and links every figure to its source. The raw file is public at `/api/equipos/<slug>/informe`. Teams without a report show a deterministic summary built from the same dossier, checked the same way.
+
+**Before committing**, re-verify everything that will be served:
 
 ```bash
-PITCHIQ_LLM_URL=http://localhost:11434/v1 PITCHIQ_MODELO=qwen2.5:14b \
-  uv run python scripts/precompute.py --equipos bayer-leverkusen-2023-24
+uv run python scripts/run_eval.py --skip-generalization    # re-runs the verifier on every saved draft
 ```
 
-The glossary context is optional: build it with `uv run python scripts/build_index.py` (downloads a small embedding model); without it the writer runs without RAG.
-
-**3. The check.** `uv run python scripts/run_eval.py --skip-generalization` re-verifies every published report against the dossier it was written from.
-
-What varies between runs, and between models, is the prose. What cannot vary is a figure: a weaker model that ignores the citation rule gets its numbers rejected and shown as unsupported. A 7B local model did exactly that in testing, which is the point of the design.
+What varies between runs, and between models, is the prose. What cannot vary is a figure: a weaker model that ignores the citation rule gets its numbers rejected and shown as unsupported. A 7B local model did exactly that in testing, which is the point of the design. What the verifier cannot catch is a qualitative claim with no number in it; that is why the draft and the dossier are always one click away ([details](EVALUATION.md)).
 
 ## How it works
 
@@ -130,7 +171,7 @@ What varies between runs, and between models, is the prose. What cannot vary is 
 |---|---|---|
 | Data | StatsBomb Open Data | events + 360 freeze-frames, cached locally; teams chosen in [`publicacion.yaml`](scripts/publicacion.yaml) |
 | Metrics | deterministic Python, all in metres | PPDA (two definitions), high turnovers, defensive block from 360, corners, shots and xG, territory, progressive actions, players, game state |
-| Context | percentiles | against the league or tournament when it has ≥ 8 teams, otherwise against all published clubs or national teams |
+| Context | percentiles | against the league when it has ≥ 8 published teams, otherwise against published teams of the same kind (clubs, men's or women's national teams) |
 | Report | LangGraph + Claude | dossier → glossary → writer ⇄ verifier; the writer cites keys, never writes figures |
 | Interpretation | RAG over a tactical glossary | Qdrant + MiniLM; the glossary **rejects any entry with digits**, so numbers only come from tools |
 | Serving | FastAPI, precomputed | no API key and no ML libraries in production (CI checks the image); team data loaded on demand |

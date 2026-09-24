@@ -47,17 +47,26 @@ def _load_report(report_dir: Path) -> "tuple[str, dict, Path, bool]":
     return report_md, evidence, base, is_sample
 
 
-PESADOS = ("corners", "bloque_densidad", "partidos", "tiros", "jugadores", "zonas_recuperacion")
+# Lo que la página lee de cada equipo para buscar, comparar y calcular percentiles
+# (METRICAS en index.html). El resto se pide a /api/equipos/{slug} al elegirlo.
+CAMPOS_LIGEROS = ("slug", "nombre", "equipo", "competicion", "temporada", "orden",
+                  "posicion", "n_equipos", "identidad")
+HERRAMIENTAS_LIGERAS = {
+    "presion": ("ppda_medio", "pct_acciones_campo_rival"),
+    "forma_defensiva": ("altura_linea_media", "anchura_media", "profundidad_media",
+                        "hull_area_media_m2", "soporte_presion_medio"),
+    "corners_ataque": ("n_corners", "xg_a_favor", "pct_primer_contacto_ganado"),
+    "corners_defensa": ("xg_en_contra", "pct_primer_contacto_concedido", "indice_orientacion_hombre"),
+}
 
 
 def _ligero(team: dict) -> dict:
-    """Lo mínimo de cada equipo para buscar, comparar y calcular percentiles en la página.
-
-    El detalle (partidos, tiros, jugadores, mapas) se pide a /api/equipos/{slug}.
-    """
-    ligero = {k: v for k, v in team.items() if k not in PESADOS}
-    ligero.setdefault("agregados", {"partidos": len(team.get("partidos", []))})
-    ligero["ligero"] = True
+    """Solo los campos que usa la página para todos los equipos (~3 veces menos peso)."""
+    ligero = {k: team.get(k) for k in CAMPOS_LIGEROS}
+    ligero["herramientas"] = {h: {c: team["herramientas"][h].get(c) for c in cs}
+                              for h, cs in HERRAMIENTAS_LIGERAS.items()}
+    agregados = team.get("agregados") or {"partidos": len(team.get("partidos", []))}
+    ligero["agregados"] = {k: v for k, v in agregados.items() if k != "carriles_pct"}
     return ligero
 
 

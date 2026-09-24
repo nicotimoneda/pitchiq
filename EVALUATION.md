@@ -39,6 +39,23 @@ informe de muestra; hay un test en CI que exige ratio 1,0 sobre lo servido.
 Límite conocido: el verificador detecta cifras con dígitos, no cantidades
 escritas con letras («tres victorias»). El prompt lo prohíbe, pero no se comprueba.
 
+Límite más importante: el verificador comprueba **cifras**, no afirmaciones
+cualitativas. En una prueba con un modelo local de 7B (Ollama), el modelo
+ignoró la regla de citar y escribió todas las cifras a mano: el verificador las
+rechazó todas (33 de 33 sin respaldo, también tras el reintento), como debe.
+Pero el mismo texto afirmaba que el Leverkusen «descendió a la Bundesliga 2», un
+invento sin números que ningún check detecta. El prompt prohíbe usar
+conocimiento externo; con un modelo capaz basta en la práctica, pero no es una
+garantía. Por eso la web enseña el borrador y el dossier: la parte cualitativa
+se revisa leyendo.
+
+Tras añadir al prompt un ejemplo correcto y otro incorrecto, el mismo modelo de
+7B pasó de 0 a 19 citas válidas, pero siguió escribiendo 19 cifras a mano
+(rechazadas) y a veces citó una clave que existe pero no encaja con la frase
+(«percentil {metrica.tilt}», que es el valor y no el percentil). El
+verificador comprueba que la clave exista, no que su significado encaje. La
+calidad del informe depende del modelo; que ninguna cifra pase sin fuente, no.
+
 ### Comparación de embeddings (top-k accuracy, 10 preguntas, sin LLM)
 
 | Modelo | top-1 | top-3 |

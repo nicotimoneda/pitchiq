@@ -9,7 +9,7 @@
 ![LangGraph](https://img.shields.io/badge/LangGraph-1C3C3C?logo=langgraph&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-Anthropic-D97757?logo=anthropic&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-110%20passing-1A7F37?logo=pytest&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-112%20passing-1A7F37?logo=pytest&logoColor=white)
 ![Playwright](https://img.shields.io/badge/e2e-Playwright-2EAD33?logo=playwright&logoColor=white)
 ![Ruff](https://img.shields.io/badge/lint-ruff-D7FF64?logo=ruff&logoColor=black)
 ![License](https://img.shields.io/badge/License-MIT-1A7F37)
@@ -91,14 +91,38 @@ uv run uvicorn app.main:app --port 8000     # → http://localhost:8000
 The computed data for all 115 teams ships in the repo, so the app runs out of the box — no API key, no downloads.
 
 ```bash
-uv run pytest                                                  # 96 unit tests (no network, LLM mocked)
+uv run pytest                                                  # 98 unit tests (no network, LLM mocked)
 uv run playwright install chromium && uv run pytest -m e2e     # 14 browser tests
 uv run python scripts/precompute.py --demo-data --jobs 6       # recompute every team from StatsBomb (~20 min)
 uv run python scripts/precompute.py --equipos bayer-leverkusen-2023-24   # write that team's report
 uv run python scripts/precompute.py --solo-faltan              # write every missing report (resumable)
 ```
 
-The writer runs through the Anthropic API when `ANTHROPIC_API_KEY` is set, or otherwise through the `claude` CLI with your Claude subscription (`claude` → `/login` once). The model is `opus` by default; set `PITCHIQ_MODELO` to change it.
+## Reproduce it
+
+Everything is reproducible from public data, and the report step works with whatever model you have.
+
+**1. The app and the data.** `uv sync` and the app runs with the data committed in the repo. To rebuild it from scratch, `--demo-data` downloads [StatsBomb Open Data](https://github.com/statsbomb/open-data) (public, no account) and recomputes every metric deterministically: same events, same numbers. Which teams are built is set in [`publicacion.yaml`](scripts/publicacion.yaml), so you can point it at any competition StatsBomb publishes.
+
+**2. The reports.** Pick a backend with environment variables:
+
+| Backend | Setup | Cost |
+|---|---|---|
+| Local model ([Ollama](https://ollama.com), LM Studio…) | `PITCHIQ_LLM_URL=http://localhost:11434/v1 PITCHIQ_MODELO=qwen2.5:14b` | free |
+| Any OpenAI-compatible API | `PITCHIQ_LLM_URL=… PITCHIQ_MODELO=… PITCHIQ_LLM_KEY=…` | provider's price |
+| Anthropic API | `ANTHROPIC_API_KEY=…` (model: `PITCHIQ_MODELO`, default `claude-opus-5-5`) | API price |
+| Claude subscription | nothing: uses the `claude` CLI (`claude` → `/login` once) | your plan |
+
+```bash
+PITCHIQ_LLM_URL=http://localhost:11434/v1 PITCHIQ_MODELO=qwen2.5:14b \
+  uv run python scripts/precompute.py --equipos bayer-leverkusen-2023-24
+```
+
+The glossary context is optional: build it with `uv run python scripts/build_index.py` (downloads a small embedding model); without it the writer runs without RAG.
+
+**3. The check.** `uv run python scripts/run_eval.py --skip-generalization` re-verifies every published report against the dossier it was written from.
+
+What varies between runs, and between models, is the prose. What cannot vary is a figure: a weaker model that ignores the citation rule gets its numbers rejected and shown as unsupported. A 7B local model did exactly that in testing, which is the point of the design.
 
 ## How it works
 

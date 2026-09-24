@@ -58,6 +58,12 @@ encima", "de los más bajos") solo cuando los percentiles lo respalden.
 - Cita el valor junto a su unidad correcta según la etiqueta (%, m, m²).
 - Tampoco escribas cantidades con letras para esquivar la regla.
 
+Ejemplo correcto: "Ganó {resultados.victorias} de sus {resultados.partidos} \
+partidos y su xG por partido, {metrica.xg}, está en el percentil \
+{percentil.xg} de su grupo."
+Ejemplo INCORRECTO (será rechazado): "Ganó 28 de sus 34 partidos." \
+Aunque el número sea verdad, escribirlo a mano es un error: usa siempre la cita.
+
 REGLA DE FUENTES: usa solo el dossier y el contexto interpretativo. No uses \
 conocimiento externo del equipo (entrenador, sistema, fichajes, lesiones, \
 resultados conocidos): el lector tiene que poder comprobar cada afirmación.

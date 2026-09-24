@@ -6,12 +6,16 @@ El LLM solo redacta: nunca computa métricas. Cambiar de proveedor = implementar
 - ``AnthropicClient``: Messages API con ANTHROPIC_API_KEY (se factura aparte).
 - ``ClaudeCodeClient``: el CLI ``claude`` en modo no interactivo, con la sesión
   de la suscripción de Claude del usuario. Sin key.
+- ``OpenAICompatibleClient``: cualquier servidor con la API de chat de OpenAI
+  (Ollama o LM Studio en local y gratis, vLLM, OpenAI...). Solo stdlib.
 """
 
 import json
 import os
 import shutil
 import subprocess
+import urllib.error
+import urllib.request
 from typing import Protocol
 
 DEFAULT_MODEL = "claude-opus-5-5"
@@ -92,8 +96,46 @@ class ClaudeCodeClient:
         return out["result"]
 
 
+class OpenAICompatibleClient:
+    """Chat completions de cualquier servidor compatible con OpenAI (p. ej. Ollama en local)."""
+
+    def __init__(self, url: str, model: str, api_key: "str | None" = None, timeout: int = 900) -> None:
+        """``url`` es la base de la API, p. ej. http://localhost:11434/v1."""
+        self.url = url.rstrip("/") + "/chat/completions"
+        self.model = self.model_used = model
+        self.api_key = api_key
+        self.timeout = timeout
+
+    def complete(self, system: str, user: str) -> str:
+        """Una petición de chat; temperatura baja para un informe sobrio."""
+        body = json.dumps({"model": self.model, "temperature": 0.2, "messages": [
+            {"role": "system", "content": system}, {"role": "user", "content": user}]}).encode()
+        headers = {"Content-Type": "application/json"}
+        if self.api_key:
+            headers["Authorization"] = f"Bearer {self.api_key}"
+        req = urllib.request.Request(self.url, data=body, headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                out = json.load(resp)
+        except urllib.error.URLError as e:
+            raise RuntimeError(f"No hay respuesta de {self.url} ({e}). ¿Está arrancado el servidor "
+                               "del modelo (p. ej. `ollama serve`)?") from None
+        return out["choices"][0]["message"]["content"]
+
+
 def cliente_por_defecto() -> LLMClient:
-    """API si hay ANTHROPIC_API_KEY; si no, el CLI de Claude con la suscripción."""
+    """Elige backend por el entorno, del más explícito al más cómodo.
+
+    1. PITCHIQ_LLM_URL: servidor compatible con OpenAI (Ollama, LM Studio, OpenAI...),
+       con el modelo en PITCHIQ_MODELO y la key, si hace falta, en PITCHIQ_LLM_KEY.
+    2. ANTHROPIC_API_KEY: la API de Anthropic.
+    3. Si no: el CLI `claude` con la sesión de la suscripción.
+    """
+    if os.environ.get("PITCHIQ_LLM_URL"):
+        if not os.environ.get("PITCHIQ_MODELO"):
+            raise RuntimeError("Con PITCHIQ_LLM_URL indica también el modelo: PITCHIQ_MODELO=qwen2.5:14b")
+        return OpenAICompatibleClient(os.environ["PITCHIQ_LLM_URL"], os.environ["PITCHIQ_MODELO"],
+                                      os.environ.get("PITCHIQ_LLM_KEY"))
     if os.environ.get("ANTHROPIC_API_KEY"):
-        return AnthropicClient()
+        return AnthropicClient(model=os.environ.get("PITCHIQ_MODELO", DEFAULT_MODEL))
     return ClaudeCodeClient(model=os.environ.get("PITCHIQ_MODELO", "opus"))

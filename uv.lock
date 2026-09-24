@@ -1694,7 +1694,6 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "anthropic" },
-    { name = "langchain-core" },
     { name = "langgraph" },
     { name = "mplsoccer" },
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
@@ -1727,7 +1726,6 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "anthropic", specifier = ">=0.116.0" },
-    { name = "langchain-core", specifier = ">=1.4.8" },
     { name = "langgraph", specifier = ">=1.2.7" },
     { name = "mplsoccer", specifier = ">=1.4" },
     { name = "numpy", specifier = ">=1.26" },

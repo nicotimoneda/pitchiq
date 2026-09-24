@@ -16,3 +16,6 @@ data/cache/
 .DS_Store
 .ipynb_checkpoints/
 data/index/
+
+# grafo local de graphify (se regenera con /graphify .)
+graphify-out/

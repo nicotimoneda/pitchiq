@@ -165,6 +165,15 @@ def test_informe_del_llm_sin_html_crudo_ni_javascript():
     assert "<blockquote>" in html and "<h1>" in html
 
 
+def test_lista_sin_linea_en_blanco_se_ve_como_lista():
+    from app.main import _markdown_seguro
+
+    # así la escribe el modelo a veces: la lista pegada a la frase anterior
+    html = _markdown_seguro("Son aproximadas:\n- Altura: 48,4 m.\n- Bloque: 32,6 m.\n\nSigue.")
+    assert html.count("<li>") == 2 and "<ul>" in html and "- Altura" not in html
+    assert _markdown_seguro("1. uno\n2. dos").count("<li>") == 2
+
+
 def test_csv_no_ejecuta_formulas():
     from app.main import _celda_csv
 

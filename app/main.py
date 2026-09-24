@@ -62,6 +62,12 @@ def _ligero(team: dict) -> dict:
     return ligero
 
 
+def _lista_suelta(m: re.Match) -> str:
+    """Línea en blanco antes del primer elemento de una lista; nada entre elementos seguidos."""
+    previa = m.group(1)
+    return previa + ("\n" if re.match(r"\s*(?:[-*+]|\d+\.) ", previa) else "\n\n")
+
+
 def _markdown_seguro(texto: str) -> str:
     """Markdown del informe del LLM a HTML sin HTML crudo ni enlaces javascript:.
 
@@ -69,6 +75,8 @@ def _markdown_seguro(texto: str) -> str:
     neutralizan los esquemas peligrosos en los enlaces: la salida del modelo es
     el único texto no determinista que llega a la página.
     """
+    # una lista pegada a la línea anterior (sin línea en blanco) también es lista, como en CommonMark
+    texto = re.sub(r"(?m)^([^\n]*\S[^\n]*)\n(?=(?:[-*+]|\d+\.) )", _lista_suelta, texto)
     html = md.markdown(texto.replace("&", "&amp;").replace("<", "&lt;"), extensions=["extra"])
     html = re.sub(r"<img\b[^>]*>", "", html)  # sin imágenes: nada se carga desde otro servidor
     return re.sub(r'(href|src)="\s*(javascript|data|vbscript):', r'\1="#', html, flags=re.IGNORECASE)

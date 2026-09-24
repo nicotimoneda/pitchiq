@@ -4,6 +4,7 @@
 # `statsbombpy.sb.competitions()`). Se publican los equipos de `equipos` (una lista
 # o `todos`) o, con `top: N`, los N primeros de la clasificación calculada con los resultados
 # (3 puntos por victoria; desempate por diferencia de goles y goles a favor).
+# `desempate: directo` aplica el enfrentamiento directo antes que la diferencia de goles.
 # `top` solo tiene sentido en temporadas completas: las parciales (p. ej. la
 # Bundesliga 2023/24, que solo trae los partidos del Leverkusen) usan `equipos`.
 # `nombre` (opcional) sustituye el nombre de la competición en la web.
@@ -27,6 +28,7 @@ competiciones:
   - competition_id: 11    # La Liga 2015/16 (temporada completa, sin 360)
     season_id: 27
     equipos: todos
+    desempate: directo    # en La Liga los empates a puntos se deciden por el enfrentamiento directo
 
   - competition_id: 2     # Premier League 2015/16 (temporada completa, sin 360)
     season_id: 27

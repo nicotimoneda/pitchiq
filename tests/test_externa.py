@@ -42,3 +42,8 @@ def test_comparar_y_resumir():
     assert r["ppda_spearman_equipos"] == 1.0
     assert r["ppda_clasico_spearman_equipos"] == 1.0
     assert r["xg_partido_diferencia_media"] == -0.1
+
+
+def test_equipo_sin_datos_no_mete_nan():
+    fila = comparar_equipo({"nombre": "E", "competicion": "L", "temporada": "1", "partidos": []}, [])
+    assert fila["xg_favor_por_partido"] == [None, None] and fila["ppda_medio"] == [None, None]

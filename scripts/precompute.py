@@ -50,10 +50,25 @@ def _temporada_corta(season_name: str) -> str:
     return f"{parts[0]}/{parts[1][-2:]}" if len(parts) == 2 else str(season_name)
 
 
-def clasificacion(matches) -> "list[str]":
-    """Equipos ordenados por la clasificación que dan los resultados."""
+def clasificacion(matches, directo: bool = False) -> "list[str]":
+    """Equipos ordenados por la clasificación que dan los resultados.
+
+    Empates a puntos: diferencia de goles y goles a favor (Premier). Con
+    ``directo=True`` manda antes el enfrentamiento directo entre los empatados,
+    puntos y luego diferencia en esos partidos (La Liga).
+    """
     tabla = _tabla(matches)
-    return sorted(tabla, key=lambda t: (-tabla[t][0], -tabla[t][1], -tabla[t][2], t))
+    directos: dict[str, list[int]] = {}
+    if directo:
+        por_puntos: dict[int, list[str]] = {}
+        for t, fila in tabla.items():
+            por_puntos.setdefault(fila[0], []).append(t)
+        for grupo in (g for g in por_puntos.values() if len(g) > 1):
+            entre = matches[matches["home_team"].isin(grupo) & matches["away_team"].isin(grupo)]
+            mini = _tabla(entre)
+            directos.update({t: mini.get(t, [0, 0, 0])[:2] for t in grupo})
+    return sorted(tabla, key=lambda t: (-tabla[t][0], *[-v for v in directos.get(t, [0, 0])],
+                                        -tabla[t][1], -tabla[t][2], t))
 
 
 def temporada_completa(matches) -> bool:
@@ -111,7 +126,7 @@ def equipos_a_publicar() -> "list[dict]":
             "1. Bundesliga", "Bundesliga")
         temporada = _temporada_corta(fila.iloc[0]["season_name"])
         matches = load_matches(competition_id=cid, season_id=sid)
-        orden = clasificacion(matches)
+        orden = clasificacion(matches, directo=bloque.get("desempate") == "directo")
         completa = temporada_completa(matches)
         if bloque.get("equipos") == "todos":
             equipos = list(orden)
@@ -600,7 +615,17 @@ def build_demo_data(jobs: int = 1, solo_faltan: bool = False) -> None:
     for viejo in [*TEAMS_DIR.glob("*.json"), *OG_DIR.glob("*.png")]:
         if viejo.stem not in vigentes:
             viejo.unlink()
-    tareas = [(e, i) for i, e in enumerate(entradas) if not (solo_faltan and _al_dia(e["slug"]))]
+    tareas = []
+    for i, e in enumerate(entradas):
+        if solo_faltan and _al_dia(e["slug"]):
+            # no se recalcula, pero el orden de publicación puede haber cambiado
+            f = TEAMS_DIR / f"{e['slug']}.json"
+            datos = json.loads(f.read_text(encoding="utf-8"))
+            if datos.get("orden") != i:
+                datos["orden"] = i
+                f.write_text(json.dumps(datos, ensure_ascii=False), encoding="utf-8")
+        else:
+            tareas.append((e, i))
     if jobs <= 1:
         for t in tareas:
             _construir(t)

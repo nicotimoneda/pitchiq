@@ -108,3 +108,18 @@ def test_agregados_medias_y_carriles():
     assert a["xg_por_tiro"] == 0.2  # sin penaltis
     assert a["robos_altos"] == 2.0 and a["robos_altos_tiro_pct"] == 25.0
     assert a["carriles_pct"] == {"izquierda": 50.0, "centro": 30.0, "derecha": 20.0}
+
+
+def test_clasificacion_desempata_por_enfrentamiento_directo():
+    # A y B acaban con 7 puntos; B tiene mejor diferencia total, pero A ganó el duelo directo
+    partidos = pd.DataFrame(
+        [
+            {"home_team": "A", "away_team": "B", "home_score": 1, "away_score": 0},
+            {"home_team": "B", "away_team": "A", "home_score": 2, "away_score": 2},
+            {"home_team": "A", "away_team": "C", "home_score": 1, "away_score": 0},
+            {"home_team": "B", "away_team": "C", "home_score": 6, "away_score": 0},
+            {"home_team": "C", "away_team": "B", "home_score": 0, "away_score": 1},
+        ]
+    )
+    assert precompute.clasificacion(partidos) == ["B", "A", "C"]  # Premier: diferencia de goles
+    assert precompute.clasificacion(partidos, directo=True) == ["A", "B", "C"]  # La Liga

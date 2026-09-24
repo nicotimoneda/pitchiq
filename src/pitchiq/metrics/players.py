@@ -14,9 +14,26 @@ CAMPOS = ("minutos", "goles", "asistencias", "tiros", "xg", "pases_clave", "prog
           "presiones", "acciones_defensivas", "recuperaciones")
 
 
-def _fin_partido(events: pd.DataFrame) -> float:
+def _reloj(events: pd.DataFrame):
+    """Reloj continuo del partido y su duración total.
+
+    StatsBomb reinicia el minuto en cada parte (45', 90', 105'), así que el
+    descuento de una parte se solaparía con el inicio de la siguiente. Se encadena
+    cada parte desde su primer hasta su último evento.
+    """
     ev = events[_col(events, "period") < 5]
-    return float((ev["minute"] + ev["second"] / 60).max()) if not ev.empty else 90.0
+    t = ev["minute"].astype(float) + ev["second"].astype(float) / 60
+    inicio, offset, acumulado = {}, {}, 0.0
+    for periodo, tp in t.groupby(ev["period"]):
+        inicio[periodo], offset[periodo] = float(tp.min()), acumulado
+        acumulado += float(tp.max() - tp.min())
+
+    def absoluto(r) -> float:
+        p = r.get("period")
+        tr = float(r["minute"]) + float(r["second"]) / 60
+        return tr - inicio.get(p, 0.0) + offset.get(p, 0.0)
+
+    return absoluto, (acumulado if inicio else 90.0)
 
 
 def _expulsado(r) -> bool:
@@ -29,7 +46,7 @@ def _expulsado(r) -> bool:
 
 def player_stats(events: pd.DataFrame, team: str) -> "dict[str, dict]":
     """Estadísticas del partido por jugador del equipo, con su posición principal."""
-    fin = _fin_partido(events)
+    reloj, fin = _reloj(events)
     jugadores: dict[str, dict] = {}
 
     def fila(nombre: str) -> dict:
@@ -43,14 +60,14 @@ def player_stats(events: pd.DataFrame, team: str) -> "dict[str, dict]":
             f["_entra"], f["posicion"] = 0.0, p["position"]["name"]
     ev = events[events["team"] == team]
     for _, r in ev[ev["type"] == "Substitution"].iterrows():
-        t = float(r["minute"]) + float(r["second"]) / 60
+        t = reloj(r)
         fila(r["player"])["_sale"] = t
         entra = fila(r["substitution_replacement"])
         entra["_entra"] = t
         entra["posicion"] = entra["posicion"] or r.get("position")
     for _, r in ev.iterrows():
         if _expulsado(r) and r.get("player") in jugadores:
-            jugadores[r["player"]]["_sale"] = float(r["minute"]) + float(r["second"]) / 60
+            jugadores[r["player"]]["_sale"] = reloj(r)
 
     con_jugador = ev[ev["player"].notna()]
     for nombre, g in con_jugador.groupby("player"):
@@ -74,7 +91,10 @@ def player_stats(events: pd.DataFrame, team: str) -> "dict[str, dict]":
         if not f["posicion"]:
             pos = g["position"].dropna()
             f["posicion"] = pos.mode().iloc[0] if not pos.empty else None
-    for nombre, n in defensive_actions(events, team).groupby("player").size().items():
+    # presiones y recuperaciones ya tienen su columna: aquí solo entradas e intercepciones
+    acciones = defensive_actions(events, team)
+    acciones = acciones[~acciones["type"].isin(("Pressure", "Ball Recovery"))]
+    for nombre, n in acciones.groupby("player").size().items():
         fila(nombre)["acciones_defensivas"] = int(n)
 
     for f in jugadores.values():

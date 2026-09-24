@@ -53,6 +53,10 @@ def comparar_equipo(team: dict, externos: list) -> dict:
     con_ppda = [(p, e) for p, e in pares if p.get("ppda") is not None and e["ppda_def"] > 0]
     con_clasico = [(p, e) for p, e in con_ppda if p.get("ppda_clasico") is not None]
     n = len(pares)
+
+    def media(vals: list) -> "float | None":
+        return round(float(np.mean(vals)), 2) if vals else None
+
     return {
         "equipo": team["nombre"],
         "competicion": f"{team['competicion']} {team['temporada']}",
@@ -61,17 +65,17 @@ def comparar_equipo(team: dict, externos: list) -> dict:
         "goles_coinciden": goles_ok,
         "goles_favor": [sum(p["goles_favor"] for p, _ in pares), sum(e["goles_favor"] for _, e in pares)],
         "xg_favor_por_partido": [
-            round(float(np.mean([p["xg_favor"] for p, _ in con_xg])), 2),
-            round(float(np.mean([e["xg_favor"] for _, e in con_xg])), 2),
+            media([p["xg_favor"] for p, _ in con_xg]),
+            media([e["xg_favor"] for _, e in con_xg]),
         ],
         "xg_contra_por_partido": [
-            round(float(np.mean([p["xg_contra"] for p, _ in con_xg])), 2),
-            round(float(np.mean([e["xg_contra"] for _, e in con_xg])), 2),
+            media([p["xg_contra"] for p, _ in con_xg]),
+            media([e["xg_contra"] for _, e in con_xg]),
         ],
         # misma agregación en las dos fuentes: media de los PPDA de cada partido
         "ppda_medio": [
-            round(float(np.mean([p["ppda"] for p, _ in con_ppda])), 2),
-            round(float(np.mean([e["ppda_att"] / e["ppda_def"] for _, e in con_ppda])), 2),
+            media([p["ppda"] for p, _ in con_ppda]),
+            media([e["ppda_att"] / e["ppda_def"] for _, e in con_ppda]),
         ],
         # la definición clásica (sin presiones) es la comparable con Understat
         "ppda_clasico_medio": [
@@ -86,8 +90,9 @@ def comparar_equipo(team: dict, externos: list) -> dict:
 def resumen(filas: list) -> dict:
     """Agregados entre equipos: coincidencia de goles y concordancia de xG y PPDA."""
     xg = [par for f in filas for par in f["_xg_partido"]]
-    nuestro_ppda = [f["ppda_medio"][0] for f in filas]
-    externo_ppda = [f["ppda_medio"][1] for f in filas]
+    con_ppda = [f for f in filas if f["ppda_medio"][0] is not None and f["ppda_medio"][1] is not None]
+    nuestro_ppda = [f["ppda_medio"][0] for f in con_ppda]
+    externo_ppda = [f["ppda_medio"][1] for f in con_ppda]
     return {
         "partidos_cruzados": sum(f["partidos_cruzados"] for f in filas),
         "goles_coinciden": sum(f["goles_coinciden"] for f in filas),

@@ -74,3 +74,21 @@ def test_minutos_y_estadisticas_por_jugador():
     assert p["Ana"]["minutos"] == 60.0 and p["Ana"]["goles"] == 1 and p["Ana"]["xg"] == 0.5
     assert p["Cris"]["minutos"] == 30.0 and p["Cris"]["pases_clave"] == 1 and p["Cris"]["progresivos"] == 1
     assert p["Bea"]["minutos"] == 90.0 and p["Bea"]["presiones"] == 1
+
+
+def test_minutos_cuentan_el_descuento_de_cada_parte():
+    # la 1.ª parte acaba en el 48' (3' de descuento) y el reloj de la 2.ª vuelve a empezar en 45'
+    xi = {"lineup": [{"player": {"name": "Ana"}, "position": {"name": "Center Forward"}},
+                     {"player": {"name": "Bea"}, "position": {"name": "Goalkeeper"}}]}
+    events = _ev([
+        {"type": "Starting XI", "tactics": xi},
+        {"period": 1, "minute": 0, "location": [60, 40]},
+        {"period": 1, "minute": 47, "player": "Ana", "type": "Substitution", "substitution_replacement": "Cris"},
+        {"period": 1, "minute": 48, "location": [60, 40]},
+        {"period": 2, "minute": 45, "location": [60, 40]},
+        {"period": 2, "minute": 90, "location": [60, 40]},
+    ])
+    p = player_stats(events, "A")
+    assert p["Bea"]["minutos"] == 93.0  # 48 de la 1.ª parte + 45 de la 2.ª
+    assert p["Ana"]["minutos"] == 47.0
+    assert p["Cris"]["minutos"] == 46.0  # 1' de descuento de la 1.ª + la 2.ª entera

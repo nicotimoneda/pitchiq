@@ -1620,7 +1620,7 @@ document.querySelectorAll("#filtro-seg button").forEach((b) => b.addEventListene
   filtro = b.dataset.f;
   document.querySelectorAll("#filtro-seg button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
   const t = actual();
-  renderFiltro(t); renderAtaque(t); renderPresion(t); renderPartidos(t);
+  renderFiltro(t); renderAtaque(t); redibujar("presion"); redibujar("partidos");
   traducirArbol(document.body);
 }));
 function renderFiltro(team) {
@@ -2264,17 +2264,46 @@ function render() {
   renderFortalezas(team);
   renderFiltro(team);
   renderAtaque(team);
-  renderPresion(team);
-  renderDefensa(team);
-  renderBalonParado(team);
-  renderJugadores(team);
   orden = { k: "j", dir: 1 };
-  renderPartidos(team);
-  renderSplits(team);
-  renderComparar(team);
-  renderEstilos(team);
   traducirArbol(document.body);
+  // el resto se dibuja al acercarse a la pantalla o en ratos libres (ver DIFERIDAS)
+  pendientes = new Set(Object.keys(DIFERIDAS));
+  for (const id of pendientes) if (cerca(document.getElementById(id))) dibujarSeccion(id);
+  dibujarEnReposo();
 }
+
+/* ---------- secciones diferidas ---------- */
+const DIFERIDAS = {
+  presion: renderPresion,
+  defensa: renderDefensa,
+  "balon-parado": renderBalonParado,
+  jugadores: renderJugadores,
+  partidos: (t) => { renderPartidos(t); renderSplits(t); },
+  comparar: (t) => { renderComparar(t); renderEstilos(t); },
+};
+let pendientes = new Set();
+const MARGEN = 800;  // px: se dibuja un poco antes de que la sección entre en pantalla
+const cerca = (el) => { const r = el.getBoundingClientRect(); return r.top < innerHeight + MARGEN && r.bottom > -MARGEN; };
+function dibujarSeccion(id) {
+  if (!pendientes.delete(id)) return;
+  DIFERIDAS[id](actual());
+  traducirArbol(document.getElementById(id));
+}
+// redibuja una sección solo si ya estaba dibujada (si no, se dibujará con el estado actual)
+function redibujar(id) {
+  if (pendientes.has(id)) return;
+  DIFERIDAS[id](actual());
+  traducirArbol(document.getElementById(id));
+}
+const enReposo = window.requestIdleCallback || ((f) => setTimeout(f, 50));
+function dibujarEnReposo() {
+  const id = pendientes.values().next().value;
+  if (id) enReposo(() => { dibujarSeccion(id); dibujarEnReposo(); });
+}
+const ioSecciones = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) dibujarSeccion(e.target.id); }),
+  { rootMargin: MARGEN + "px 0px" });
+Object.keys(DIFERIDAS).forEach((id) => ioSecciones.observe(document.getElementById(id)));
+window.addEventListener("beforeprint", () => [...pendientes].forEach(dibujarSeccion));
 $("#rival").addEventListener("change", (e) => {
   rivalSlug = e.target.value;
   renderComparar(actual());

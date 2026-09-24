@@ -9,7 +9,7 @@
 ![LangGraph](https://img.shields.io/badge/LangGraph-1C3C3C?logo=langgraph&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-Anthropic-D97757?logo=anthropic&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-106%20passing-1A7F37?logo=pytest&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-107%20passing-1A7F37?logo=pytest&logoColor=white)
 ![Playwright](https://img.shields.io/badge/e2e-Playwright-2EAD33?logo=playwright&logoColor=white)
 ![Ruff](https://img.shields.io/badge/lint-ruff-D7FF64?logo=ruff&logoColor=black)
 ![License](https://img.shields.io/badge/License-MIT-1A7F37)
@@ -86,7 +86,7 @@ Los datos calculados de los 115 equipos vienen en el repositorio: la web funcion
 
 ```bash
 uv run pytest                                                    # 94 tests (sin red, LLM simulado)
-uv run playwright install chromium && uv run pytest -m e2e       # 12 tests en navegador
+uv run playwright install chromium && uv run pytest -m e2e       # 13 tests en navegador
 uv run python scripts/precompute.py --demo-data --jobs 6         # recalcula todos los equipos (~20 min)
 ANTHROPIC_API_KEY=sk-ant-... uv run python scripts/precompute.py # + el informe redactado por el LLM
 ```

@@ -120,14 +120,15 @@ def test_version_en_ingles_con_cifras_verificadas(pagina, servidor):
 
 
 def test_filtro_de_partidos_reduce_la_tabla(pagina):
-    assert pagina.locator("#tabla tbody tr").count() == 4
+    # Partidos se dibuja diferido (al acercarse o en ratos libres): se espera a que aparezca
+    expect(pagina.locator("#tabla tbody tr")).to_have_count(4)
     pagina.locator('#filtro-seg button[data-f="local"]').click()
-    assert pagina.locator("#tabla tbody tr").count() == 2
+    expect(pagina.locator("#tabla tbody tr")).to_have_count(2)
     assert "2 de 4" in pagina.locator("#filtro-nota").inner_text()
 
 
 def test_jugadores_por_90_y_posicion(pagina):
-    assert pagina.locator("#tabla-jug tbody tr").count() == 2
+    expect(pagina.locator("#tabla-jug tbody tr")).to_have_count(2)
     pagina.locator('#jug-pos button[data-p="DEF"]').click()
     expect(pagina.locator("#tabla-jug tbody tr")).to_have_count(1)
     assert "Bea Ejemplo" in pagina.locator("#tabla-jug tbody").inner_text()
@@ -152,3 +153,9 @@ def test_enlace_directo_a_una_ficha(page, servidor):
     assert "J2" in page.locator("#ficha-meta").inner_text()
     page.keyboard.press("Escape")
     expect(page).not_to_have_url(re.compile("#partido"))
+
+
+def test_secciones_diferidas_se_dibujan_solas(pagina):
+    # sin hacer scroll, las secciones de abajo acaban dibujadas en ratos libres
+    expect(pagina.locator("#compare-grid .bar-group").first).to_be_attached()
+    expect(pagina.locator("#zonas .bar-row").first).to_be_attached()

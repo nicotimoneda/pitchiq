@@ -10,7 +10,7 @@ Escribe el informe que lee un entrenador antes de un partido. El modelo cita los
 ![LangGraph](https://img.shields.io/badge/LangGraph-1C3C3C?logo=langgraph&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-Anthropic-D97757?logo=anthropic&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-118%20passing-1A7F37?logo=pytest&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-119%20passing-1A7F37?logo=pytest&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-1A7F37)
 
 [English](README.md) · **Español**
@@ -88,7 +88,7 @@ uv run uvicorn app.main:app --port 8000     # → http://localhost:8000
 Los datos de los 67 equipos vienen en el repositorio: la web funciona sin API key ni descargas.
 
 ```bash
-uv run pytest                                                  # 103 tests (sin red, LLM simulado)
+uv run pytest                                                  # 104 tests (sin red, LLM simulado)
 uv run playwright install chromium && uv run pytest -m e2e     # 15 tests en navegador
 uv run python scripts/precompute.py --demo-data --jobs 6       # recalcula todos los equipos desde StatsBomb
 ```

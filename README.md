@@ -10,7 +10,7 @@ It writes the report a coach reads before a match. The model cites the data, the
 ![LangGraph](https://img.shields.io/badge/LangGraph-1C3C3C?logo=langgraph&logoColor=white)
 ![Claude](https://img.shields.io/badge/Claude-Anthropic-D97757?logo=anthropic&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-118%20passing-1A7F37?logo=pytest&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-119%20passing-1A7F37?logo=pytest&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-1A7F37)
 
 **English** · [Español](README.es.md)
@@ -88,7 +88,7 @@ uv run uvicorn app.main:app --port 8000     # → http://localhost:8000
 The data for all 67 teams ships in the repo: the app runs with no API key and no downloads.
 
 ```bash
-uv run pytest                                                  # 103 unit tests (no network, LLM mocked)
+uv run pytest                                                  # 104 unit tests (no network, LLM mocked)
 uv run playwright install chromium && uv run pytest -m e2e     # 15 browser tests
 uv run python scripts/precompute.py --demo-data --jobs 6       # rebuild every team from StatsBomb
 ```

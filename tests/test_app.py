@@ -61,6 +61,14 @@ def test_index_con_selector_secciones_y_datos(client):
     assert "Datos de muestra" in html
 
 
+def test_enlaces_internos_de_la_web_existen(client):
+    # cada enlace a la API que pinta la plantilla responde (antes quedó uno a /api/evidence, retirada)
+    import re
+    html = client.get("/").text
+    for ruta in set(re.findall(r'href="(/api/[^"]*)"', html)):
+        assert client.get(ruta).status_code == 200, ruta
+
+
 def test_equipo_inicial_por_query(client):
     html = client.get("/?equipo=equipo-rival").text
     assert "<title>PitchIQ</title>" in html
